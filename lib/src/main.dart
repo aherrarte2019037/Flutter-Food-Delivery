@@ -16,7 +16,7 @@ void main() async {
   final dynamic user = await SharedPref.read('user');
   String initialRoute = RoleRedirect.getInitialRoute(user);
 
-  runApp(MainApp(initialRoute));
+  runApp(MainApp('roles'));
 }
 
 class MainApp extends StatefulWidget {

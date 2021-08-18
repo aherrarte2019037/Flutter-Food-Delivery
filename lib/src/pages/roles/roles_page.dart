@@ -185,13 +185,14 @@ Widget _profileSection() {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
+                    color: Colors.black
                   ),
                 ),
                 const SizedBox(height: 2),
                 const Text(
                   'Cliente • Delivery',
                   style: TextStyle(
-                    color: Color(0XFFFD9176),
+                    color: Color(0XFF424C69),
                   ),
                 )
               ],
@@ -218,13 +219,13 @@ Widget _continueButton() {
         ],
       ),
       style: ElevatedButton.styleFrom(
-        elevation: 4.5,
+        elevation: 4,
         padding: const EdgeInsets.symmetric(horizontal: 40),
-        primary: const Color(0XFF030303),
+        primary: const Color(0XFF0F182F),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         textStyle: const TextStyle(
           fontSize: 16.5,
-          letterSpacing: 0.65,
+          letterSpacing: 0.5,
           fontWeight: FontWeight.w500
         )
       ),
@@ -233,5 +234,5 @@ Widget _continueButton() {
 }
 
 Widget _columnSpace() {
-  return const SizedBox(height: 40);
+  return const SizedBox(height: 35);
 }
