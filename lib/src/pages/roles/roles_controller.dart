@@ -13,7 +13,7 @@ class RolesController {
     'DELIVERY'  : false
   };
 
-  Future<void> init(BuildContext context) async {
+  void init(BuildContext context) {
     this.context = context;
   }
 
