@@ -2,11 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:flutter_icons/flutter_icons.dart';
-import 'package:food_delivery/src/models/role_model.dart';
+import 'package:food_delivery/src/models/user_model.dart';
+import 'package:food_delivery/src/pages/roles/card_list.dart';
 import 'package:food_delivery/src/pages/roles/roles_controller.dart';
-import 'package:logger/logger.dart';
 
 class RolesPage extends StatefulWidget {
   const RolesPage({Key? key}) : super(key: key);
@@ -37,38 +35,30 @@ class _RolesPageState extends State<RolesPage> {
         height: height,
         width: width,
         color: Colors.white,
-        padding:
-            const EdgeInsets.only(top: 60, left: 42, right: 42, bottom: 60),
+        padding: const EdgeInsets.only(top: 50, left: 42, right: 42, bottom: 40),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _topSection(),
-            _profileSection(),
             FutureBuilder(
-              future: _rolesController.getUserRoles(),
+              future: _rolesController.getUser(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData && !snapshot.hasError) {
-                  List<Role> roles = snapshot.data;
-                  return ListView.separated(
-                    physics: const NeverScrollableScrollPhysics(),
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const SizedBox(
-                        height: 40,
-                      );
-                    },
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: roles.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return _roleCard(roles[index]);
-                    },
+                  return Expanded(
+                    child: Column(
+                      children: [
+                        SizedBox(height: height * 0.06),
+                        _profileSection(user: snapshot.data),
+                        CardListWidget(roles: snapshot.data.roles),
+                        SizedBox(height: height * 0.02),
+                      ],
+                    ),
                   );
                 }
-                return const Text('no tiene data');
+                return const Text('No Hay Datos');
               },
             ),
-            const SizedBox(height: 0),
-            _continueButton()
+            _continueButton(_rolesController)
           ],
         ),
       ),
@@ -84,163 +74,10 @@ Widget _topSection() {
       _backButton(),
       const Text(
         'Escoje un rol',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
       ),
       _moreButton()
     ],
-  );
-}
-
-Widget _roleCard(Role role) {
-  return Container(
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: RolesController.getColorsByRole(role)['lightColor'],
-      boxShadow: [
-        BoxShadow(
-          color: RolesController.getColorsByRole(role)['lightColor']!
-              .withOpacity(0.45),
-          spreadRadius: 1,
-          blurRadius: 10,
-          offset: const Offset(0, 8), // changes position of shadow
-        ),
-      ],
-      borderRadius: BorderRadius.circular(32),
-    ),
-    child: Row(
-      children: [
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              image: DecorationImage(
-                image: AssetImage(role.image),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Container(
-              width: 165,
-              height: 40,
-              padding: const EdgeInsets.only(right: 4, top: 1),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18),
-                  ),
-                  elevation: 0,
-                  primary: Colors.white,
-                  onPrimary: const Color(0XFF879EF3),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Seleccionada',
-                      style: TextStyle(
-                        fontSize: 14.5,
-                        color:
-                            RolesController.getColorsByRole(role)['lightColor'],
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Icon(
-                      FlutterIcons.check_fea,
-                      color:
-                          RolesController.getColorsByRole(role)['lightColor'],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Container(
-              width: 165,
-              height: 40,
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              decoration: BoxDecoration(
-                  color: RolesController.getColorsByRole(role)['darkColor'],
-                  borderRadius: BorderRadius.circular(20)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    RolesController.getTextRoleByRole(role),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Icon(
-                    RolesController.getIconsByRole(role)[0],
-                    size: 24,
-                    color: Colors.white,
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-            Container(
-              width: 165,
-              transform: Matrix4.translationValues(0, -2, 0),
-              padding: const EdgeInsets.only(right: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-                      color: Colors.white,
-                    ),
-                    child: Icon(
-                      RolesController.getIconsByRole(role)[1],
-                      color:
-                          RolesController.getColorsByRole(role)['lightColor'],
-                    ),
-                  ),
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-                      color: Colors.white,
-                    ),
-                    child: Icon(
-                      RolesController.getIconsByRole(role)[2],
-                      color:
-                          RolesController.getColorsByRole(role)['lightColor'],
-                    ),
-                  ),
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-                      color: Colors.white,
-                    ),
-                    child: Icon(
-                      RolesController.getIconsByRole(role)[3],
-                      color:
-                          RolesController.getColorsByRole(role)['lightColor'],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ],
-        )
-      ],
-    ),
   );
 }
 
@@ -288,7 +125,7 @@ Widget _moreButton() {
   );
 }
 
-Widget _profileSection() {
+Widget _profileSection({required User user}) {
   return Container(
     width: double.infinity,
     height: 70,
@@ -298,6 +135,7 @@ Widget _profileSection() {
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        const SizedBox(height: 10),
         Row(
           children: [
             Container(
@@ -316,17 +154,17 @@ Widget _profileSection() {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Angel Herrarte',
-                  style: TextStyle(
+                Text(
+                  '${user.firstName} ${user.lastName}',
+                  style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                       color: Colors.black),
                 ),
                 const SizedBox(height: 2),
-                const Text(
-                  'Cliente • Delivery',
-                  style: TextStyle(
+                Text(
+                  RolesController.getRolesFormated(user),
+                  style: const TextStyle(
                     color: Color(0XFF424C69),
                   ),
                 )
@@ -339,12 +177,14 @@ Widget _profileSection() {
   );
 }
 
-Widget _continueButton() {
+Widget _continueButton(RolesController _roleController) {
   return Container(
     height: 60,
     width: double.infinity,
     child: ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        _roleController.goToSelectedPage();
+      },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,

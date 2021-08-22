@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:food_delivery/src/models/role_model.dart';
 import 'package:food_delivery/src/models/user_model.dart';
@@ -6,14 +7,41 @@ import 'package:food_delivery/src/utils/shared_pref.dart';
 
 class RolesController {
   late BuildContext context;
+  static Map buttonsSelected = {
+    'CLIENT'    : false,
+    'RESTAURANT': false,
+    'DELIVERY'  : false
+  };
 
   Future<void> init(BuildContext context) async {
     this.context = context;
   }
 
-  Future<dynamic> getUserRoles() async {
+  Future<dynamic> getUser() async {
     User user = User.fromJson(await SharedPref.read('user'));
-    return user.roles;
+    Role role = Role(name: 'RESTAURANT', image: 'assets/images/restaurant-role.png');
+    user.roles!.add(role);
+    return user;
+  }
+
+  void goToSelectedPage() {
+    late String route;
+    if(buttonsSelected['CLIENT']) route = 'client/product/list';
+    if(buttonsSelected['RESTAURANT']) route = 'restaurant/order/list';
+    if(buttonsSelected['DELIVERY']) route = 'delivery/order/list';
+    Navigator.pushNamed(context, route);
+  }
+
+  static String getRolesFormated(User user) {
+    String roles = '';
+
+    for (var i = 0; i < user.roles!.length; i++) {
+      if(user.roles![i].name == 'CLIENT') roles = roles + 'Cliente • ';
+      if(user.roles![i].name == 'RESTAURANT') roles = roles + 'Restaurante • ';
+      if(user.roles![i].name == 'DELIVERY') roles = roles + 'Repartidor • ';
+    }
+
+    return roles.substring(0, roles.length - 2);
   }
 
   static String getTextRoleByRole(Role role) {
@@ -91,6 +119,19 @@ class RolesController {
           FlutterIcons.shopping_bag_ent
         ];
     }
+  }
+
+  static selectButton(Role role) {
+    buttonsSelected[role.name] = true;
+
+    buttonsSelected.forEach((key, value) {
+      if(key == role.name) return;
+      buttonsSelected[key] = false;
+    });
+  }
+
+  static defaultButtonSelected(List<Role> roles) {
+    buttonsSelected.update(roles[0].name, (value) => true);
   }
 
 }
