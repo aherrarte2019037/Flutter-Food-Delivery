@@ -21,7 +21,6 @@ class LoginController {
     this.context = context;
     this.updateView = updateView;
     _userProvider.init(context);
-    CustomSnackBar.showSuccess(context, 'title', 'message');
   }
 
   void goToRegisterPage() {
@@ -34,7 +33,6 @@ class LoginController {
 
   void login() async {
     if (requestFocusInputs()) return;
-
     String email = emailInput.text.trim();
     String pass = passwordInput.text.trim();
 
@@ -55,8 +53,8 @@ class LoginController {
       RoleRedirect.redirect(user.roles!, context!);
       
     } else {
-      updateView();
       CustomSnackBar.showError(context, 'Aviso', response!.message!);
+      updateView();
     }
   }
 

@@ -15,7 +15,6 @@ void main() async {
 
   final dynamic user = await SharedPref.read('user');
   String initialRoute = RoleRedirect.getInitialRoute(user);
-
   runApp(MainApp(initialRoute));
 }
 

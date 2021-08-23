@@ -2,18 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flash/flash.dart';
 
 class CustomSnackBar {
-  static bool _isShown = false;
-
   static showSuccess(BuildContext? context, String title, String message) {
-    if (context == null || _isShown == true) return;
-
-    Future.delayed(const Duration(seconds: 3), () => _isShown = false);
+    if (context == null) return;
 
     return showFlash(
         context: context,
         duration: const Duration(seconds: 3),
         builder: (context, controller) {
-          _isShown = true;
           return Flash.bar(
               position: FlashPosition.top,
               backgroundColor: Colors.white,
@@ -55,15 +50,12 @@ class CustomSnackBar {
   }
 
   static showError(BuildContext? context, String title, String message) {
-    if (context == null || _isShown == true) return;
-
-    Future.delayed(const Duration(seconds: 3), () => _isShown = false);
+    if (context == null) return;
 
     return showFlash(
         context: context,
         duration: const Duration(seconds: 3),
         builder: (context, controller) {
-          _isShown = true;
           return Flash.bar(
               position: FlashPosition.top,
               backgroundColor: Colors.white,
