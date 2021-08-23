@@ -242,9 +242,9 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           child: const Text(
             'Iniciar Sesión',
             style: TextStyle(
-              color: Color(0XFF435bc3),
-              fontSize: 19,
-              fontWeight: FontWeight.w700),
+                color: Color(0XFF435bc3),
+                fontSize: 19,
+                fontWeight: FontWeight.w700),
           ),
         ),
         ScaleTransition(
