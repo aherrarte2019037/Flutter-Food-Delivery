@@ -28,18 +28,20 @@ class _RolesPageState extends State<RolesPage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
     return Scaffold(
       body: Container(
         height: height,
         width: width,
         color: Colors.white,
-        padding: const EdgeInsets.only(top: 50, left: 42, right: 42, bottom: 40),
+        padding:
+            const EdgeInsets.only(top: 50, left: 42, right: 42, bottom: 40),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _topSection(),
+            _topSection(_rolesController),
             FutureBuilder(
               future: _rolesController.getUser(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -66,12 +68,12 @@ class _RolesPageState extends State<RolesPage> {
   }
 }
 
-Widget _topSection() {
+Widget _topSection(RolesController _roleController) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-      _backButton(),
+      _backButton(_roleController),
       const Text(
         'Escoje un rol',
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
@@ -81,11 +83,11 @@ Widget _topSection() {
   );
 }
 
-Widget _backButton() {
+Widget _backButton(RolesController _roleController) {
   return Transform.translate(
     offset: const Offset(-20, 0),
     child: ElevatedButton(
-      onPressed: () {},
+      onPressed: _roleController.logOut,
       child: const Icon(
         Icons.arrow_back_rounded,
         size: 30,
@@ -194,13 +196,13 @@ Widget _continueButton(RolesController _roleController) {
         ],
       ),
       style: ElevatedButton.styleFrom(
-          elevation: 4,
-          padding: const EdgeInsets.symmetric(horizontal: 40),
-          primary: Colors.black.withOpacity(0.9),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          textStyle: const TextStyle(
-              fontSize: 16.5, letterSpacing: 0.5, fontWeight: FontWeight.w500)),
+        elevation: 4,
+        padding: const EdgeInsets.symmetric(horizontal: 40),
+        primary: Colors.black.withOpacity(0.9),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        textStyle: const TextStyle(
+          fontSize: 16.5, letterSpacing: 0.5, fontWeight: FontWeight.w500),
+      ),
     ),
   );
 }

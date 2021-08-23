@@ -7,6 +7,8 @@ import 'package:food_delivery/src/widgets/custom_snackbar.dart';
 
 class RegisterController {
   BuildContext? context;
+  late Function updateView;
+  bool isLoading = false;
   final UserProvider _userProvider = UserProvider();
   TextEditingController firstNameInput = TextEditingController();
   TextEditingController lastNameInput = TextEditingController();
@@ -19,8 +21,9 @@ class RegisterController {
   FocusNode passwordNode = FocusNode();
   FocusNode confirmNode = FocusNode();
 
-  void init(BuildContext context) {
+  void init(BuildContext context, Function updateView) {
     this.context = context;
+    this.updateView = updateView;
     _userProvider.init(context);
   }
 
@@ -52,14 +55,18 @@ class RegisterController {
       firstName: firstNameInput.text.trim(),
       lastName: lastNameInput.text.trim()
     );
+    isLoading = true;
+    updateView();
 
     ResponseApi? response = await _userProvider.register(user);
-    
+    isLoading = false;
+
     if(response?.success == true) {
       goToLoginPage();
       CustomSnackBar.showSuccess(context, 'Registro exitoso', 'bienvenido ${response?.data?['firstName']}');
     
     } else {
+      updateView();
       CustomSnackBar.showError(context, 'Aviso', response!.message!);
     }
   }

@@ -33,7 +33,7 @@ class User {
     "firstName": firstName,
     "lastName" : lastName,
     "image"    : image,
-    "roles"    : List<dynamic>.from(roles!.map((x) => x.toJson()))
+    "roles"    : roles != null ? List<dynamic>.from(roles!.map((x) => x.toJson())): null
   };
 
   User userFromJson(String str) => User.fromJson(json.decode(str));

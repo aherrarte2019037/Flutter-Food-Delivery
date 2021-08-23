@@ -13,14 +13,13 @@ class RolesController {
     'DELIVERY'  : false
   };
 
-  void init(BuildContext context) {
+  void init(BuildContext context) async{
     this.context = context;
+    await SharedPref.logOut();
   }
 
   Future<dynamic> getUser() async {
     User user = User.fromJson(await SharedPref.read('user'));
-    Role role = Role(name: 'RESTAURANT', image: 'assets/images/restaurant-role.png');
-    user.roles!.add(role);
     return user;
   }
 
@@ -30,6 +29,11 @@ class RolesController {
     if(buttonsSelected['RESTAURANT']) route = 'restaurant/order/list';
     if(buttonsSelected['DELIVERY']) route = 'delivery/order/list';
     Navigator.pushNamed(context, route);
+  }
+
+  void logOut() {
+    SharedPref.logOut();
+    Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
   }
 
   static String getRolesFormated(User user) {

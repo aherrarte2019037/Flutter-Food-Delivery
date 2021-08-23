@@ -31,14 +31,17 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     return const Color(0XFF23EBA0);
   }
 
+  updateView() {
+    setState(() => {});
+  }
+
   @override
   void initState() {
     super.initState();
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      _loginController.init(context);
+      _loginController.init(context, updateView);
     });
-    _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1500));
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1500));
     _animationController.repeat(reverse: true, min: 0.72);
   }
 
@@ -53,8 +56,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -67,7 +69,9 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             child: Stack(
               children: [
                 Container(
-                  decoration: const BoxDecoration(color: Color(0xFF060633)),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF060633),
+                  ),
                 ),
                 Column(
                   children: [
@@ -82,9 +86,10 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                             top: 33, left: 32, right: 32, bottom: 30),
                         width: double.infinity,
                         decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(50))),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(50),
+                          ),
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -255,12 +260,15 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             style: ElevatedButton.styleFrom(
               primary: const Color(0XFF435bc3),
               shape: const CircleBorder(),
-              padding: const EdgeInsets.all(22),
+              fixedSize: const Size(75, 75),
             ),
             child: _loginController.isLoading
-                ? const Text('Cargando')
+                ? const CircularProgressIndicator(
+                    color: Colors.white,
+                  )
                 : const Icon(
-                    FlutterIcons.md_arrow_forward_ion,
+                    Icons.arrow_forward_rounded,
+                    size: 32,
                   ),
           ),
         )

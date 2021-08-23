@@ -9,6 +9,7 @@ import 'package:email_validator/email_validator.dart';
 
 class LoginController {
   BuildContext? context;
+  late Function updateView;
   bool isLoading = false;
   final UserProvider _userProvider = UserProvider();
   TextEditingController emailInput = TextEditingController();
@@ -16,9 +17,11 @@ class LoginController {
   FocusNode emailNode = FocusNode();
   FocusNode passNode = FocusNode();
 
-  void init(BuildContext context) async {
+  void init(BuildContext context, Function updateView) async {
     this.context = context;
+    this.updateView = updateView;
     _userProvider.init(context);
+    CustomSnackBar.showSuccess(context, 'title', 'message');
   }
 
   void goToRegisterPage() {
@@ -26,8 +29,7 @@ class LoginController {
   }
 
   void goToProductListPage() {
-    Navigator.pushNamedAndRemoveUntil(
-        context!, 'client/products/list', (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context!, 'client/products/list', (route) => false);
   }
 
   void login() async {
@@ -42,18 +44,20 @@ class LoginController {
     }
 
     isLoading = true;
+    updateView();
 
     ResponseApi? response = await _userProvider.login(email, pass);
+    isLoading = false;
+
     if (response?.success == true) {
       final User user = User.fromJson(response?.data);
       SharedPref.save('user', user);
       RoleRedirect.redirect(user.roles!, context!);
       
     } else {
+      updateView();
       CustomSnackBar.showError(context, 'Aviso', response!.message!);
     }
-
-    isLoading = false;
   }
 
   bool requestFocusInputs() {
@@ -74,8 +78,7 @@ class LoginController {
     passwordInput.dispose();
   }
 
-  void fieldFocusChange(
-      BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
+  void fieldFocusChange(BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
   }
