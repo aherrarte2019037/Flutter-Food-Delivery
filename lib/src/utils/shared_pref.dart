@@ -27,4 +27,11 @@ class SharedPref {
     return deleted;
   }
 
+  static Future<bool> logOut() async {
+    final prefs = await SharedPreferences.getInstance();
+    final deleted = await prefs.remove('user');
+
+    return deleted;
+  }
+
 }
