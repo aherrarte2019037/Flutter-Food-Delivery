@@ -17,7 +17,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   bool isChecked = true;
   final LoginController _loginController = LoginController();
   late AnimationController _animationController;
-  
+
   Color getColor(Set<MaterialState> states) {
     const Set<MaterialState> interactiveStates = <MaterialState>{
       MaterialState.pressed,
@@ -37,7 +37,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
       _loginController.init(context);
     });
-    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1500));
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1500));
     _animationController.repeat(reverse: true, min: 0.72);
   }
 
@@ -52,10 +53,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown
-    ]);
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -79,7 +78,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                     Expanded(
                       flex: 3,
                       child: Container(
-                        padding: const EdgeInsets.only(top: 33, left: 32, right: 32, bottom: 30),
+                        padding: const EdgeInsets.only(
+                            top: 33, left: 32, right: 32, bottom: 30),
                         width: double.infinity,
                         decoration: const BoxDecoration(
                             color: Colors.white,
@@ -98,7 +98,13 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                             ]),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [_loginButton(), const SizedBox(height: 10,), _registerSection()],
+                              children: [
+                                _loginButton(),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                _registerSection()
+                              ],
                             ),
                           ],
                         ),
@@ -136,18 +142,21 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             borderRadius: BorderRadius.circular(10)),
         child: TextField(
           focusNode: _loginController.emailNode,
-            textInputAction: TextInputAction.next,
-            onEditingComplete: () {
-              _loginController.fieldFocusChange(context, _loginController.emailNode, _loginController.passNode);
+          textInputAction: TextInputAction.next,
+          onEditingComplete: () {
+            _loginController.fieldFocusChange(
+                context, _loginController.emailNode, _loginController.passNode);
           },
           keyboardType: TextInputType.emailAddress,
           controller: _loginController.emailInput,
           style: const TextStyle(color: Color(0XFF3C4976), fontSize: 18),
           decoration: InputDecoration(
             hintText: 'Correo electrónico',
-            hintStyle: const TextStyle(color: Color(0XFF758CD9), letterSpacing: -0.1),
+            hintStyle:
+                const TextStyle(color: Color(0XFF758CD9), letterSpacing: -0.1),
             border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
             prefixIcon: Icon(
               FlutterIcons.md_mail_ion,
               size: 23,
@@ -171,9 +180,11 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           style: const TextStyle(color: Color(0XFF3C4976), fontSize: 18),
           decoration: InputDecoration(
             hintText: 'Contraseña',
-            hintStyle: const TextStyle(color: Color(0XFF758CD9), letterSpacing: -0.1),
+            hintStyle:
+                const TextStyle(color: Color(0XFF758CD9), letterSpacing: -0.1),
             border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
             prefixIcon: Icon(
               FlutterIcons.md_lock_ion,
               size: 26,
@@ -205,8 +216,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             Container(
                 transform: Matrix4.translationValues(-6, 1, 0),
                 child: const Text('Recordarme',
-                    style:
-                        TextStyle(color: Color(0XFF23EBA0), fontSize: 15))),
+                    style: TextStyle(color: Color(0XFF23EBA0), fontSize: 15))),
             Expanded(
               child: Container(
                   transform: Matrix4.translationValues(8, 1, 0),
@@ -214,8 +224,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                     alignment: Alignment.centerRight,
                     child: Text(
                       "Olvidaste tu contraseña?",
-                      style:
-                          TextStyle(color: Color(0XFF2A3660), fontSize: 15),
+                      style: TextStyle(color: Color(0XFF2A3660), fontSize: 15),
                     ),
                   )),
             )
@@ -230,25 +239,30 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       children: [
         Container(
           transform: Matrix4.translationValues(-1, 0, 0),
-          child: const Text('Iniciar Sesión',
-              style: TextStyle(
-                  color: Color(0XFF435bc3),
-                  fontSize: 19,
-                  fontWeight: FontWeight.w700)),
+          child: const Text(
+            'Iniciar Sesión',
+            style: TextStyle(
+              color: Color(0XFF435bc3),
+              fontSize: 19,
+              fontWeight: FontWeight.w700),
+          ),
         ),
         ScaleTransition(
           scale: _animationController,
           alignment: Alignment.center,
           child: ElevatedButton(
-              onPressed: _loginController.login,
-              style: ElevatedButton.styleFrom(
-                primary: const Color(0XFF435bc3),
-                shape: const CircleBorder(),
-                padding: const EdgeInsets.all(22),
-              ),
-              child: const Icon(
-                FlutterIcons.md_arrow_forward_ion,
-              )),
+            onPressed: _loginController.login,
+            style: ElevatedButton.styleFrom(
+              primary: const Color(0XFF435bc3),
+              shape: const CircleBorder(),
+              padding: const EdgeInsets.all(22),
+            ),
+            child: _loginController.isLoading
+                ? const Text('Cargando')
+                : const Icon(
+                    FlutterIcons.md_arrow_forward_ion,
+                  ),
+          ),
         )
       ],
     );
@@ -263,7 +277,10 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
         },
         child: const Text(
           'Crear Cuenta',
-          style: TextStyle(color: Color(0XFF9B81FF), fontWeight: FontWeight.w500, fontSize: 16),
+          style: TextStyle(
+              color: Color(0XFF9B81FF),
+              fontWeight: FontWeight.w500,
+              fontSize: 16),
         ),
         style: TextButton.styleFrom(
             elevation: 0,
@@ -271,8 +288,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             backgroundColor: const Color(0XFFF1EEFF),
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             side: const BorderSide(color: Color(0XFF9B81FF)),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50))),
       ),
     );
   }

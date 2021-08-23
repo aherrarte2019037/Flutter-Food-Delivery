@@ -9,6 +9,7 @@ import 'package:email_validator/email_validator.dart';
 
 class LoginController {
   BuildContext? context;
+  bool isLoading = false;
   final UserProvider _userProvider = UserProvider();
   TextEditingController emailInput = TextEditingController();
   TextEditingController passwordInput = TextEditingController();
@@ -39,6 +40,8 @@ class LoginController {
       return;
     }
 
+    isLoading = true;
+
     ResponseApi? response = await _userProvider.login(email, pass);
     if(response?.success == true) {
       final User user = User.fromJson(response?.data);
@@ -47,7 +50,9 @@ class LoginController {
 
     } else {
       CustomSnackBar.showError(context, 'Aviso', response!.message!);
-    } 
+    }
+
+    isLoading = false; 
   }
 
   bool requestFocusInputs() {

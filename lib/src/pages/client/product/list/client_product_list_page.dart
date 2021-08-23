@@ -10,8 +10,7 @@ class ClientProductListPage extends StatefulWidget {
 }
 
 class _ProductListState extends State<ClientProductListPage> {
-  final ClientProductListController _productListController =
-      ClientProductListController();
+  final ClientProductListController _productListController = ClientProductListController();
 
   @override
   void initState() {
@@ -47,35 +46,35 @@ Widget userDrawer() {
 }
 
 Widget buildHeader({required String urlImage, required String email, required VoidCallback onClicked}) =>
-    InkWell(
-      onTap: onClicked,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 40),
-        child: Row(
+  InkWell(
+  onTap: onClicked,
+    child: Container(
+    padding: const EdgeInsets.symmetric(vertical: 40),
+    child: Row(
+      children: [
+        CircleAvatar(radius: 30, backgroundImage: NetworkImage(urlImage)),
+        const SizedBox(width: 20),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(radius: 30, backgroundImage: NetworkImage(urlImage)),
-            const SizedBox(width: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'asdasdasds',
-                  style: TextStyle(fontSize: 20, color: Colors.white),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  email,
-                  style: const TextStyle(fontSize: 14, color: Colors.white),
-                ),
-              ],
+            const Text(
+              'asdasdasds',
+                style: TextStyle(fontSize: 20, color: Colors.white),
             ),
-            const Spacer(),
-            const CircleAvatar(
-              radius: 24,
-              backgroundColor: Color.fromRGBO(30, 60, 168, 1),
-              child: Icon(Icons.add_comment_outlined, color: Colors.white),
-            )
+            const SizedBox(height: 4),
+            Text(
+              email,
+              style: const TextStyle(fontSize: 14, color: Colors.white),
+            ),
           ],
         ),
-      ),
-    );
+        const Spacer(),
+        const CircleAvatar(
+          radius: 24,
+          backgroundColor: Color.fromRGBO(30, 60, 168, 1),
+          child: Icon(Icons.add_comment_outlined, color: Colors.white),
+        )
+      ],
+    ),
+  ),
+);
