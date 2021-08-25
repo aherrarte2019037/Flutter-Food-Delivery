@@ -44,6 +44,7 @@ class _RolesPageState extends State<RolesPage> {
               future: _rolesController.getUser(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData && !snapshot.hasError) {
+                  _rolesController.defaultButtonSelected(snapshot.data.roles);
                   return Expanded(
                     child: Column(
                       children: [

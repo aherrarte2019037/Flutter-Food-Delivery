@@ -27,7 +27,7 @@ class RolesController {
     if(buttonsSelected['CLIENT']) route = 'client/product/list';
     if(buttonsSelected['RESTAURANT']) route = 'restaurant/order/list';
     if(buttonsSelected['DELIVERY']) route = 'delivery/order/list';
-    Navigator.pushNamed(context, route);
+    Navigator.pushNamedAndRemoveUntil(context, route, (route) => false);
   }
 
   void logOut() {
@@ -133,8 +133,17 @@ class RolesController {
     });
   }
 
-  static defaultButtonSelected(List<Role> roles) {
-    buttonsSelected.update(roles[0].name, (value) => true);
+  defaultButtonSelected(List<Role> roles) {
+    String selected = '';
+    for (var button in buttonsSelected.keys) {
+      if(buttonsSelected[button]) selected = button; 
+      buttonsSelected[button] = false;
+    }
+    if(selected.isEmpty) {
+      buttonsSelected.update(roles[0].name, (value) => true);
+      return;
+    }
+    buttonsSelected[selected] = true;
   }
 
 }

@@ -32,7 +32,7 @@ class _ProductListState extends State<ClientProductListPage> {
         leading: _buttonDrawer(),
       ),
       drawer: UserDrawer(drawerType: 'CLIENT'),
-      body: const Text('data')
+      body: const Text('Client Product List')
     );
   }
 

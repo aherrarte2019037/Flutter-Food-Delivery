@@ -17,7 +17,6 @@ class CardListWidget extends StatefulWidget {
 class _CardListWidgetState extends State<CardListWidget> {
   @override
   void initState() {
-    RolesController.defaultButtonSelected(widget.roles);
     super.initState();
   }
 
@@ -65,8 +64,7 @@ class _CardListWidgetState extends State<CardListWidget> {
                             width: 200,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image:
-                                        AssetImage(widget.roles[index].image))),
+                                    image:AssetImage(widget.roles[index].image))),
                           ),
                         ),
                       ),
