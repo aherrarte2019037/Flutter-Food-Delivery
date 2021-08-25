@@ -28,16 +28,14 @@ class _RolesPageState extends State<RolesPage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
     return Scaffold(
       body: Container(
         height: height,
         width: width,
         color: Colors.white,
-        padding:
-            const EdgeInsets.only(top: 50, left: 42, right: 42, bottom: 40),
+        padding: const EdgeInsets.only(top: 50, left: 42, right: 42, bottom: 40),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -144,10 +142,9 @@ Widget _profileSection({required User user}) {
               width: 70,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
-                image: const DecorationImage(
+                image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: NetworkImage(
-                      'https://images.unsplash.com/photo-1621290558426-f2c5e19cfac7?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80'),
+                  image: AssetImage(user.image!),
                 ),
               ),
             ),

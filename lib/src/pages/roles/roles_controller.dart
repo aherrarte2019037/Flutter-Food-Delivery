@@ -15,7 +15,6 @@ class RolesController {
 
   void init(BuildContext context) async{
     this.context = context;
-    await SharedPref.logOut();
   }
 
   Future<dynamic> getUser() async {
