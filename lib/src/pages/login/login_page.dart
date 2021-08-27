@@ -256,7 +256,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           scale: _animationController,
           alignment: Alignment.center,
           child: ElevatedButton(
-            onPressed: _loginController.login,
+            onPressed: _loginController.isLoading? () {} : _loginController.login,
             style: ElevatedButton.styleFrom(
               primary: const Color(0XFF435bc3),
               shape: const CircleBorder(),

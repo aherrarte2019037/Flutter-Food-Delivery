@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:food_delivery/src/api/environment.dart';
 import 'package:food_delivery/src/models/response_api_model.dart';
 import 'package:food_delivery/src/models/user_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 
 class UserProvider {
   final String _url = Environment.apiDelivery;
@@ -14,15 +16,24 @@ class UserProvider {
     this.context = context;
   }
 
-  Future<ResponseApi?> register(User user) async {
+  Future<Stream?> register(User user, File? image) async {
     try {
       Uri request = Uri.http(_url, '$_api/register');
-      String body = json.encode(user);
-      Map<String, String> headers = {'Content-type': 'application/json'};
+      final body = http.MultipartRequest('POST', request);
+
+      if (image != null) {
+        body.files.add(http.MultipartFile(
+          'image',
+          http.ByteStream(image.openRead().cast()),
+          await image.length(),
+          filename: basename(image.path)
+        ));
+      }
+
+      body.fields['user'] = jsonEncode(user);
       
-      final response = await http.post(request, headers: headers, body: body);
-      final data = json.decode(response.body);
-      return ResponseApi.fromJson(data);
+      final response = await body.send();
+      return response.stream.transform(utf8.decoder);
 
     } catch (e) {
       print('Error: $e');

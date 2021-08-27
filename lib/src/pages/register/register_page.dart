@@ -17,18 +17,13 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
   late AnimationController _animationController;
   final RegisterController _registerController = RegisterController();
 
-  updateView() {
-    setState(() => {});
-  }
-
   @override
   void initState() {
     super.initState();
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      _registerController.init(context, updateView);
+      _registerController.init(context);
     });
-    _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1500));
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1500));
     _animationController.repeat(reverse: true, min: 0.72);
   }
 
@@ -43,8 +38,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -72,14 +66,13 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                         width: double.infinity,
                         decoration: const BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(50))),
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(50))),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _registerTitle(),
-                            const SizedBox(height: 15),
+                            const SizedBox(height: 0),
                             Column(children: [
                               Row(
                                 children: [
@@ -109,7 +102,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                       ),
                     )
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -320,20 +313,16 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
           scale: _animationController,
           alignment: Alignment.center,
           child: ElevatedButton(
-            onPressed: _registerController.register,
+            onPressed: _registerController.verifyRegisterData,
             style: ElevatedButton.styleFrom(
               primary: const Color(0XFF435bc3),
               shape: const CircleBorder(),
               fixedSize: const Size(72, 72),
             ),
-            child: _registerController.isLoading
-                ? const CircularProgressIndicator(
-                    color: Colors.white,
-                  )
-                : const Icon(
-                    Icons.arrow_forward_rounded,
-                    size: 32,
-                  ),
+            child: const Icon(
+              Icons.arrow_forward_rounded,
+              size: 32,
+            ),
           ),
         )
       ],
@@ -350,9 +339,10 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
         child: const Text(
           'Iniciar Sesión',
           style: TextStyle(
-              color: Color(0XFF9B81FF),
-              fontWeight: FontWeight.w500,
-              fontSize: 16),
+            color: Color(0XFF9B81FF),
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+          ),
         ),
         style: TextButton.styleFrom(
             elevation: 0,
@@ -360,9 +350,9 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
             backgroundColor: const Color(0XFFF1EEFF),
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             side: const BorderSide(color: Color(0XFF9B81FF)),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50))),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
       ),
     );
   }
+
 }

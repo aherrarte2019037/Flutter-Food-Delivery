@@ -151,20 +151,24 @@ class _UserDrawerState extends State<UserDrawer> {
           Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              height: 70,
-              child: AspectRatio(
-                aspectRatio: 1/1,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    image: DecorationImage(
+            ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child: Container(
+                height: 70,
+                width: 70,
+                child: user.image!.contains('assets')
+                  ? Image.asset(
+                      user.image!,
                       fit: BoxFit.cover,
-                      image: AssetImage(user.image!),
+                    )
+                  : FadeInImage.assetNetwork(
+                      height: 70,
+                      width: 70,
+                      image: user.image!,
+                      placeholder: 'assets/images/loading.gif',
+                      fit: BoxFit.cover,
                     ),
-                  ),
                 ),
-              ),
             ),
             const SizedBox(width: 10),
             Flexible(
