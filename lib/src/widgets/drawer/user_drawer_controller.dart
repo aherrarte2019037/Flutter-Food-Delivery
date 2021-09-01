@@ -7,18 +7,18 @@ import 'package:food_delivery/src/utils/shared_pref.dart';
 class UserDrawerController {
   late BuildContext context;
   List<Map> clientDrawerItems = [
-    { 'title': 'Perfil', 'icon': FlutterIcons.md_person_ion },
+    { 'title': 'Perfil', 'icon': FlutterIcons.md_person_ion, 'route': 'profile' },
     { 'title': 'Compras', 'icon': FlutterIcons.shopping_cart_faw },
     { 'title': 'Ajustes', 'icon': FlutterIcons.setting_ant },
     { 'title': 'Notificaciones', 'icon': FlutterIcons.bell_mco }
   ];
   List<Map> restaurantDrawerItems = [
-    { 'title': 'Perfil', 'icon': FlutterIcons.md_person_ion },
+    { 'title': 'Perfil', 'icon': FlutterIcons.md_person_ion, 'route': 'profile' },
     { 'title': 'Ajustes', 'icon': FlutterIcons.setting_ant },
     { 'title': 'Notificaciones', 'icon': FlutterIcons.bell_mco }
   ];
   List<Map> deliveryDrawerItems = [
-    { 'title': 'Perfil', 'icon': FlutterIcons.md_person_ion },
+    { 'title': 'Perfil', 'icon': FlutterIcons.md_person_ion, 'route': 'profile' },
     { 'title': 'Pedidos', 'icon': FlutterIcons.shopping_bag_ent },
     { 'title': 'Ajustes', 'icon': FlutterIcons.setting_ant },
     { 'title': 'Notificaciones', 'icon': FlutterIcons.bell_mco },
@@ -43,7 +43,7 @@ class UserDrawerController {
 
   void drawerItemNavigate(String route) {
     Future.delayed(const Duration(milliseconds: 180), () {
-      Navigator.pushNamed(context, route);
+      Navigator.popAndPushNamed(context, route);
     });
   }
 

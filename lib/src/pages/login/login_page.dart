@@ -40,6 +40,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     super.initState();
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
       _loginController.init(context, updateView);
+      precacheImage(const AssetImage('assets/images/login-background.png'), context);
     });
     _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1500));
     _animationController.repeat(reverse: true, min: 0.72);

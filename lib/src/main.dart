@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/src/pages/client/product/list/client_product_list_page.dart';
 import 'package:food_delivery/src/pages/delivery/order/list/delivery_order_list_page.dart';
 import 'package:food_delivery/src/pages/login/login_page.dart';
+import 'package:food_delivery/src/pages/profile/profile_page.dart';
 import 'package:food_delivery/src/pages/register/register_page.dart';
 import 'package:food_delivery/src/pages/restaurant/order/list/restaurant_order_list_page.dart';
 import 'package:food_delivery/src/pages/roles/roles_page.dart';
@@ -9,9 +10,13 @@ import 'package:food_delivery/src/utils/role_redirect.dart';
 import 'package:food_delivery/src/utils/shared_pref.dart';
 import 'package:food_delivery/src/utils/theme_colors.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  timeago.setLocaleMessages('es', timeago.EsMessages());
+  timeago.setDefaultLocale('es');
 
   final dynamic user = await SharedPref.read('user');
   String initialRoute = RoleRedirect.getInitialRoute(user);
@@ -39,6 +44,7 @@ class _MainAppState extends State<MainApp> {
         'login': (BuildContext context) => const LoginPage(),
         'register': (BuildContext context) => const RegisterPage(),
         'roles': (BuildContext context) => const RolesPage(),
+        'profile': (BuildContext context) => const ProfilePage(),
         'client/product/list': (BuildContext context) => const ClientProductListPage(),
         'restaurant/order/list': (BuildContext context) => const RestaurantOrderListPage(),
         'delivery/order/list': (BuildContext context) => const DeliveryOrderListPage(),

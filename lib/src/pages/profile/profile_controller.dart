@@ -5,73 +5,111 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/src/models/response_api_model.dart';
 import 'package:food_delivery/src/models/user_model.dart';
 import 'package:food_delivery/src/providers/user_provider.dart';
+import 'package:food_delivery/src/utils/shared_pref.dart';
 import 'package:food_delivery/src/widgets/custom_snackbar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 import 'package:material_dialogs/widgets/buttons/icon_outline_button.dart';
 
-class RegisterController {
-  BuildContext? context;
-  bool isLoading = false;
-  late XFile? pickedFile;
+class ProfileController {
   File? imageFile;
-  late User user;
-  late StateSetter _selectImageSetState;
-  late StateSetter _buttonNoneSetState;
-  final UserProvider _userProvider = UserProvider();
-  TextEditingController firstNameInput = TextEditingController();
-  TextEditingController lastNameInput = TextEditingController();
-  TextEditingController emailInput = TextEditingController();
-  TextEditingController passwordInput = TextEditingController();
-  TextEditingController confirmInput = TextEditingController();
-  FocusNode firstNameNode = FocusNode();
-  FocusNode lastNameNode = FocusNode();
-  FocusNode emailNode = FocusNode();
-  FocusNode passwordNode = FocusNode();
-  FocusNode confirmNode = FocusNode();
+  bool isEditing = false;
+  bool editIsLoading = false;
+  bool editImageIsLoading = false;
+  UserProvider userProvider = UserProvider();
+  late StateSetter selectImageSetState;
+  late BuildContext context;
+  late Function updateView;
+  User? userProfile;
+  late XFile? pickedFile;
+  Map<String, TextEditingController> controllers = {
+    'firstName': TextEditingController(),
+    'lastName' : TextEditingController(),
+    'email'    : TextEditingController(),
+  };
 
-  void init(BuildContext context) {
+  Future<void> init(BuildContext context, Function updateView) async {
     this.context = context;
-    _userProvider.init(context);
+    this.updateView = updateView;
+    userProfile = await getUser();
+    controllers['firstName']!.text = userProfile!.firstName;
+    controllers['lastName']!.text = userProfile!.lastName;
+    controllers['email']!.text = userProfile!.email;
+    updateView();
   }
 
-  void goToLoginPage() {
-    Navigator.pushNamedAndRemoveUntil(context!, 'login', (route) => false);
+  void goBack() {
+    Navigator.pop(context);
   }
 
-  void verifyRegisterData() async {
-    if(requestFocusInputs()) return;
+  Future getUser() async {
+    User user = User.fromJson(await SharedPref.read('user'));
+    return user;
+  }
 
-    if(!EmailValidator.validate(emailInput.text)) {
+  void editUser() async {
+    if (controllers['firstName']!.text.isEmpty || controllers['lastName']!.text.isEmpty || controllers['email']!.text.isEmpty) {
+      CustomSnackBar.showError(context, 'Aviso', 'Ingresa todos los datos');
+      return;
+    }
+
+    if (!EmailValidator.validate(controllers['email']!.text)) {
       CustomSnackBar.showError(context, 'Aviso', 'Correo inválido');
       return;
     }
 
-    if(passwordInput.text != confirmInput.text) {
-      CustomSnackBar.showError(context, 'Aviso', 'Contraseñas no coinciden');
-      return;
+    isEditing = !isEditing;
+    updateView();
+    if(isEditing) return;
+
+    Map editedData = {};
+    controllers.forEach((key, value) {
+      if(value.text != userProfile!.toJson()[key]) editedData[key] = value.text;
+    });
+
+    ResponseApi? response = await userProvider.edit(userProfile!.id!, editedData);
+    if (response?.success == true) {
+      CustomSnackBar.showSuccess(context, 'Perfil Editado', 'Se editaron los datos');
+      userProfile = User.fromJson(response!.data);
+      SharedPref.save('user', userProfile);
+      isEditing = false;
+      editIsLoading = false;
+      updateView();
+      
+    } else {
+      editIsLoading = false;
+      isEditing = true;
+      updateView();
+      CustomSnackBar.showError(context, 'Aviso', response!.message!);
     }
+  }
 
-    if(passwordInput.text.length < 6) {
-      CustomSnackBar.showError(context, 'Aviso', 'Contraseña con minímo 6 caracteres');
-      return;
-    }
+  void editProfileImage() async {
+    editImageIsLoading = true;
+    selectImageSetState(() => {});
 
-    user = User(
-      email: emailInput.text.trim(),
-      password: passwordInput.text.trim(),
-      firstName: firstNameInput.text.trim(),
-      lastName: lastNameInput.text.trim()
-    );
+    Stream? stream = await userProvider.editProfileImage(userProfile!.id!, imageFile);
+    stream!.listen((res) {
+      ResponseApi response = ResponseApi.fromJson(jsonDecode(res));
+      editImageIsLoading = false;
+      selectImageSetState(() => {});
 
-    showImageDialog();
+      if (response.success == true) {
+        userProfile = User.fromJson(response.data);
+        SharedPref.save('user', userProfile);
+        updateView();
+        Navigator.pop(context);
+        Navigator.pop(context);
+
+      } else {
+        CustomSnackBar.showError(context, 'Aviso', response.message!);
+      }
+    });
   }
 
   void showImageDialog() {
     Widget buttonGallery = IconsOutlineButton(
-      onPressed: () {
-        selectImage(ImageSource.gallery);
-      },
+      onPressed: () => selectImage(ImageSource.gallery),
       padding: const EdgeInsets.symmetric(vertical: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       text: 'Galería',
@@ -82,9 +120,7 @@ class RegisterController {
     );
 
     Widget buttonCamera = IconsOutlineButton(
-      onPressed: () {
-        selectImage(ImageSource.camera);
-      },
+      onPressed: () => selectImage(ImageSource.camera),
       padding: const EdgeInsets.symmetric(vertical: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       text: 'Cámara',
@@ -94,43 +130,27 @@ class RegisterController {
       iconColor: Colors.white,
     );
 
-    Widget buttonNone = StatefulBuilder(
-      builder: (_, setState) {
-        _buttonNoneSetState = setState;
-        return OutlinedButton(
-          onPressed: isLoading ? () {} : () {register(withImage: false);},
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (isLoading == true) ...[
-                Container(
-                  width: 15,
-                  height: 15,
-                  child: const CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.grey,
-                  ),
-                ),
-              ] else ...[
-                const Icon(Icons.cancel_rounded, color: Colors.grey, size: 22),
-              ],
-              SizedBox(width: isLoading ? 10 : 5),
-              const Text(
-                'Ninguna',
-                style: TextStyle(color: Colors.grey, fontSize: 14.5),
-              )
-            ],
-          ),
-          style: OutlinedButton.styleFrom(
-            side: const BorderSide(color: Color(0XFFD7D7D7)),
-            padding: const EdgeInsets.only(left: 16, right: 24, top: 9, bottom: 9),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        );
-      },
+    Widget buttonCancel = OutlinedButton(
+      onPressed: () => Navigator.pop(context),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Icon(Icons.cancel_rounded, color: Colors.grey, size: 22),
+          const SizedBox(width: 5),
+          const Text('Cancelar', style: TextStyle(color: Colors.grey, fontSize: 14.5))
+        ],
+      ),
+      style: OutlinedButton.styleFrom(
+        side: const BorderSide(color: Color(0XFFD7D7D7)),
+        padding: const EdgeInsets.only(left: 16, right: 24, top: 9, bottom: 9),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
     );
 
     Dialogs.bottomMaterialDialog(
+      context: context,
+      title: 'Foto De Perfil',
+      titleStyle: const TextStyle(fontSize: 18, height: 1.8, fontWeight: FontWeight.w500),
       msg: 'Escoje una opción para subir tu foto',
       msgStyle: const TextStyle(fontSize: 16, color: Color(0XFF525252), height: 0.5),
       dialogShape: const RoundedRectangleBorder(
@@ -139,14 +159,6 @@ class RegisterController {
           topRight: Radius.circular(35),
         ),
       ),
-      title: 'Foto De Perfil',
-      titleStyle: const TextStyle(
-        fontSize: 18,
-        height: 1.8,
-        fontWeight: FontWeight.w500
-      ),
- 
-      context: context!,
       actions: [
         Container(
           height: 75,
@@ -161,7 +173,7 @@ class RegisterController {
         Container(
           height: 75,
           padding: const EdgeInsets.symmetric(vertical: 15),
-          child: buttonNone
+          child: buttonCancel
         ),
       ],
     );
@@ -174,7 +186,7 @@ class RegisterController {
     if(imageFile == null) return;
 
     Dialogs.bottomMaterialDialog(
-      msg: 'Podrás cambiar la imagen en tu perfil',
+      msg: 'Podrás cambiar la imagen después',
       msgStyle: const TextStyle(fontSize: 16, color: Color(0XFF525252), height: 0.5),
       dialogShape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -189,7 +201,7 @@ class RegisterController {
         fontWeight: FontWeight.w500
       ),
       isDismissible: false,
-      context: context!,
+      context: context,
       actions: [
         Column(
           children: [
@@ -210,13 +222,13 @@ class RegisterController {
               children: [
                 StatefulBuilder(
                   builder: (_, setState) {
-                    _selectImageSetState = setState;
+                    selectImageSetState = setState;
                     return OutlinedButton(
-                      onPressed: isLoading? (){} : register,
+                      onPressed: editImageIsLoading ? () {} : editProfileImage,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          if (isLoading == true) ...[
+                          if (editImageIsLoading == true) ...[
                             Container(
                               width: 15,
                               height: 15,
@@ -228,11 +240,8 @@ class RegisterController {
                           ] else ...[
                             const Icon(Icons.check_rounded, color: Colors.white, size: 22),
                           ],
-                          SizedBox(width: isLoading? 10 : 5),
-                          const Text(
-                            'Aceptar',
-                            style: TextStyle(color: Colors.white, fontSize: 14.5),
-                          )
+                          SizedBox(width: editImageIsLoading? 10 : 5),
+                          const Text('Aceptar', style: TextStyle(color: Colors.white, fontSize: 14.5))
                         ],
                       ),
                       style: OutlinedButton.styleFrom(
@@ -245,9 +254,7 @@ class RegisterController {
                 ),
                 const SizedBox(width: 20),
                 OutlinedButton(
-                  onPressed: () {
-                    Navigator.pop(context!);
-                  },
+                  onPressed: () => Navigator.pop(context),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -277,74 +284,6 @@ class RegisterController {
         )
       ],
     );
-  }
-
-  void register({ bool withImage = true }) async {
-    isLoading = true;
-    if (!withImage) _buttonNoneSetState(() => {});
-    if (withImage) _selectImageSetState(() => {});
-
-    Stream? stream = await _userProvider.register(user, imageFile);
-    stream?.listen((res) {
-      ResponseApi response = ResponseApi.fromJson(jsonDecode(res));
-      isLoading = false;
-
-      if (!withImage) _buttonNoneSetState(() => {});
-      if (withImage) _selectImageSetState(() => {});
-
-      if (response.success == true) {
-        goToLoginPage();
-        CustomSnackBar.showSuccess(context, 'Registro exitoso','bienvenido ${response.data?['firstName']}');
-
-      } else {
-        if (!withImage) {
-          Navigator.pop(context!);
-
-        } else {
-          Navigator.pop(context!);
-          Navigator.pop(context!);
-        }
-        CustomSnackBar.showError(context, 'Aviso', response.message!);
-      }
-    });
-  }
-
-  bool requestFocusInputs() {
-    if(firstNameInput.text.isEmpty) {
-      firstNameNode.requestFocus();
-      return true;
-
-    } else if(lastNameInput.text.isEmpty) {
-      lastNameNode.requestFocus();
-      return true;
-
-    } else if(emailInput.text.isEmpty) {
-      emailNode.requestFocus();
-      return true;
-
-    } else if(passwordInput.text.isEmpty) {
-      passwordNode.requestFocus();
-      return true;
-
-    } else if(confirmInput.text.isEmpty) {
-      confirmNode.requestFocus();
-      return true;
-    }
-
-    return false;
-  }
-  
-  void fieldFocusChange(BuildContext context, FocusNode currentFocus,FocusNode nextFocus) {
-      currentFocus.unfocus();
-      FocusScope.of(context).requestFocus(nextFocus);  
-  }
-
-  void disposeInputControllers() {
-    firstNameInput.dispose();
-    lastNameInput.dispose();
-    emailInput.dispose();
-    passwordInput.dispose();
-    confirmInput.dispose();
   }
 
 }

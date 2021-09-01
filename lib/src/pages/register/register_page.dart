@@ -22,6 +22,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
     super.initState();
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
       _registerController.init(context);
+      precacheImage(const AssetImage('assets/images/register-background.png'), context);
     });
     _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1500));
     _animationController.repeat(reverse: true, min: 0.72);

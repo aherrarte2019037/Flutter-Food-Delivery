@@ -7,15 +7,19 @@ class User {
   String firstName;
   String lastName;
   String? image;
+  String? id;
   List<Role>? roles;
+  DateTime? createdAt;
 
   User({
     required this.email,
     required this.password,
     required this.firstName,
     required this.lastName,
+    this.createdAt,
     this.image,
     this.roles,
+    this.id
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -24,7 +28,9 @@ class User {
     firstName: json["firstName"],
     lastName : json["lastName"],
     image    : json["image"],
+    id       : json["_id"],
     roles    : List<Role>.from(json["roles"].map((x) => Role.fromJson(x))),
+    createdAt: DateTime.parse(json["createdAt"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -33,7 +39,9 @@ class User {
     "firstName": firstName,
     "lastName" : lastName,
     "image"    : image,
-    "roles"    : roles != null ? List<dynamic>.from(roles!.map((x) => x.toJson())): null
+    "_id"       : id,
+    "roles"    : roles != null ? List<dynamic>.from(roles!.map((x) => x.toJson())): null,
+    "createdAt": createdAt?.toIso8601String(),
   };
 
   User userFromJson(String str) => User.fromJson(json.decode(str));

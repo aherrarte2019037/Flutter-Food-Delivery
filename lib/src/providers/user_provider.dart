@@ -57,4 +57,43 @@ class UserProvider {
     }
   }
 
+  Future<ResponseApi?> edit(String id, Map editUser) async {
+    try {
+      Uri request = Uri.http(_url, '$_api/$id');
+      String body = json.encode(editUser);
+      Map<String, String> headers = {'Content-type': 'application/json'};
+
+      final response = await http.put(request, headers: headers, body: body);
+      final data = json.decode(response.body);
+      return ResponseApi.fromJson(data);
+
+    } catch (e) {
+      print('Error $e');
+      return null;
+    }
+  }
+
+  Future<Stream?> editProfileImage(String id, File? image) async {
+    try {
+      Uri request = Uri.http(_url, '$_api/image/$id');
+      final body = http.MultipartRequest('PUT', request);
+
+      if (image != null) {
+        body.files.add(http.MultipartFile(
+          'image',
+          http.ByteStream(image.openRead().cast()),
+          await image.length(),
+          filename: basename(image.path)
+        ));
+      }
+      
+      final response = await body.send();
+      return response.stream.transform(utf8.decoder);
+
+    } catch (e) {
+      print('Error: $e');
+      return null;
+    }
+  }
+
 }

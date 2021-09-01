@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:food_delivery/src/models/role_model.dart';
@@ -17,6 +18,11 @@ class CardListWidget extends StatefulWidget {
 class _CardListWidgetState extends State<CardListWidget> {
   @override
   void initState() {
+    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+      precacheImage(const AssetImage('assets/images/client-role.png'), context);
+      precacheImage(const AssetImage('assets/images/delivery-role.png'), context);
+      precacheImage(const AssetImage('assets/images/restaurant-role.png'), context);
+    });
     super.initState();
   }
 
