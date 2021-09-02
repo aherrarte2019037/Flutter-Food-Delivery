@@ -62,12 +62,14 @@ class ProfileController {
     updateView();
     if(isEditing) return;
 
+    editIsLoading = true;
     Map editedData = {};
     controllers.forEach((key, value) {
       if(value.text != userProfile!.toJson()[key]) editedData[key] = value.text;
     });
 
     ResponseApi? response = await userProvider.edit(userProfile!.id!, editedData);
+
     if (response?.success == true) {
       CustomSnackBar.showSuccess(context, 'Perfil Editado', 'Se editaron los datos');
       userProfile = User.fromJson(response!.data);
@@ -80,7 +82,7 @@ class ProfileController {
       editIsLoading = false;
       isEditing = true;
       updateView();
-      CustomSnackBar.showError(context, 'Aviso', response!.message!);
+      CustomSnackBar.showError(context, 'Aviso', response?.message ?? 'Error al editar usuario');
     }
   }
 
@@ -133,11 +135,11 @@ class ProfileController {
     Widget buttonCancel = OutlinedButton(
       onPressed: () => Navigator.pop(context),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(Icons.cancel_rounded, color: Colors.grey, size: 22),
           const SizedBox(width: 5),
-          const Text('Cancelar', style: TextStyle(color: Colors.grey, fontSize: 14.5))
+          const Text('Cerrar', style: TextStyle(color: Colors.grey, fontSize: 14.5))
         ],
       ),
       style: OutlinedButton.styleFrom(

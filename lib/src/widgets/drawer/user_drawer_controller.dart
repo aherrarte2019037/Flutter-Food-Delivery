@@ -24,7 +24,7 @@ class UserDrawerController {
     { 'title': 'Notificaciones', 'icon': FlutterIcons.bell_mco },
   ];
 
-  void init(BuildContext context) {
+  void init(BuildContext context) async {
     this.context = context;
   }
 

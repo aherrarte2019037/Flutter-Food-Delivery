@@ -50,6 +50,7 @@ class LoginController {
     if (response?.success == true) {
       final User user = User.fromJson(response?.data);
       SharedPref.save('user', user);
+      SharedPref.save('token', response!.data['token']);
       RoleRedirect.redirect(user.roles!, context!);
       
     } else {

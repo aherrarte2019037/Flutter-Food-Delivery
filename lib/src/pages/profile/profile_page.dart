@@ -44,10 +44,10 @@ class _ProfilePageState extends State<ProfilePage> {
           height: height - 120,
           width: width,
           color: Colors.white,
-          padding: const EdgeInsets.only(left: 42, right: 42),
+          padding: EdgeInsets.only(left: 42, right: 42, top: height * 0.02),
           child: Column(
             children: [
-              const SizedBox(height: 20),
+              SizedBox(height: height * 0.03),
               _profileController.userProfile == null
                 ? const Text('')
                 : Expanded(
@@ -62,7 +62,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       const SizedBox(height: 30),
                       _nameText(_profileController.userProfile!.firstName, _profileController.userProfile!.lastName),
-                      SizedBox(height: height * 0.018),
+                      SizedBox(height: height * 0.05),
                       Expanded(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -70,7 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             _textField(label: 'Nombre', controller: _profileController.controllers['firstName']!),
                             _textField(label: 'Apellido', controller: _profileController.controllers['lastName']!),
                             _textField(label: 'Correo Electrónico', controller: _profileController.controllers['email']!),
-                            SizedBox(height: height * 0.03),
+                            SizedBox(height: height * 0.015),
                             _editButton()
                           ],
                         ),
@@ -268,9 +268,9 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           Text(
             _profileController.isEditing ? 'Confirmar' : 'Editar',
-            style: const TextStyle(
-              color: Colors.white,
-            ),
+              style: const TextStyle(
+                color: Colors.white,
+              ),
             ),
           Padding(
             padding: EdgeInsets.only(bottom: _profileController.isEditing ? 4 : 3),
