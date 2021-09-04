@@ -13,9 +13,24 @@ class UserDrawerController {
     { 'title': 'Notificaciones', 'icon': FlutterIcons.bell_mco }
   ];
   List<Map> restaurantDrawerItems = [
-    { 'title': 'Perfil', 'icon': FlutterIcons.md_person_ion, 'route': 'profile' },
-    { 'title': 'Ajustes', 'icon': FlutterIcons.setting_ant },
-    { 'title': 'Notificaciones', 'icon': FlutterIcons.bell_mco }
+    {
+      'title': 'Perfil',
+      'icon': FlutterIcons.md_person_ion,
+      'route': 'profile',
+    },
+    {
+      'title': 'Crear Categoría',
+      'icon': FlutterIcons.layers_fea,
+      'route': 'restaurant/category/create'
+    },
+    {
+      'title': 'Ajustes',
+      'icon': FlutterIcons.setting_ant,
+    },
+    {
+      'title': 'Notificaciones',
+      'icon': FlutterIcons.bell_mco,
+    }
   ];
   List<Map> deliveryDrawerItems = [
     { 'title': 'Perfil', 'icon': FlutterIcons.md_person_ion, 'route': 'profile' },
@@ -42,7 +57,7 @@ class UserDrawerController {
   }
 
   void drawerItemNavigate(String route) {
-    Future.delayed(const Duration(milliseconds: 180), () {
+    Future.delayed(const Duration(milliseconds: 140), () {
       Navigator.popAndPushNamed(context, route);
     });
   }

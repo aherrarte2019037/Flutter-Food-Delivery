@@ -32,7 +32,6 @@ class RegisterController {
 
   void init(BuildContext context) {
     this.context = context;
-    _userProvider.init(context);
   }
 
   void goToLoginPage() {

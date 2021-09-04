@@ -28,7 +28,7 @@ class ProfileController {
     'email'    : TextEditingController(),
   };
 
-  Future<void> init(BuildContext context, Function updateView) async {
+  void init(BuildContext context, Function updateView) async {
     this.context = context;
     this.updateView = updateView;
     userProfile = await getUser();

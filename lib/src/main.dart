@@ -4,6 +4,7 @@ import 'package:food_delivery/src/pages/delivery/order/list/delivery_order_list_
 import 'package:food_delivery/src/pages/login/login_page.dart';
 import 'package:food_delivery/src/pages/profile/profile_page.dart';
 import 'package:food_delivery/src/pages/register/register_page.dart';
+import 'package:food_delivery/src/pages/restaurant/category/create/restaurant_category_create_page.dart';
 import 'package:food_delivery/src/pages/restaurant/order/list/restaurant_order_list_page.dart';
 import 'package:food_delivery/src/pages/roles/roles_page.dart';
 import 'package:food_delivery/src/utils/role_redirect.dart';
@@ -19,6 +20,8 @@ void main() async {
   timeago.setDefaultLocale('es');
 
   final dynamic user = await SharedPref.read('user');
+  await SharedPref.setAuthToken();
+
   String initialRoute = RoleRedirect.getInitialRoute(user);
   runApp(MainApp(initialRoute));
 }
@@ -47,6 +50,7 @@ class _MainAppState extends State<MainApp> {
         'profile': (BuildContext context) => const ProfilePage(),
         'client/product/list': (BuildContext context) => const ClientProductListPage(),
         'restaurant/order/list': (BuildContext context) => const RestaurantOrderListPage(),
+        'restaurant/category/create': (BuildContext context) => const RestaurantCategoryCreatePage(),
         'delivery/order/list': (BuildContext context) => const DeliveryOrderListPage(),
       },
       builder: (context, widget) => ResponsiveWrapper.builder(

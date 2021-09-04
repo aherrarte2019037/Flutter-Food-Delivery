@@ -63,8 +63,10 @@ class UserProvider {
       Uri request = Uri.http(_url, '$_api/$id');
       String body = json.encode(editUser);
 
-      String token = await SharedPref.read('token');
-      Map<String, String> headers = {'Content-type': 'application/json', 'Authorization': 'Bearer $token'};
+      Map<String, String> headers = {
+        'Content-type': 'application/json',
+        'Authorization': 'Bearer ${SharedPref.authToken}'
+      };
 
       final response = await http.put(request, headers: headers, body: body);
       final data = json.decode(response.body);
@@ -90,8 +92,7 @@ class UserProvider {
         ));
       }
       
-      String token = await SharedPref.read('token');
-      body.headers['Authorization'] = 'Bearer $token';  
+      body.headers['Authorization'] = 'Bearer ${SharedPref.authToken}';  
 
       final response = await body.send();
       return response.stream.transform(utf8.decoder);

@@ -20,7 +20,6 @@ class LoginController {
   void init(BuildContext context, Function updateView) async {
     this.context = context;
     this.updateView = updateView;
-    _userProvider.init(context);
   }
 
   void goToRegisterPage() {

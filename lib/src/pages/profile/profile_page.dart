@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:food_delivery/src/utils/current_user_role.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -49,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               SizedBox(height: height * 0.03),
               _profileController.userProfile == null
-                ? const Text('')
+                ? const SizedBox.shrink()
                 : Expanded(
                   child: Column(
                     children: [
@@ -205,25 +206,67 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _nameText(String firsName, String lastName) {
     return Container(
       width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            firsName,
-            style: const TextStyle(
-              fontSize: 38,
-              color: Color(0XFF292929),
-              fontWeight: FontWeight.w500
+          Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              firsName,
+              style: const TextStyle(
+                  fontSize: 38,
+                  color: Color(0XFF292929),
+                  fontWeight: FontWeight.w500),
             ),
-          ),
-          Text(
-            lastName,
-            style: const TextStyle(
-              fontSize: 38,
-              color: Color(0XFF292929),
-              fontWeight: FontWeight.w500,
-              height: 1.05
+            Text(
+              lastName,
+              style: const TextStyle(
+                  fontSize: 38,
+                  color: Color(0XFF292929),
+                  fontWeight: FontWeight.w500,
+                  height: 1.05),
             ),
+          ],
+        ),
+          Column(
+            children: [
+              const SizedBox(height: 5),
+              _profileController.userProfile!.roles!.length > 1
+                ? const Padding(
+                  padding: EdgeInsets.only(top: 9),
+                  child: Text(
+                    'Rol actual',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
+                  ),
+                )
+                : const SizedBox.shrink(),
+              Chip(
+                labelPadding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                avatar: Transform.translate(
+                  offset: const Offset(0, -2),
+                  child: const Icon(Icons.check_rounded),
+                ),
+                label: Text(
+                  CurrentUserRole.getCurrentRole().roleFormat(),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.black, width: 1.5),
+                elevation: 0,
+                shadowColor: Colors.grey[60],
+              ),
+            ],
           ),
         ],
       ),
@@ -258,49 +301,49 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _editButton() {
-  return Container(
-    height: 60,
-    child: ElevatedButton(
-      onPressed: _profileController.editUser,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            _profileController.isEditing ? 'Confirmar' : 'Editar',
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          Padding(
-            padding: EdgeInsets.only(bottom: _profileController.isEditing ? 4 : 3),
-            child: _profileController.editIsLoading
-              ? Container(
-                width: 20,
-                height: 20,
-                child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
-                )
-              : Icon(
-                _profileController.isEditing
-                  ? FlutterIcons.md_checkmark_ion
-                  : FlutterIcons.edit_ent,
-                size: _profileController.isEditing
-                  ? 28
-                  : 22,
+    return Container(
+      height: 60,
+      child: ElevatedButton(
+        onPressed: _profileController.editUser,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              _profileController.isEditing ? 'Confirmar' : 'Editar',
+                style: const TextStyle(
+                  color: Colors.white,
                 ),
-          )
-        ],
+              ),
+            Padding(
+              padding: EdgeInsets.only(bottom: _profileController.isEditing ? 4 : 3),
+              child: _profileController.editIsLoading
+                ? Container(
+                  width: 20,
+                  height: 20,
+                  child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+                  )
+                : Icon(
+                  _profileController.isEditing
+                    ? FlutterIcons.md_checkmark_ion
+                    : FlutterIcons.edit_ent,
+                  size: _profileController.isEditing
+                    ? 28
+                    : 22,
+                  ),
+            )
+          ],
+        ),
+        style: ElevatedButton.styleFrom(
+          elevation: 4,
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          primary: Colors.black.withOpacity(0.9),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          textStyle: const TextStyle(
+            fontSize: 16.5, letterSpacing: 0.5, fontWeight: FontWeight.w500),
+        ),
       ),
-      style: ElevatedButton.styleFrom(
-        elevation: 4,
-        padding: const EdgeInsets.symmetric(horizontal: 40),
-        primary: Colors.black.withOpacity(0.9),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        textStyle: const TextStyle(
-          fontSize: 16.5, letterSpacing: 0.5, fontWeight: FontWeight.w500),
-      ),
-    ),
-  );
-}
+    );
+  }
 
 }

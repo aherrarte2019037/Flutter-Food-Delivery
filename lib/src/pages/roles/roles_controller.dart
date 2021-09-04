@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:food_delivery/src/models/role_model.dart';
 import 'package:food_delivery/src/models/user_model.dart';
+import 'package:food_delivery/src/utils/current_user_role.dart';
 import 'package:food_delivery/src/utils/shared_pref.dart';
 
 class RolesController {
@@ -24,6 +25,8 @@ class RolesController {
 
   void goToSelectedPage() {
     late String route;
+    String role = buttonsSelected.keys.firstWhere((key) => buttonsSelected[key] == true, orElse: () => '');
+    CurrentUserRole.setCurrentRole(role);
     if(buttonsSelected['CLIENT']) route = 'client/product/list';
     if(buttonsSelected['RESTAURANT']) route = 'restaurant/order/list';
     if(buttonsSelected['DELIVERY']) route = 'delivery/order/list';
