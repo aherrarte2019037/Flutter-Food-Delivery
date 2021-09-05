@@ -61,7 +61,16 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
                 ),
               ),
               const SizedBox(height: 30),
-              _latestCategories()
+              _latestCategories(),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _textFieldName(),
+                    _textFieldDescription()
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -125,7 +134,7 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Ultimas categorias',
+            'Últimas categorías',
             style: TextStyle(
               color: Colors.black,
               fontSize: 18,
@@ -192,13 +201,73 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
           Text(
             category.name!.capitalize(),
             style: const TextStyle(
-              color: Color(0XFF0e0e0e),
+              color: Colors.black,
               fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(width: 8),
         ],
       ),
+    );
+  }
+
+  Widget _textFieldName() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Nombre',
+          style: TextStyle(color: Color(0XFF838383), fontSize: 16),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: _controller.textFieldControllers['name'],
+          cursorColor: Colors.grey,
+          style: const TextStyle(color: Colors.black, fontSize: 18),
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _textFieldDescription() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Descripción',
+          style: TextStyle(color: Color(0XFF838383), fontSize: 16),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: _controller.textFieldControllers['description'],
+          minLines: 3,
+          maxLines: 5,
+          cursorColor: Colors.grey,
+          style: const TextStyle(color: Colors.black, fontSize: 18),
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

@@ -145,17 +145,17 @@ class _ProfilePageState extends State<ProfilePage> {
             height: 145,
             width: 145,
             child: image.contains('assets')
-                ? Image.asset(
-                    image,
-                    fit: BoxFit.cover,
-                  )
-                : FadeInImage.assetNetwork(
-                    height: 70,
-                    width: 70,
-                    image: image,
-                    placeholder: 'assets/images/loading.gif',
-                    fit: BoxFit.cover,
-                  ),
+              ? Image.asset(
+                  image,
+                  fit: BoxFit.cover,
+                )
+              : FadeInImage.assetNetwork(
+                  height: 70,
+                  width: 70,
+                  image: image,
+                  placeholder: 'assets/images/loading.gif',
+                  fit: BoxFit.cover,
+                ),
           ),
         ),
         Positioned(

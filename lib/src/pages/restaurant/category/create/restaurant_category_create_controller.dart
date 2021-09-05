@@ -9,7 +9,7 @@ class RestaurantCategoryCreateController {
   late Function updateView;
   ProductCategoryProvider categoryProvider = ProductCategoryProvider();
   List latestCategories = [];
-  Map<String, TextEditingController> controllers = {
+  Map<String, TextEditingController> textFieldControllers = {
     'name': TextEditingController(),
     'description' : TextEditingController(),
   };
@@ -27,22 +27,21 @@ class RestaurantCategoryCreateController {
 
   Future<List<ProductCategory>> getLatestCategories() async {
     ResponseApi? response = await categoryProvider.getLatestCategories();
-    if(response == null || !response.success!) return [];
   
-    List<ProductCategory> latest = response.data;
+    List<ProductCategory> categories = response?.data ?? [];
 
-    return latest;
+    return categories;
   }
 
   void createCategory() {
-    if (controllers['name']!.text.isEmpty || controllers['description']!.text.isEmpty) {
+    if (textFieldControllers['name']!.text.isEmpty || textFieldControllers['description']!.text.isEmpty) {
       CustomSnackBar.showError(context, 'Aviso', 'Ingresa todos los datos');
       return;
     }
 
     ProductCategory category = ProductCategory(
-      name: controllers['name']!.text.trim(),
-      description: controllers['descriprion']!.text.trim()
+      name: textFieldControllers['name']!.text.trim(),
+      description: textFieldControllers['descriprion']!.text.trim()
     );
 
     print(category.toJson());
