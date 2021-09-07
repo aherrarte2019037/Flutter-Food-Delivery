@@ -39,7 +39,7 @@ class User {
     "firstName": firstName,
     "lastName" : lastName,
     "image"    : image,
-    "_id"       : id,
+    "_id"      : id,
     "roles"    : roles != null ? List<dynamic>.from(roles!.map((x) => x.toJson())): null,
     "createdAt": createdAt?.toIso8601String(),
   };

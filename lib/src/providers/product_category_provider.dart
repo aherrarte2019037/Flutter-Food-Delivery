@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:path/path.dart';
 import 'package:food_delivery/src/utils/shared_pref.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -38,21 +40,26 @@ class ProductCategoryProvider {
     }
   }
 
-  Future<ResponseApi?> createCategory(ProductCategory category) async {
+  Future<Stream?> createCategory(ProductCategory category, File? image) async {
     try {
       Uri request = Uri.http(_url, '$_api/');
-      String body = jsonEncode(category);
+      final body = http.MultipartRequest('POST', request);
 
-      Map<String, String> headers = {
-        'Content-type': 'application/json',
-        'Authorization': 'Bearer ${SharedPref.authToken}'
-      };
-
-      final response = await http.post(request, headers: headers, body: body);
-      final data = jsonDecode(response.body);
-
-      return ResponseApi.fromJson(data);
+      if (image != null) {
+        body.files.add(http.MultipartFile(
+          'image',
+          http.ByteStream(image.openRead().cast()),
+          await image.length(),
+          filename: basename(image.path)
+        ));
+      }
       
+      body.fields['category'] = jsonEncode(category);
+      body.headers['Authorization'] = 'Bearer ${SharedPref.authToken}';
+      
+      final response = await body.send();
+      return response.stream.transform(utf8.decoder);
+
     } catch (e) {
       print('Error: $e');
       return null;
