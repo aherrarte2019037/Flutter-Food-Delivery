@@ -54,6 +54,11 @@ class RestaurantCategoryCreateController {
     ImagePickerDialog.show(context: context, callback: createCategory);
   }
 
+  void resetControllers() {
+    textFieldControllers['name']!.text = '';
+    textFieldControllers['description']!.text = '';
+  }
+
   void createCategory({File? file }) async {
     Stream? stream = await categoryProvider.createCategory(category, file);
     stream?.listen((res) {
@@ -63,8 +68,9 @@ class RestaurantCategoryCreateController {
         ImagePickerDialog.hide();
         CustomSnackBar.showSuccess(context, 'Felicidades','Categoría ${response.data['name']} creada');
         ProductCategory categoryCreated = ProductCategory.fromJson(response.data);
-        categoriesListKey.currentState!.insertItem(0, duration: const Duration(milliseconds: 500));
+        categoriesListKey.currentState!.insertItem(0, duration: const Duration(milliseconds: 800));
         latestCategories.insert(0, categoryCreated);
+        resetControllers();
         updateView();
 
       } else {
