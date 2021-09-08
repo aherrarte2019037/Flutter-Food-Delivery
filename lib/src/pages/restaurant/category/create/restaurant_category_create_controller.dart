@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:food_delivery/src/utils/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/src/models/product_category_model.dart';
@@ -59,13 +58,14 @@ class RestaurantCategoryCreateController {
     textFieldControllers['description']!.text = '';
   }
 
-  void createCategory({File? file }) async {
-    Stream? stream = await categoryProvider.createCategory(category, file);
+  void createCategory() async {
+    Stream? stream = await categoryProvider.createCategory(category, ImagePickerDialog.file);
     stream?.listen((res) {
       ResponseApi response = ResponseApi.fromJson(jsonDecode(res));
 
       if (response.success == true) {
         ImagePickerDialog.hide();
+        Navigator.popUntil(context, ModalRoute.withName('restaurant/category/create'));
         CustomSnackBar.showSuccess(context, 'Felicidades','Categoría ${response.data['name']} creada');
         ProductCategory categoryCreated = ProductCategory.fromJson(response.data);
         categoriesListKey.currentState!.insertItem(0, duration: const Duration(milliseconds: 800));
@@ -75,6 +75,7 @@ class RestaurantCategoryCreateController {
 
       } else {
         ImagePickerDialog.hide();
+        Navigator.popUntil(context, ModalRoute.withName('restaurant/category/create'));
         CustomSnackBar.showError(context, 'Aviso', response.message!);
       }
     });

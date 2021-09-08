@@ -182,7 +182,7 @@ class ProfileController {
   }
 
   void selectImage(ImageSource imageSource) async {
-    pickedFile = await ImagePicker().pickImage(source: imageSource);
+    pickedFile = await ImagePicker().pickImage(source: imageSource, imageQuality: 40);
     if(pickedFile != null) imageFile = File(pickedFile!.path);
 
     if(imageFile == null) return;

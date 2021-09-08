@@ -201,15 +201,21 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
                 child: Padding(
                   padding: const EdgeInsets.all(5),
                   child: category.image!.contains('assets')
-                    ? Image.asset(
-                        category.image!,
-                        fit: BoxFit.cover,
-                      )
-                    : FadeInImage.assetNetwork(
-                        image: category.image!,
-                        placeholder: 'assets/images/loading.gif',
-                        fit: BoxFit.cover,
-                      ),
+                    ? ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image.asset(
+                          category.image!,
+                          fit: BoxFit.cover,
+                        ),
+                    )
+                    : ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: FadeInImage.assetNetwork(
+                          image: category.image!,
+                          placeholder: 'assets/images/loading.gif',
+                          fit: BoxFit.cover,
+                        ),
+                    ),
                 ),
               ),
               const SizedBox(width: 10),

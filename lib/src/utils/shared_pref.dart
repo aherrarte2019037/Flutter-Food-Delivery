@@ -33,7 +33,7 @@ class SharedPref {
     final prefs = await SharedPreferences.getInstance();
     final value = prefs.getString('token');
 
-    SharedPref.authToken = jsonDecode(value ?? '');
+    SharedPref.authToken = value == null ? '' : jsonDecode(value);
   }
 
   static Future<bool> logOut() async {

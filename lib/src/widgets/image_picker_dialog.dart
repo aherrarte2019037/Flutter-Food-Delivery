@@ -8,7 +8,7 @@ class ImagePickerDialog {
   static late Function _callback;
   static late BuildContext _context;
   static late XFile? _pickedFile;
-  static File? _imageFile;
+  static File? file;
   static final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   static void show({required BuildContext context, required Function callback}) {
@@ -46,7 +46,7 @@ class ImagePickerDialog {
             ? () {}
             : () {
               _startLoading();
-              _callback(file: _imageFile);
+              _callback();
             },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -113,10 +113,10 @@ class ImagePickerDialog {
   }
 
   static void _selectImage(ImageSource imageSource) async {
-    _pickedFile = await ImagePicker().pickImage(source: imageSource);
-    if(_pickedFile != null) _imageFile = File(_pickedFile!.path);
+    _pickedFile = await ImagePicker().pickImage(source: imageSource, imageQuality: 40);
+    if(_pickedFile != null) file = File(_pickedFile!.path);
 
-    if(_imageFile == null) return;
+    if(file == null) return;
 
     Widget buttonCancel = OutlinedButton(
       onPressed: () => Navigator.pop(_context),
@@ -147,14 +147,17 @@ class ImagePickerDialog {
         return OutlinedButton(
           onPressed: value == true 
             ? () {} 
-            : () => _callback(file: _imageFile),
+            : () {
+              _startLoading();
+              _callback();
+            },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               if (value == true) ...[
                 Container(
-                  width: 15,
-                  height: 15,
+                  width: 16,
+                  height: 16,
                   child: const CircularProgressIndicator(
                     strokeWidth: 2,
                     color: Colors.white,
@@ -163,7 +166,7 @@ class ImagePickerDialog {
               ] else ...[
                 const Icon(Icons.check_rounded, color: Colors.white, size: 22),
               ],
-              SizedBox(width: value == true ? 10 : 5),
+              SizedBox(width: value == true ? 10 : 5, height: value == true ? 22 : 0,),
               const Text(
                 'Aceptar',
                 style: TextStyle(color: Colors.white, fontSize: 14.5),
@@ -171,11 +174,9 @@ class ImagePickerDialog {
             ],
           ),
           style: OutlinedButton.styleFrom(
-            padding:
-                const EdgeInsets.only(left: 16, right: 24, top: 9, bottom: 9),
+            padding: const EdgeInsets.only(left: 16, right: 24, top: 9, bottom: 9),
             backgroundColor: const Color(0XFF735FDC),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
         );
       },
@@ -207,7 +208,7 @@ class ImagePickerDialog {
                 width: 75,
                 height: 75,
                 child: Image.file(
-                  _imageFile!,
+                  file!,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -236,10 +237,18 @@ class ImagePickerDialog {
   }
 
   static void hide() {
-    _pickedFile = null;
-    _imageFile = null;
     _stopLoading();
-    Navigator.popUntil(_context, ModalRoute.withName('restaurant/category/create'));
+
+    if(file == null) {
+      Navigator.pop(_context);
+    
+    } else {
+      Navigator.pop(_context);
+      Navigator.pop(_context);
+    }
+
+    _pickedFile = null;
+    file = null;
   }
 
 }

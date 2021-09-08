@@ -334,9 +334,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
     return Container(
       alignment: Alignment.center,
       child: ElevatedButton(
-        onPressed: () {
-          _registerController.goToLoginPage();
-        },
+        onPressed: _registerController.goToLoginPage,
         child: const Text(
           'Iniciar Sesión',
           style: TextStyle(
