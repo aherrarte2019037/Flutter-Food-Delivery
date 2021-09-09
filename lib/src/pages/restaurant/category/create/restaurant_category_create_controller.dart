@@ -13,7 +13,7 @@ class RestaurantCategoryCreateController {
   final GlobalKey<AnimatedListState> categoriesListKey = GlobalKey();
   ProductCategoryProvider categoryProvider = ProductCategoryProvider();
   List<ProductCategory> latestCategories = [];
-  bool createCategoryIsLoading = false;
+  bool latestCategoriesIsLoading = false;
   Map<String, TextEditingController> textFieldControllers = {
     'name': TextEditingController(),
     'description' : TextEditingController(),
@@ -32,9 +32,14 @@ class RestaurantCategoryCreateController {
   }
 
   Future<List<ProductCategory>> getLatestCategories() async {
+    latestCategoriesIsLoading = true;
+    updateView();
+
     ResponseApi? response = await categoryProvider.getLatestCategories();
-  
     List<ProductCategory> categories = response?.data ?? [];
+
+    latestCategoriesIsLoading = false;
+    updateView();
   
     return categories;
   }

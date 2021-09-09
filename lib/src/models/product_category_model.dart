@@ -23,7 +23,6 @@ class ProductCategory {
     createdAt: DateTime.parse(json["createdAt"]),
   );
 
-
   static List<ProductCategory> fromJsonList(List json) {
     return json.map((category) => ProductCategory.fromJson(category)).toList();
   }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:food_delivery/src/api/environment.dart';
 import 'package:food_delivery/src/models/response_api_model.dart';
 import 'package:food_delivery/src/models/user_model.dart';
@@ -11,11 +10,6 @@ import 'package:path/path.dart';
 class UserProvider {
   final String _url = Environment.apiDelivery;
   final String _api = 'api/users';
-  late BuildContext context;
-
-  void init(BuildContext context) {
-    this.context = context;
-  }
 
   Future<Stream?> register(User user, File? image) async {
     try {

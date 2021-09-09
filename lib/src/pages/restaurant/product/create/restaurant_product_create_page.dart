@@ -3,19 +3,19 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:food_delivery/src/models/product_category_model.dart';
+import 'package:food_delivery/src/models/product_model.dart';
 import 'package:food_delivery/src/utils/string_extension.dart';
-import 'package:food_delivery/src/pages/restaurant/category/create/restaurant_category_create_controller.dart';
+import 'package:food_delivery/src/pages/restaurant/product/create/restaurant_product_create_controller.dart';
 
-class RestaurantCategoryCreatePage extends StatefulWidget {
-  const RestaurantCategoryCreatePage({ Key? key }) : super(key: key);
+class RestaurantProductCreatePage extends StatefulWidget {
+  const RestaurantProductCreatePage({ Key? key }) : super(key: key);
 
   @override
-  _RestaurantCategoryCreatePageState createState() => _RestaurantCategoryCreatePageState();
+  _RestaurantProductCreatePageState createState() => _RestaurantProductCreatePageState();
 }
 
-class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreatePage> {
-  final RestaurantCategoryCreateController _controller = RestaurantCategoryCreateController();
+class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePage> {
+  final RestaurantProductCreateController _controller = RestaurantProductCreateController();
 
   updateView() {
     setState(() => {});
@@ -39,12 +39,11 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
       backgroundColor: Colors.white,
       appBar: _appBar(),
       bottomNavigationBar: _createButton(),
-      body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        padding: const EdgeInsets.only(left: 42, right: 42),
-        child: Container(
-          height: height - 186,
-          width: width,
+      body: Container(
+        padding: const EdgeInsets.only(left: 42, right: 42, bottom: 30),
+        height: height,
+        width: width,
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -55,22 +54,26 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                   image: const DecorationImage(
-                    image: AssetImage('assets/images/create-category.webp'),
+                    image: AssetImage('assets/images/create-product.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
               const SizedBox(height: 30),
-              _latestCategories(),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _textFieldName(),
-                    SizedBox(height: height * 0.06),
-                    _textFieldDescription()
-                  ],
-                ),
+              _latestProducts(),
+              const SizedBox(height: 35),
+              _textFieldName(),
+              const SizedBox(height: 35),
+              _textFieldPrice(),
+              const SizedBox(height: 35),
+              _textFieldDescription(),
+              const SizedBox(height: 20),
+              _uploadImageButton(),
+              const SizedBox(height: 20),
+              FutureBuilder(
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  return const Text('asdas');                  
+                }
               ),
             ],
           ),
@@ -102,7 +105,7 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
               ),
             ),
             const Text(
-              'Crear Categoría',
+              'Crear Producto',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
@@ -129,13 +132,13 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
     );
   }
 
-  Widget _latestCategories() {
+  Widget _latestProducts() {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Últimas categorías',
+            'Últimos Productos',
             style: TextStyle(
               color: Colors.black,
               fontSize: 18,
@@ -147,40 +150,43 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
             borderRadius: BorderRadius.circular(40),
             child: Container(
               height: 55,
-              child: _controller.latestCategoriesIsLoading
-              ? Container(
+              child: _controller.latestProductsIsLoading
+                ? Container(
                     padding: const EdgeInsets.all(10),
                     width: 55,
                     height: 50,
                     child: const CircularProgressIndicator(color: Colors.black, strokeWidth: 3),
-                )
-              : _controller.latestCategories.isNotEmpty
-                ? AnimatedList(
-                    key: _controller.categoriesListKey,
-                    scrollDirection: Axis.horizontal,
-                    initialItemCount: _controller.latestCategories.length,
-                    itemBuilder: (_, index, animation) {
-                      return _categoryChip(
-                        _controller.latestCategories[index],
-                        animation,
-                        index
-                      );
-                    },
                   )
-                : AnimatedList(
-                    scrollDirection: Axis.horizontal,
-                    initialItemCount: 1,
-                    itemBuilder: (_, index, animation) {
-                      return _categoryChip(
-                        ProductCategory(
-                            name: 'No hay categorías recientes',
-                            image: 'assets/images/product-category-image.png',
-                          ),
-                        animation,
-                        index
-                      );
-                    },
-                  )      
+                : _controller.latestProducts.isNotEmpty 
+                  ? AnimatedList(
+                      key: _controller.productsListKey,
+                      scrollDirection: Axis.horizontal,
+                      initialItemCount: _controller.latestProducts.length,
+                      itemBuilder: (_, index, animation) {
+                        return _productChip(
+                          _controller.latestProducts[index],
+                          animation,
+                          index
+                        );
+                      },
+                    )
+                  : AnimatedList(
+                      scrollDirection: Axis.horizontal,
+                      initialItemCount: 1,
+                      itemBuilder: (_, index, animation) {
+                        return _productChip(
+                          Product(
+                              name: 'No hay productos recientes',
+                              description: '',
+                              price: 0,
+                              images: ['assets/images/product-category-image.png'],
+                            ),
+                          animation,
+                          index
+                        );
+                      },
+                    )
+                
             ),
           ),
         ],
@@ -188,9 +194,9 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
     );
   }
 
-  Widget _categoryChip(ProductCategory category, Animation<double> animation, int index) {
+  Widget _productChip(Product product, Animation<double> animation, int index) {
     return Padding(
-      padding: EdgeInsets.only(right: index + 1 < _controller.latestCategories.length ? 12 : 0),
+      padding: EdgeInsets.only(right: index + 1 < _controller.latestProducts.length ? 12 : 0),
       child: SlideTransition(
         position: Tween<Offset>(
           begin: const Offset(-1, 0),
@@ -208,11 +214,11 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
                 backgroundColor: Colors.white,
                 child: Padding(
                   padding: const EdgeInsets.all(5),
-                  child: category.image!.contains('assets')
+                  child: product.images![0].contains('assets')
                     ? ClipRRect(
                       borderRadius: BorderRadius.circular(50),
                       child: Image.asset(
-                          category.image!,
+                          product.images![0],
                           fit: BoxFit.cover,
                         ),
                     )
@@ -221,7 +227,7 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50),
                         child: FadeInImage.assetNetwork(
-                            image: category.image!,
+                            image: product.images![0],
                             placeholder: 'assets/images/loading.gif',
                             fit: BoxFit.cover,
                           ),
@@ -231,7 +237,7 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
               ),
               const SizedBox(width: 10),
               Text(
-                category.name!.capitalize(),
+                product.name.capitalize(),
                 style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w500,
@@ -248,14 +254,38 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
   Widget _textFieldName() {
     return TextField(
       controller: _controller.textFieldControllers['name'],
-      autofocus: false,
       cursorColor: Colors.grey,
       style: const TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
         labelText: 'Nombre',
         labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintText: 'Nombre De Categoría',
+        hintText: 'Nombre De Producto',
+        hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
+          borderRadius: BorderRadius.circular(14),
+        ),
+      ),
+    );
+  }
+
+  Widget _textFieldPrice() {
+    return TextField(
+      controller: _controller.textFieldControllers['price'],
+      keyboardType: TextInputType.number,
+      cursorColor: Colors.grey,
+      style: const TextStyle(color: Colors.black, fontSize: 18),
+      decoration: InputDecoration(
+        labelText: 'Precio',
+        labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        hintText: 'Precio De Producto',
         hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
         contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
         enabledBorder: OutlineInputBorder(
@@ -272,12 +302,11 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
 
   Widget _textFieldDescription() {
     return TextField(
-      autofocus: false,
-      textInputAction: TextInputAction.done,
       controller: _controller.textFieldControllers['description'],
+      textInputAction: TextInputAction.done,
       minLines: 3,
       maxLines: 3,
-      cursorColor: Colors.grey,
+      cursorColor: const Color(0XFF3a3a3a),
       style: const TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
         labelText: 'Descripción',
@@ -298,13 +327,110 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
     );
   }
 
+  Widget _uploadImageButton() {
+    return OutlinedButton.icon(
+      onPressed: () {},
+      label: const Text(' Subir Imagen', style: TextStyle(color: Colors.white)),
+      icon: const Icon(FlutterIcons.upload_cloud_fea, color: Colors.white, size: 18),
+      style: OutlinedButton.styleFrom(
+        primary: Colors.white,
+        side: const BorderSide(style: BorderStyle.none),
+        backgroundColor: Colors.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        elevation: 2,
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
+      ),
+    );
+  }
+
+  Widget _uploadedImage() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Dismissible(
+        key: GlobalKey(),
+        onDismissed: (direction) {},
+        child: Container(
+          height: 74,
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 14),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight,
+              colors: [Colors.red.shade400, Colors.orange.shade300],
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 51,
+                    height: 51,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Icon(
+                      FlutterIcons.file_image_outline_mco,
+                      color: Colors.red.withOpacity(0.85),
+                      size: 26,
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'image1.png',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        '5.8 MB',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              Container(
+                width: 51,
+                height: 51,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/images/client-role.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _createButton() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
       child: Container(
         height: 60,
         child: ElevatedButton(
-          onPressed: _controller.verifyCategoryData,
+          onPressed: () {},
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,

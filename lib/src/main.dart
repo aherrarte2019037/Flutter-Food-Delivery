@@ -6,6 +6,7 @@ import 'package:food_delivery/src/pages/profile/profile_page.dart';
 import 'package:food_delivery/src/pages/register/register_page.dart';
 import 'package:food_delivery/src/pages/restaurant/category/create/restaurant_category_create_page.dart';
 import 'package:food_delivery/src/pages/restaurant/order/list/restaurant_order_list_page.dart';
+import 'package:food_delivery/src/pages/restaurant/product/create/restaurant_product_create_page.dart';
 import 'package:food_delivery/src/pages/roles/roles_page.dart';
 import 'package:food_delivery/src/utils/role_redirect.dart';
 import 'package:food_delivery/src/utils/shared_pref.dart';
@@ -51,6 +52,7 @@ class _MainAppState extends State<MainApp> {
         'client/product/list': (BuildContext context) => const ClientProductListPage(),
         'restaurant/order/list': (BuildContext context) => const RestaurantOrderListPage(),
         'restaurant/category/create': (BuildContext context) => const RestaurantCategoryCreatePage(),
+        'restaurant/product/create': (BuildContext context) => const RestaurantProductCreatePage(),
         'delivery/order/list': (BuildContext context) => const DeliveryOrderListPage(),
       },
       builder: (context, widget) => ResponsiveWrapper.builder(

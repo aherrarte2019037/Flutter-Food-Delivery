@@ -1,0 +1,35 @@
+import 'dart:convert';
+import 'package:food_delivery/src/models/product_model.dart';
+import 'package:http/http.dart' as http;
+import 'package:food_delivery/src/api/environment.dart';
+import 'package:food_delivery/src/models/response_api_model.dart';
+import 'package:food_delivery/src/utils/shared_pref.dart';
+
+class ProductProvider {
+  final String _url = Environment.apiDelivery;
+  final String _api = 'api/products';
+
+  Future<ResponseApi?> getLatestProducts() async {
+    try {
+      Uri request = Uri.http(_url, '$_api/latest');
+
+      Map<String, String> headers = {
+        'Content-type' : 'application/json',
+        'Authorization': 'Bearer ${SharedPref.authToken}'
+      };
+
+      final response = await http.get(request, headers: headers);
+      final data = jsonDecode(response.body);
+
+      ResponseApi responseApi = ResponseApi.fromJson(data);
+      responseApi.data = Product.fromJsonList(responseApi.data);
+
+      return responseApi;
+
+    } catch (e) {
+      print('Error: $e');
+      return null;
+    }
+  }
+
+}

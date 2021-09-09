@@ -63,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       const SizedBox(height: 30),
                       _nameText(_profileController.userProfile!.firstName, _profileController.userProfile!.lastName),
-                      SizedBox(height: height * 0.05),
+                      SizedBox(height: height * 0.06),
                       Expanded(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -71,7 +71,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             _textField(label: 'Nombre', controller: _profileController.controllers['firstName']!),
                             _textField(label: 'Apellido', controller: _profileController.controllers['lastName']!),
                             _textField(label: 'Correo Electrónico', controller: _profileController.controllers['email']!),
-                            SizedBox(height: height * 0.015),
                             _editButton()
                           ],
                         ),
@@ -274,29 +273,25 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _textField({ required String label, required TextEditingController controller }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(color: Color(0XFF838383), fontSize: 16)),
-        const SizedBox(height: 8),
-        TextField(
-          readOnly: _profileController.isEditing ? false : true,
-          controller: controller,
-          cursorColor: Colors.grey,
-          style: const TextStyle(color: Colors.black, fontSize: 18),
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
-            enabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
-              borderRadius: BorderRadius.circular(14),
-            ),
-          ),
+    return TextField(
+      readOnly: _profileController.isEditing ? false : true,
+      controller: controller,
+      cursorColor: Colors.grey,
+      style: const TextStyle(color: Colors.black, fontSize: 18),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
+          borderRadius: BorderRadius.circular(14),
         ),
-      ],
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
+          borderRadius: BorderRadius.circular(14),
+        ),
+      ),
     );
   }
 

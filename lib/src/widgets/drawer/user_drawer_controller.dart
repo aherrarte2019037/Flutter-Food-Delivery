@@ -24,6 +24,11 @@ class UserDrawerController {
       'route': 'restaurant/category/create'
     },
     {
+      'title': 'Crear Producto',
+      'icon': Icons.fastfood_rounded,
+      'route': 'restaurant/product/create'
+    },
+    {
       'title': 'Ajustes',
       'icon': FlutterIcons.setting_ant,
     },
