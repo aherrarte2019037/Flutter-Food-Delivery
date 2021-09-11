@@ -389,13 +389,35 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
                 borderRadius: BorderRadius.circular(10.0),
               ),
             ),
+            searchFn: (String keyword, items) {
+              List<int> results = [];
+              if (items != null && keyword.isNotEmpty) {
+                keyword.split(" ").forEach((k) {
+                  int i = 0;
+                  items.forEach((item) {
+                    if (!results.contains(i) && k.isNotEmpty && (item.value.toString().toLowerCase().contains(k.toLowerCase()))) {
+                      results.add(i);
+                    }
+                    i++;
+                  });
+                });
+              }
+              if (keyword.isEmpty) {
+                results = Iterable<int>.generate(items.length).toList();
+              }
+              return (results);
+            },
+            emptyListWidget: const Padding(
+              padding: EdgeInsets.only(top: 12, left: 6),
+              child: Text('No hay resultados', style: TextStyle(fontSize: 17)),
+            ),
             items: _controller.categoryItems,
             icon: const Icon(FlutterIcons.chevron_down_evi, color: Color(0XFF232323), size: 30),
             autofocus: false,
             value: 1,
             padding: 5,
             hint: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 13),
+              padding: EdgeInsets.symmetric(vertical: 12),
               child: Text('Seleccionar'),
             ),
             style: const TextStyle(color: Color(0XFF494949), fontSize: 17),

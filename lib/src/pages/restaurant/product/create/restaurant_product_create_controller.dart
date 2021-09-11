@@ -32,7 +32,7 @@ class RestaurantProductCreateController {
             c.name!.capitalize(),
             style: const TextStyle(fontSize: 17, color: Color(0XFF494949)),
           ),
-          value: c.id,
+          value: c.name,
         );
       },
     ).toList();
