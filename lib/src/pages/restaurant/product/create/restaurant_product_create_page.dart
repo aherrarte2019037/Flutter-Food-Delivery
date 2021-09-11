@@ -334,10 +334,10 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
             buildDropDownDialog: (titleBar, searchBar, list, closeButton, dropDownContext) {
               return Card(
                 elevation: 0,
+                margin: const EdgeInsets.all(0),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                 child: Container(
                   height: 220,
-                  width: 1000,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -347,19 +347,32 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
                       searchBar,
                       const SizedBox(height: 15),
                       Transform.scale(
-                        scale: 0.8
-                        child: list
+                        scale: 0.92,
+                        child: SizedBox(
+                          height: 105,
+                          child: Column(
+                            children: [
+                              list,
+                            ],
+                          ),
+                        ),
                       ),
                       ColorFiltered(
-                        colorFilter: ColorFilter.mode(Color.blueGrey, BlendMode.colorBurn),
-                        child: closeButton
+                        colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.6), BlendMode.modulate),
+                        child: Transform.scale(
+                          scale: 0.9,
+                          child: Transform.translate(
+                            offset: const Offset(22, 0),
+                            child: closeButton,
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
               );
             },
+            closeButton: 'Cerrar',
             searchInputDecoration: InputDecoration(
               filled: true,
               fillColor: const Color(0XFFe7e7e7),
