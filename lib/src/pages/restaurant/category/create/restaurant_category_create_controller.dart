@@ -71,7 +71,7 @@ class RestaurantCategoryCreateController {
       if (response.success == true) {
         ImagePickerDialog.hide();
         Navigator.popUntil(context, ModalRoute.withName('restaurant/category/create'));
-        CustomSnackBar.showSuccess(context, 'Felicidades','Categoría ${response.data['name']} creada');
+        CustomSnackBar.showSuccess(context, 'Felicidades','Categoría creada');
         ProductCategory categoryCreated = ProductCategory.fromJson(response.data);
         categoriesListKey.currentState!.insertItem(0, duration: const Duration(milliseconds: 800));
         latestCategories.insert(0, categoryCreated);

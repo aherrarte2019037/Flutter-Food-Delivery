@@ -17,6 +17,29 @@ class ProductCategoryProvider {
     this.context = context;
   }
 
+  Future<List<ProductCategory>> getAll() async {
+    try {
+      Uri request = Uri.http(_url, '$_api/all');
+      
+      Map<String, String> headers = {
+        'Content-type': 'application/json',
+        'Authorization': 'Bearer ${SharedPref.authToken}'
+      };
+
+      final response = await http.get(request, headers: headers);
+      final data = jsonDecode(response.body);
+
+      ResponseApi responseApi = ResponseApi.fromJson(data);
+      List<ProductCategory> categories = ProductCategory.fromJsonList(responseApi.data);
+
+      return categories;
+
+    } catch (e) {
+      print('Error: $e');
+      return [];
+    }
+  }
+
   Future<ResponseApi?> getLatestCategories() async {
     try {
       Uri request = Uri.http(_url, '$_api/latest');
