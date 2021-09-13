@@ -421,7 +421,7 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
               child: Text('Seleccionar'),
             ),
             style: const TextStyle(color: Color(0XFF494949), fontSize: 17),
-            onChanged: (value) {},
+            onChanged: (String value) => _controller.textFieldControllers['category']!.text = value,
             dialogBox: false,
             menuConstraints: BoxConstraints.tight(const Size.fromHeight(350)),
             isExpanded: true,
@@ -579,7 +579,7 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
       child: Container(
         height: 60,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: _controller.createProduct,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -607,4 +607,5 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
       ),
     );
   }
+
 }
