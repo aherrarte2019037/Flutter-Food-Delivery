@@ -8,6 +8,7 @@ class Product {
   bool? available;
   List<String>? images;
   dynamic category;
+  DateTime? createdAt;
 
   Product({
     required this.name,
@@ -17,6 +18,7 @@ class Product {
     this.available,
     this.images,
     this.category,
+    this.createdAt
   });
 
 
@@ -28,6 +30,7 @@ class Product {
     available  : json["available"],
     images     : List<String>.from(json["images"].map((x) => x)),
     category   : json["category"],
+    createdAt: DateTime.parse(json["createdAt"]),
   );
 
   static List<Product> fromJsonList(List json) {
@@ -40,8 +43,9 @@ class Product {
     "description": description,
     "price"      : price,
     "available"  : available,
-    "images"     : images == null ? List<dynamic>.from(images!.map((x) => x)) : null,
+    "images"     : images != null ? List<dynamic>.from(images!.map((x) => x)) : null,
     "category"   : category,
+    "createdAt": createdAt?.toIso8601String(),
   };
 
   Product productFromJson(String str) => Product.fromJson(json.decode(str));

@@ -14,6 +14,7 @@ class RestaurantCategoryCreateController {
   ProductCategoryProvider categoryProvider = ProductCategoryProvider();
   List<ProductCategory> latestCategories = [];
   bool latestCategoriesIsLoading = false;
+  bool createCategoryIsLoading = false;
   Map<String, TextEditingController> textFieldControllers = {
     'name': TextEditingController(),
     'description' : TextEditingController(),
@@ -54,8 +55,10 @@ class RestaurantCategoryCreateController {
       name: textFieldControllers['name']!.text.trim().capitalize(),
       description: textFieldControllers['description']!.text.trim().capitalize()
     );
-
+    
     ImagePickerDialog.show(context: context, callback: createCategory);
+    createCategoryIsLoading = true;
+    updateView();
   }
 
   void resetControllers() {
@@ -73,7 +76,8 @@ class RestaurantCategoryCreateController {
         Navigator.popUntil(context, ModalRoute.withName('restaurant/category/create'));
         CustomSnackBar.showSuccess(context, 'Felicidades','Categoría creada');
         ProductCategory categoryCreated = ProductCategory.fromJson(response.data);
-        categoriesListKey.currentState!.insertItem(0, duration: const Duration(milliseconds: 800));
+        createCategoryIsLoading = false;
+        categoriesListKey.currentState?.insertItem(0, duration: const Duration(milliseconds: 800));
         latestCategories.insert(0, categoryCreated);
         resetControllers();
         updateView();
@@ -82,6 +86,8 @@ class RestaurantCategoryCreateController {
         ImagePickerDialog.hide();
         Navigator.popUntil(context, ModalRoute.withName('restaurant/category/create'));
         CustomSnackBar.showError(context, 'Aviso', response.message!);
+        createCategoryIsLoading = false;
+        updateView();
       }
     });
   }

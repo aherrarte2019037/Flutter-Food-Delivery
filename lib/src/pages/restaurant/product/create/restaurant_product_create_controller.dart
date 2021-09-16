@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/src/models/product_category_model.dart';
 import 'package:food_delivery/src/models/product_model.dart';
@@ -6,6 +8,7 @@ import 'package:food_delivery/src/utils/string_extension.dart';
 import 'package:food_delivery/src/providers/product_category_provider.dart';
 import 'package:food_delivery/src/providers/product_provider.dart';
 import 'package:food_delivery/src/widgets/custom_snackbar.dart';
+import 'package:food_delivery/src/widgets/image_picker_dialog.dart';
 
 class RestaurantProductCreateController {
   late BuildContext context;
@@ -14,6 +17,7 @@ class RestaurantProductCreateController {
   final ProductProvider productProvider = ProductProvider();
   final ProductCategoryProvider categoryProvider = ProductCategoryProvider();
   final GlobalKey<AnimatedListState> productsListKey = GlobalKey();
+  final scrollController = ScrollController();
   Map<String, TextEditingController> textFieldControllers = {
     'name': TextEditingController(),
     'price': TextEditingController(),
@@ -21,9 +25,11 @@ class RestaurantProductCreateController {
     'category': TextEditingController(),
   };
   bool latestProductsIsLoading = false;
+  bool createProductIsLoading = false;
   List<Product> latestProducts = [];
   List<DropdownMenuItem> categoryItems = [];
-
+  List<File> images = [];
+  
   void init(BuildContext context, Function updateView) async {
     this.context = context;
     this.updateView = updateView;
@@ -33,7 +39,7 @@ class RestaurantProductCreateController {
         return DropdownMenuItem(
           child: Text(
             c.name!.capitalize(),
-            style: const TextStyle(fontSize: 17, color: Color(0XFF494949)),
+            style: const TextStyle(fontSize: 17, color: Colors.black),
           ),
           value: c.name,
         );
@@ -78,8 +84,52 @@ class RestaurantProductCreateController {
       category: textFieldControllers['category']!.text,
       description: textFieldControllers['description']!.text
     );
+    createProductIsLoading = true;
+    updateView();
 
-    print(product);
+    Stream? stream = await productProvider.createProduct(product, images);
+    stream?.listen((res) {
+      ResponseApi response = ResponseApi.fromJson(jsonDecode(res));
+    
+      if (response.success == true) {
+        CustomSnackBar.showSuccess(context, 'Felicidades','Producto creado');
+        Product productCreated = Product.fromJson(response.data);
+        latestProducts.insert(0, productCreated);
+        productsListKey.currentState?.insertItem(0, duration: const Duration(milliseconds: 500));
+        createProductIsLoading = false;
+        resetControllers();
+        updateView();
+        
+      } else {
+        createProductIsLoading = false;
+        CustomSnackBar.showError(context, 'Aviso', response.message!);
+        updateView();
+      }
+    });
   }  
+
+  void uploadImage() async {
+    if(images.length == 4) {
+      CustomSnackBar.showError(context, 'Aviso', 'Máximo 4 imágenes');
+      return;
+    }
+    File image = await ImagePickerDialog.showWithoutCallback(context);
+    images.add(image);
+    double scrollTo = scrollController.position.maxScrollExtent + (images.length > 1 ? 94 : 74);
+    scrollController.animateTo(scrollTo, duration: const Duration(milliseconds: 600), curve: Curves.fastOutSlowIn);
+    updateView();
+  }
+
+  void dismissImage(DismissDirection direction, File image) {
+    images.remove(image);
+  }
+
+  void resetControllers() {
+    for (var controller in textFieldControllers.values) {
+      controller.text = '';
+    }
+
+    images = [];
+  }
 
 }

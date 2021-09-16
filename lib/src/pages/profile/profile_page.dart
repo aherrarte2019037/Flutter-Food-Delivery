@@ -314,9 +314,9 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: EdgeInsets.only(bottom: _profileController.isEditing ? 4 : 3),
               child: _profileController.editIsLoading
                 ? Container(
-                  width: 20,
-                  height: 20,
-                  child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+                    width: 20,
+                    height: 20,
+                    child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
                   )
                 : Icon(
                   _profileController.isEditing

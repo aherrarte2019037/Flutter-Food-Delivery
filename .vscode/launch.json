@@ -8,7 +8,10 @@
             "name": "food_delivery",
             "request": "launch",
             "type": "dart",
-            "program": "lib/src/main.dart"
+            "program": "lib/src/main.dart",
+            "args": [
+                "--no-sound-null-safety"
+            ]
         },
         {
             "name": "food_delivery (profile mode)",

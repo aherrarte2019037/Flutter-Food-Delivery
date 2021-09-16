@@ -304,15 +304,21 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
       child: Container(
         height: 60,
         child: ElevatedButton(
-          onPressed: _controller.verifyCategoryData,
+          onPressed: _controller.createCategoryIsLoading ? () {} : _controller.verifyCategoryData,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text('Añadir', style: TextStyle(color: Colors.white)),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4),
-                child: Icon(FlutterIcons.edit_ent, size: 22),
+              Padding(
+                padding: EdgeInsets.only(bottom: _controller.createCategoryIsLoading ? 4 : 3),
+                child: _controller.createCategoryIsLoading
+                  ? Container(
+                      width: 20,
+                      height: 20,
+                      child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+                    )
+                  : const Icon(FlutterIcons.edit_ent, size: 22),
               )
             ],
           ),

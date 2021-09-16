@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -47,6 +48,7 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
         child: ClipRRect(
           borderRadius: BorderRadius.circular(25),
           child: SingleChildScrollView(
+            controller: _controller.scrollController,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -75,15 +77,12 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
                 const SizedBox(height: 20),
                 _uploadImageButton(),
                 const SizedBox(height: 20),
-                ListView.separated(
+                ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: 2,
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const SizedBox(height: 20);
-                  },
+                  itemCount: _controller.images.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return _uploadedCardImage();
+                    return _uploadedCardImage(_controller.images[index], index);
                   },
                 ),
               ],
@@ -155,8 +154,7 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
         children: [
           const Text(
             'Últimos Productos',
-            style: TextStyle(
-                color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500),
+            style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 18),
           ClipRRect(
@@ -268,6 +266,7 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
   Widget _textFieldName() {
     return TextField(
       controller: _controller.textFieldControllers['name'],
+      textInputAction: TextInputAction.next,
       cursorColor: Colors.grey,
       style: const TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
@@ -276,8 +275,7 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
         floatingLabelBehavior: FloatingLabelBehavior.always,
         hintText: 'Nombre De Producto',
         hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
           borderRadius: BorderRadius.circular(14),
@@ -293,6 +291,7 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
   Widget _textFieldPrice() {
     return TextField(
       controller: _controller.textFieldControllers['price'],
+      textInputAction: TextInputAction.done,
       keyboardType: TextInputType.number,
       cursorColor: Colors.grey,
       style: const TextStyle(color: Colors.black, fontSize: 18),
@@ -414,11 +413,11 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
             items: _controller.categoryItems,
             icon: const Icon(FlutterIcons.chevron_down_evi, color: Color(0XFF232323), size: 30),
             autofocus: false,
-            value: 1,
+            value: _controller.textFieldControllers['category']!.text,
             padding: 5,
             hint: const Padding(
               padding: EdgeInsets.symmetric(vertical: 12),
-              child: Text('Seleccionar'),
+              child: Text('Seleccionar', style: TextStyle(color: Color(0XFF494949))),
             ),
             style: const TextStyle(color: Color(0XFF494949), fontSize: 17),
             onChanged: (String value) => _controller.textFieldControllers['category']!.text = value,
@@ -459,8 +458,7 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
         floatingLabelBehavior: FloatingLabelBehavior.always,
         hintText: 'Descripción Breve',
         hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
           borderRadius: BorderRadius.circular(14),
@@ -475,10 +473,9 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
 
   Widget _uploadImageButton() {
     return OutlinedButton.icon(
-      onPressed: () {},
+      onPressed: _controller.uploadImage,
       label: const Text(' Subir Imagen', style: TextStyle(color: Colors.white)),
-      icon: const Icon(FlutterIcons.upload_cloud_fea,
-          color: Colors.white, size: 18),
+      icon: const Icon(FlutterIcons.upload_cloud_fea, color: Colors.white, size: 18),
       style: OutlinedButton.styleFrom(
         primary: Colors.white,
         side: const BorderSide(style: BorderStyle.none),
@@ -490,13 +487,14 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
     );
   }
 
-  Widget _uploadedCardImage() {
-    return Container(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Dismissible(
-          key: GlobalKey(),
-          onDismissed: (direction) {},
+  Widget _uploadedCardImage(File image, int index) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Dismissible(
+        key: GlobalKey(),
+        onDismissed: (direction) => _controller.dismissImage(direction, image),
+        child: Padding(
+          padding: EdgeInsets.only(top: index > 0 ? 20: 0),
           child: Container(
             height: 74,
             width: double.infinity,
@@ -532,18 +530,18 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'image1.png',
-                          style: TextStyle(
+                        Text(
+                          'Imagen ${index + 1}',
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
                             fontSize: 15,
                           ),
                         ),
                         const SizedBox(height: 4),
-                        const Text(
-                          '5.8 MB',
-                          style: TextStyle(
+                        Text(
+                          image.path.split('.').last.toUpperCase(),
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -554,14 +552,14 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
                   ],
                 ),
                 Container(
-                  width: 51,
-                  height: 51,
+                  width: 54,
+                  height: 52,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(14),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/client-role.png'),
-                      fit: BoxFit.cover,
+                    image: DecorationImage(
+                      image: FileImage(image),
+                      fit: BoxFit.cover
                     ),
                   ),
                 ),
@@ -579,15 +577,21 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
       child: Container(
         height: 60,
         child: ElevatedButton(
-          onPressed: _controller.createProduct,
+          onPressed: _controller.createProductIsLoading ? () {} : _controller.createProduct,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text('Añadir', style: TextStyle(color: Colors.white)),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4),
-                child: Icon(FlutterIcons.edit_ent, size: 22),
+              Padding(
+                padding: EdgeInsets.only(bottom: _controller.createProductIsLoading ? 4 : 3),
+                child: _controller.createProductIsLoading
+                  ? Container(
+                      width: 20,
+                      height: 20,
+                      child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+                    )
+                  : const Icon(FlutterIcons.edit_ent, size: 22),
               )
             ],
           ),
@@ -595,8 +599,7 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
             elevation: 4,
             padding: const EdgeInsets.symmetric(horizontal: 40),
             primary: Colors.black.withOpacity(0.9),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             textStyle: const TextStyle(
               fontSize: 16.5,
               letterSpacing: 0.5,
