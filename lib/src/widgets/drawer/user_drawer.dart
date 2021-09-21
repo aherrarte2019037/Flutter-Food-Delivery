@@ -35,7 +35,7 @@ class _UserDrawerState extends State<UserDrawer> {
   Widget _drawer() {
     return Drawer(
       child: Material(
-        color: const Color(0XFF496FD6),
+        color: const Color(0XFFFF8C3E),
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 50, bottom: 35),
           child: FutureBuilder(
@@ -80,20 +80,15 @@ class _UserDrawerState extends State<UserDrawer> {
   }
 
   Widget _drawerItem({required String title, required IconData icon, required String route}) {
-    return ListTile(
-      onTap: () {
-        _drawerController.drawerItemNavigate(route);
-      },
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      title: Text(
-        title,
-        style: const TextStyle(color: Colors.white),
+    return InkWell(
+      splashColor: const Color(0XFFFF6600 ),
+      borderRadius: BorderRadius.circular(15),
+      onTap: () => _drawerController.drawerItemNavigate(route),
+      child: ListTile(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: Text(title, style: const TextStyle(color: Colors.white)),
+        leading: Icon(icon, color: Colors.white),
       ),
-      leading: Icon(
-        icon,
-        color: Colors.white,
-      ),
-      hoverColor: Colors.white,
     );
   }
 
@@ -118,11 +113,11 @@ class _UserDrawerState extends State<UserDrawer> {
           const Text(
             'Cerrar Sesión',
             style: TextStyle(
-              color: Color(0XFF496FD6),
+              color: Colors.black,
               fontSize: 14.5
             ),
           ),
-          const Icon(FlutterIcons.md_arrow_forward_ion, color: Color(0XFF496FD6))
+          const Icon(FlutterIcons.md_arrow_forward_ion, color: Colors.black)
         ],
       ),
     );
@@ -138,7 +133,7 @@ class _UserDrawerState extends State<UserDrawer> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color(0XFF324D94).withOpacity(0.4),
+            color: const Color(0XFF324D94).withOpacity(0.1),
             spreadRadius: 1,
             blurRadius: 10,
             offset: const Offset(0, 3), // changes position of shadow

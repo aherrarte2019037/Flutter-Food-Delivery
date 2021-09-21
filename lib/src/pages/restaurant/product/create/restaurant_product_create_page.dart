@@ -129,15 +129,13 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
               offset: const Offset(0, 2),
               child: ElevatedButton(
                 onPressed: () {},
-                child:
-                    const Icon(Icons.more_horiz, size: 30, color: Colors.black),
+                child: const Icon(Icons.more_horiz, size: 30, color: Colors.black),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.all(2),
                   elevation: 0,
                   primary: Colors.white,
                   onPrimary: Colors.grey,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                 ),
               ),
             ),

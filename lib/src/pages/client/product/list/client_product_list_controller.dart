@@ -1,29 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/src/models/user_model.dart';
-import 'package:food_delivery/src/utils/shared_pref.dart';
+import 'package:food_delivery/src/models/product_category_model.dart';
+import 'package:food_delivery/src/providers/product_category_provider.dart';
 
 class ClientProductListController {
+  ProductCategoryProvider categoryProvider = ProductCategoryProvider();
+  List<ProductCategory> categories = [];
+  bool categoriesIsLoading = false;
+  bool productsIsLoading = false;
   late BuildContext context;
-  GlobalKey<ScaffoldState> drawerKey = GlobalKey();
+  late Function updateView;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+  final GlobalKey<AnimatedListState> categoriesListKey = GlobalKey();
 
-  void init(BuildContext context) {
+  void init(BuildContext context, Function updateView) {
     this.context = context;
-  }
-
-  Future<dynamic> getUser() async {
-    User user = User.fromJson(await SharedPref.read('user'));
-    return user;
-  }
-
-  void logOut() {
-    SharedPref.logOut();
-    Future.delayed(const Duration(milliseconds: 180), () {
-      Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
-    });
+    this.updateView = updateView;
   }
 
   void openDrawer() {
-    drawerKey.currentState!.openDrawer();
+    scaffoldKey.currentState?.openDrawer();
+  }
+
+  Future<void> addCategoriesToList() async {
+    categoriesIsLoading = true;
+    updateView();
+
+    List<ProductCategory> allCategories = await categoryProvider.getAll();
+    if (allCategories.isEmpty) allCategories.add(ProductCategory(name: 'No hay categorías', image: 'assets/images/product-category-image.png',));
+    
+    categoriesIsLoading = false;
+    updateView();
+
+    for (var i = 0; i < allCategories.length; i++) {
+      print(i);
+      Future.delayed(Duration(milliseconds: i * 400), () {
+        categories.add(allCategories[i]);
+        categoriesListKey.currentState?.insertItem(categories.length - 1);
+      });
+    }
   }
 
 }

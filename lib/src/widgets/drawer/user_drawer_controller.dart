@@ -8,7 +8,7 @@ class UserDrawerController {
   late BuildContext context;
   List<Map> clientDrawerItems = [
     { 'title': 'Perfil', 'icon': FlutterIcons.md_person_ion, 'route': 'profile' },
-    { 'title': 'Compras', 'icon': FlutterIcons.shopping_cart_faw },
+    { 'title': 'Compras', 'icon': FlutterIcons.shopping_cart_fea },
     { 'title': 'Ajustes', 'icon': FlutterIcons.setting_ant },
     { 'title': 'Notificaciones', 'icon': FlutterIcons.bell_mco }
   ];

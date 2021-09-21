@@ -173,9 +173,9 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
                     itemBuilder: (_, index, animation) {
                       return _categoryChip(
                         ProductCategory(
-                            name: 'No hay categorías recientes',
-                            image: 'assets/images/product-category-image.png',
-                          ),
+                          name: 'No hay categorías recientes',
+                          image: 'assets/images/product-category-image.png',
+                        ),
                         animation,
                         index
                       );
