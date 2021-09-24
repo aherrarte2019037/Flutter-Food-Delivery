@@ -353,21 +353,14 @@ class _ProductListState extends State<ClientProductListPage> {
           const SizedBox(height: 15),
           Container(
             height: 240,
-            child: _controller.productsIsLoading
-              ? Container(
-                  padding: const EdgeInsets.all(10),
-                  width: 55,
-                  height: 50,
-                  child: const CircularProgressIndicator(color: Colors.black, strokeWidth: 3),
-                )
-              : ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: categoryGrouped['products'].length,
-                  itemBuilder: (_, index) {
-                    Product product = Product.fromJson(categoryGrouped['products'][index]);
-                    return _productCard(product);
-                  },
-                )
+            child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: categoryGrouped['products'].length,
+              itemBuilder: (_, index) {
+                Product product = Product.fromJson(categoryGrouped['products'][index]);
+                return _productCard(product);
+              },
+            ),
           ),
         ]
       ),

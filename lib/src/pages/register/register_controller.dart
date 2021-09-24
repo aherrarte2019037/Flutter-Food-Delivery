@@ -48,6 +48,16 @@ class RegisterController {
       return;
     }
 
+    if (!passwordInput.text.contains(RegExp(r'[0-9]'))) {
+      CustomSnackBar.showError(context, 'Aviso', 'Contraseña con al menos 1 dígito');
+      return;
+    }
+
+    if (!passwordInput.text.contains(RegExp(r'[a-z]')) || !!passwordInput.text.contains(RegExp(r'[A-Z]'))) {
+      CustomSnackBar.showError(context, 'Aviso', 'Contraseña debe contener letras');
+      return;
+    }
+
     user = User(
       email: emailInput.text.trim(),
       password: passwordInput.text.trim(),

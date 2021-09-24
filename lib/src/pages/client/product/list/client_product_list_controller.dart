@@ -9,7 +9,6 @@ class ClientProductListController {
   List<ProductCategory> categories = [];
   List products = [];
   bool categoriesIsLoading = false;
-  bool productsIsLoading = false;
   late BuildContext context;
   late Function updateView;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
@@ -36,7 +35,7 @@ class ClientProductListController {
     categoriesIsLoading = true;
     updateView();
 
-    List<ProductCategory> allCategories = await categoryProvider.getAll();
+    List<ProductCategory> allCategories = await categoryProvider.getCategoriesWithProducts();
     if (allCategories.isEmpty) allCategories.add(ProductCategory(name: 'No hay categorías', image: 'assets/images/product-category-image.png',));
     
     categoriesIsLoading = false;
