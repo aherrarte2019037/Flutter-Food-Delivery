@@ -28,9 +28,9 @@ class Product {
     description: json["description"],
     price      : json["price"],
     available  : json["available"],
-    images     : List<String>.from(json["images"].map((x) => x)),
+    images     : json["images"] != null ? List<String>.from(json["images"].map((x) => x)) : null,
     category   : json["category"],
-    createdAt: DateTime.parse(json["createdAt"]),
+    createdAt  : json["createdAt"] != null ? DateTime.parse(json["createdAt"]) : null,
   );
 
   static List<Product> fromJsonList(List json) {

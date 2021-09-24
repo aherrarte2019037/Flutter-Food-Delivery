@@ -34,6 +34,27 @@ class ProductProvider {
     }
   }
 
+  Future<List> productsGroupBy(String field) async {
+    try {
+      Uri request = Uri.http(_url, '$_api/groupBy/$field');
+
+      Map<String, String> headers = {
+        'Content-type' : 'application/json',
+        'Authorization': 'Bearer ${SharedPref.authToken}'
+      };
+
+      final response = await http.get(request, headers: headers);
+      final data = jsonDecode(response.body);
+
+      ResponseApi responseApi = ResponseApi.fromJson(data);
+      return responseApi.data;
+
+    } catch (e) {
+      print('Error: $e');
+      return [];
+    }
+  }
+
   Future<Stream?> createProduct(Product product, List<File> images) async {
     try {
       Uri request = Uri.http(_url, '$_api/');

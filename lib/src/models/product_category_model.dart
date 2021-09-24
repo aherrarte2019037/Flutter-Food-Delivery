@@ -16,11 +16,11 @@ class ProductCategory {
   });
 
   factory ProductCategory.fromJson(Map<String, dynamic> json) => ProductCategory(
-    name: json["name"],
+    name       : json["name"],
     description: json["description"],
-    image: json["image"],
-    id       : json["_id"],
-    createdAt: DateTime.parse(json["createdAt"]),
+    image      : json["image"],
+    id         : json["_id"],
+    createdAt  : json["createdAt"] != null ? DateTime.parse(json["createdAt"]) : null,
   );
 
   static List<ProductCategory> fromJsonList(List json) {

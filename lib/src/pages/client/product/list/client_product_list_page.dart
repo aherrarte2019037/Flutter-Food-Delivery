@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:food_delivery/src/models/product_category_model.dart';
+import 'package:food_delivery/src/models/product_model.dart';
 import 'package:food_delivery/src/pages/client/product/list/client_product_list_controller.dart';
 import 'package:food_delivery/src/utils/string_extension.dart';
+import 'package:food_delivery/src/widgets/shimmer_widget.dart';
 import 'package:food_delivery/src/widgets/drawer/user_drawer.dart';
 
 class ClientProductListPage extends StatefulWidget {
@@ -24,9 +26,8 @@ class _ProductListState extends State<ClientProductListPage> {
 
   @override
   void initState() {
-    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) async {
+    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
       _controller.init(context, updateView);
-      _controller.addCategoriesToList();
     });
     super.initState();
   }
@@ -46,17 +47,39 @@ class _ProductListState extends State<ClientProductListPage> {
         padding: const EdgeInsets.only(bottom: 30, left: 42, right: 42),
         height: height,
         width: width,
-        child: Column(
-          children: [
-            const SizedBox(height: 6),
-            _bannerImage(),
-            const SizedBox(height: 35),
-            _searchBar(),
-            const SizedBox(height: 28),
-            _categoriesChipSection(),
-            const SizedBox(height: 28),
-            _foodCategoryList()
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 15),
+              _bannerImage(),
+              const SizedBox(height: 30),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Bievenido,', style: TextStyle(fontSize: 28)),
+                  const SizedBox(height: 4),
+                  const Text('Angel Herrarte', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500)),
+                ],
+              ),
+              const SizedBox(height: 20),
+              _searchBar(),
+              const SizedBox(height: 35),
+              _categoriesChipSection(),
+              const SizedBox(height: 40),
+              ListView.separated(
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _controller.products.length,
+                shrinkWrap: true,
+                separatorBuilder: (_, __) => const SizedBox(height: 40),
+                itemBuilder: (_, index) {
+                  if (_controller.products[index]['products'].length == 0) return const SizedBox.shrink();
+                  
+                  return _foodCategoryList(_controller.products[index]);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -155,7 +178,7 @@ class _ProductListState extends State<ClientProductListPage> {
               contentPadding: const EdgeInsets.symmetric(horizontal: 25, vertical: 17),
               border: InputBorder.none,
               hintText: 'Qué quieres comer?',
-              hintStyle: const TextStyle(color: Color(0XFF9FA6C1), fontWeight: FontWeight.w400),
+              hintStyle: const TextStyle(color: Color(0XFF9FA6C1), fontWeight: FontWeight.w400, fontSize: 15.5),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide.none,
@@ -194,7 +217,7 @@ class _ProductListState extends State<ClientProductListPage> {
         children: [
           const Text(
             'Categorías',
-            style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500),
+            style: TextStyle(color: Color(0XFF292929), fontSize: 18, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 15),
           ClipRRect(
@@ -281,7 +304,7 @@ class _ProductListState extends State<ClientProductListPage> {
     );
   }
 
-  Widget _foodCategoryList() {
+  Widget _foodCategoryList(Map categoryGrouped) {
     return Container(
       width: double.infinity,
       child: Column(
@@ -290,10 +313,10 @@ class _ProductListState extends State<ClientProductListPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Bebidas',
-                  style: TextStyle(color: Colors.black, fontSize: 18,fontWeight: FontWeight.w500),
+                  categoryGrouped['category']['name'].toString().capitalize(),
+                  style: const TextStyle(color: Color(0XFF292929), fontSize: 18,fontWeight: FontWeight.w500),
                 ),
               ),
               OutlinedButton(
@@ -328,38 +351,137 @@ class _ProductListState extends State<ClientProductListPage> {
             ],
           ),
           const SizedBox(height: 15),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(28),
-            child: Container(
-              height: 200,
-              child: _controller.productsIsLoading
-                ? Container(
-                    padding: const EdgeInsets.all(10),
-                    width: 55,
-                    height: 50,
-                    child: const CircularProgressIndicator(color: Colors.black, strokeWidth: 3),
-                  )
-                : AnimatedList(
-                    scrollDirection: Axis.horizontal,
-                    initialItemCount: 2,
-                    itemBuilder: (_, index, animation) => _productCard(),
-                  )
-            ),
+          Container(
+            height: 240,
+            child: _controller.productsIsLoading
+              ? Container(
+                  padding: const EdgeInsets.all(10),
+                  width: 55,
+                  height: 50,
+                  child: const CircularProgressIndicator(color: Colors.black, strokeWidth: 3),
+                )
+              : ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: categoryGrouped['products'].length,
+                  itemBuilder: (_, index) {
+                    Product product = Product.fromJson(categoryGrouped['products'][index]);
+                    return _productCard(product);
+                  },
+                )
           ),
         ]
       ),
     );
   }
 
-  Widget _productCard() {
+  Widget _productCard(Product product) {
     return Padding(
       padding: const EdgeInsets.only(right: 25),
       child: Container(
-        height: 200,
-        width: 165,
+        width: 175,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 18),
         decoration: BoxDecoration(
-          color: Colors.orangeAccent,
-          borderRadius: BorderRadius.circular(28)
+          color: const Color(0XFFF8F8F8),
+          borderRadius: BorderRadius.circular(28),
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              right: 0,
+              top: 5,
+              child: Container(
+                height: 25,
+                width: 25,
+                padding: const EdgeInsets.only(bottom: 1.5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.redAccent.withOpacity(0.25),
+                ),
+                child: const Icon(FlutterIcons.fire_faw5s, size: 15, color: Colors.redAccent),
+              ),
+            ),
+            Transform.translate(
+              offset: const Offset(0, -2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 105,
+                    height: 105,
+                    child: product.images![0].contains('assets')
+                      ? Image.asset(
+                          product.images![0],
+                          fit: BoxFit.cover,
+                        )
+                      : Image.network(
+                          product.images![0],
+                          fit: BoxFit.contain,
+                          loadingBuilder: (_, child, progress) {
+                            if (progress == null) return child;
+
+                            return Transform.translate(
+                              offset: const Offset(1, -2),
+                              child: const ShimmerWidget(height: 70, width: 70, radius: 50),
+                            );
+                          },
+                        )
+                  ),
+                  Text(
+                    product.name.capitalize(),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                      color: Color(0XFF292929),
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    product.description.capitalize(),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 13,
+                      color: Color(0XFF292929),
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Q${product.price}',
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0XFF292929)
+                        ),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(FlutterIcons.plus_fea, size: 19, color: Colors.white),
+                        label: const Text(''),
+                        style: OutlinedButton.styleFrom(
+                          elevation: 4,
+                          primary: Colors.white,
+                          fixedSize: const Size(35, 35),
+                          minimumSize: const Size(35, 35),
+                          padding: const EdgeInsets.only(left: 8, right: 0, top: 0, bottom: 2.5),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                          backgroundColor: Colors.black,
+                          side: BorderSide.none,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

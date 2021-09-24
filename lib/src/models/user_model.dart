@@ -30,7 +30,7 @@ class User {
     image    : json["image"],
     id       : json["_id"],
     roles    : List<Role>.from(json["roles"].map((x) => Role.fromJson(x))),
-    createdAt: DateTime.parse(json["createdAt"]),
+    createdAt  : json["createdAt"] != null ? DateTime.parse(json["createdAt"]) : null,
   );
 
   Map<String, dynamic> toJson() => {
