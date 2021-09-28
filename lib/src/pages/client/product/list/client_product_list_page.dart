@@ -106,6 +106,7 @@ class _ProductListState extends State<ClientProductListPage> {
                   elevation: 0,
                   primary: Colors.white,
                   onPrimary: Colors.grey,
+                  shadowColor: Colors.transparent,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                 ),
               ),
@@ -128,6 +129,7 @@ class _ProductListState extends State<ClientProductListPage> {
                     elevation: 0,
                     primary: Colors.white,
                     onPrimary: Colors.grey,
+                    shadowColor: Colors.transparent,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                   ),
                 ),
@@ -370,111 +372,114 @@ class _ProductListState extends State<ClientProductListPage> {
   Widget _productCard(Product product) {
     return Padding(
       padding: const EdgeInsets.only(right: 25),
-      child: Container(
-        width: 175,
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 18),
-        decoration: BoxDecoration(
-          color: const Color(0XFFF8F8F8),
-          borderRadius: BorderRadius.circular(28),
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              right: 0,
-              top: 5,
-              child: Container(
-                height: 25,
-                width: 25,
-                padding: const EdgeInsets.only(bottom: 1.5),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.redAccent.withOpacity(0.25),
+      child: GestureDetector(
+        onTap: () => _controller.showProductDetailModal(product),
+        child: Container(
+          width: 175,
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 18),
+          decoration: BoxDecoration(
+            color: const Color(0XFFF8F8F8),
+            borderRadius: BorderRadius.circular(28),
+          ),
+          child: Stack(
+            children: [
+              Positioned(
+                right: 0,
+                top: 5,
+                child: Container(
+                  height: 25,
+                  width: 25,
+                  padding: const EdgeInsets.only(bottom: 1.5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.redAccent.withOpacity(0.25),
+                  ),
+                  child: const Icon(FlutterIcons.fire_faw5s, size: 15, color: Colors.redAccent),
                 ),
-                child: const Icon(FlutterIcons.fire_faw5s, size: 15, color: Colors.redAccent),
               ),
-            ),
-            Transform.translate(
-              offset: const Offset(0, -2),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 105,
-                    height: 105,
-                    child: product.images![0].contains('assets')
-                      ? Image.asset(
-                          product.images![0],
-                          fit: BoxFit.cover,
-                        )
-                      : Image.network(
-                          product.images![0],
-                          fit: BoxFit.contain,
-                          loadingBuilder: (_, child, progress) {
-                            if (progress == null) return child;
-
-                            return Transform.translate(
-                              offset: const Offset(1, -2),
-                              child: const ShimmerWidget(height: 70, width: 70, radius: 50),
-                            );
-                          },
-                        )
-                  ),
-                  Text(
-                    product.name.capitalize(),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                      color: Color(0XFF292929),
-                      letterSpacing: 0.3,
+              Transform.translate(
+                offset: const Offset(0, -2),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 105,
+                      height: 105,
+                      child: product.images![0].contains('assets')
+                        ? Image.asset(
+                            product.images![0],
+                            fit: BoxFit.cover,
+                          )
+                        : Image.network(
+                            product.images![0],
+                            fit: BoxFit.contain,
+                            loadingBuilder: (_, child, progress) {
+                              if (progress == null) return child;
+      
+                              return Transform.translate(
+                                offset: const Offset(1, -2),
+                                child: const ShimmerWidget(height: 70, width: 70, radius: 50),
+                              );
+                            },
+                          ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    product.description.capitalize(),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13,
-                      color: Color(0XFF292929),
-                      letterSpacing: 0.3,
+                    Text(
+                      product.name.capitalize(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                        color: Color(0XFF292929),
+                        letterSpacing: 0.3,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Q${product.price}',
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0XFF292929)
-                        ),
+                    const SizedBox(height: 4),
+                    Text(
+                      product.description.capitalize(),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13,
+                        color: Color(0XFF292929),
+                        letterSpacing: 0.3,
                       ),
-                      OutlinedButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(FlutterIcons.plus_fea, size: 19, color: Colors.white),
-                        label: const Text(''),
-                        style: OutlinedButton.styleFrom(
-                          elevation: 4,
-                          primary: Colors.white,
-                          fixedSize: const Size(35, 35),
-                          minimumSize: const Size(35, 35),
-                          padding: const EdgeInsets.only(left: 8, right: 0, top: 0, bottom: 2.5),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                          backgroundColor: Colors.black,
-                          side: BorderSide.none,
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Q${product.price}',
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0XFF292929)
+                          ),
                         ),
-                      ),
-                    ],
-                  )
-                ],
+                        OutlinedButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(FlutterIcons.plus_fea, size: 19, color: Colors.white),
+                          label: const Text(''),
+                          style: OutlinedButton.styleFrom(
+                            elevation: 4,
+                            primary: Colors.white,
+                            fixedSize: const Size(35, 35),
+                            minimumSize: const Size(35, 35),
+                            padding: const EdgeInsets.only(left: 8, right: 0, top: 0, bottom: 2.5),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                            backgroundColor: Colors.black,
+                            side: BorderSide.none,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

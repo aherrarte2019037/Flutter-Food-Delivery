@@ -98,8 +98,8 @@ Widget _backButton(RolesController _roleController) {
           elevation: 0,
           primary: Colors.white,
           onPrimary: Colors.grey,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
     ),
   );
 }
@@ -120,8 +120,8 @@ Widget _moreButton() {
           elevation: 0,
           primary: Colors.white,
           onPrimary: Colors.grey,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
     ),
   );
 }

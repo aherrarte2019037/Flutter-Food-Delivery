@@ -96,6 +96,7 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(2),
                 elevation: 0,
+                shadowColor: Colors.transparent,
                 primary: Colors.white,
                 onPrimary: Colors.grey,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
@@ -118,6 +119,7 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
                   padding: const EdgeInsets.all(2),
                   elevation: 0,
                   primary: Colors.white,
+                  shadowColor: Colors.transparent,
                   onPrimary: Colors.grey,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                 ),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/src/models/product_category_model.dart';
+import 'package:food_delivery/src/models/product_model.dart';
+import 'package:food_delivery/src/pages/client/product/detail/client_product_detail_page.dart';
 import 'package:food_delivery/src/providers/product_category_provider.dart';
 import 'package:food_delivery/src/providers/product_provider.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class ClientProductListController {
   ProductCategoryProvider categoryProvider = ProductCategoryProvider();
@@ -47,6 +50,13 @@ class ClientProductListController {
         categoriesListKey.currentState?.insertItem(categories.length - 1);
       });
     }
+  }
+
+  void showProductDetailModal(Product product) {
+    showMaterialModalBottomSheet(
+      context: context,
+      builder: (_) => ClientProductDetailPage(product: product),
+    );
   }
 
 }

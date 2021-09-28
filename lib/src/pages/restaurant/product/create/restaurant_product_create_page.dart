@@ -106,15 +106,14 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
           children: [
             ElevatedButton(
               onPressed: _controller.goBack,
-              child: const Icon(Icons.arrow_back_rounded,
-                  size: 30, color: Colors.black),
+              child: const Icon(Icons.arrow_back_rounded, size: 30, color: Colors.black),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(2),
                 elevation: 0,
+                shadowColor: Colors.transparent,
                 primary: Colors.white,
                 onPrimary: Colors.grey,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
               ),
             ),
             const Text(
@@ -133,6 +132,7 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.all(2),
                   elevation: 0,
+                  shadowColor: Colors.transparent,
                   primary: Colors.white,
                   onPrimary: Colors.grey,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
