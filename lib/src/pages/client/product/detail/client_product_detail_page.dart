@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -50,13 +51,17 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
           children: [
             const SizedBox(height: 4),
             _imageCarousel(),
+            const SizedBox(height: 30),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 42),
                 child: Column(
                   children: [
-                    Expanded(
-                      child: Container(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _quantityButton()
+                      ],
                     ),
                   ],
                 ),
@@ -119,7 +124,7 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
 
   Widget _imageCarousel() {
     return Container(
-      height: 228,
+      height: 225,
       child: Column(
         children: [
           CarouselSlider.builder(
@@ -141,12 +146,12 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemCount: _controller.product.images!.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 5),
+              separatorBuilder: (_, __) => const SizedBox(width: 4),
               itemBuilder: (_, index) {
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  width: _controller.actualCarouselIndex == index ? 18 : 8,
-                  height: 8,
+                  width: _controller.actualCarouselIndex == index ? 18 : 6,
+                  height: 5,
                   decoration: BoxDecoration(
                     color: _controller.actualCarouselIndex == index
                       ? const Color(0XFFFF8C3E)
@@ -181,35 +186,114 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
     );
   }
 
+  Widget _quantityButton() {
+    return Row(
+      children: [
+        Transform.translate(
+          offset: const Offset(6, 0),
+          child: ElevatedButton(
+            onPressed: _controller.increaseProductQuantity,
+            child: const Icon(Icons.add_rounded, size: 24, color: Colors.white),
+            style: ElevatedButton.styleFrom(
+              shadowColor: Colors.transparent,
+              minimumSize: const Size(45, 45),
+              padding: const EdgeInsets.only(left: 8, bottom: 1),
+              elevation: 0,
+              primary: const Color(0XFFFF8C3E),
+              onPrimary: Colors.white,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(50),
+                  bottomLeft: Radius.circular(50),
+                ),
+              ),
+            ),
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {},
+          child: ZoomIn(
+            from: 1,
+            manualTrigger: true,
+            duration: const Duration(milliseconds: 300),
+            controller: (controller) => _controller.productQuantityController = controller,
+            child: Text(
+              _controller.productQuantity.toString(),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
+            ),
+          ),
+          style: ElevatedButton.styleFrom(
+            shadowColor: Colors.transparent,
+            padding: const EdgeInsets.all(0),
+            fixedSize: const Size(40, 45),
+            minimumSize: const Size(40, 45),
+            elevation: 0,
+            primary: const Color(0XFFFF8C3E),
+            onPrimary: const Color(0XFFFF8C3E),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+          ),
+        ),
+        Transform.translate(
+          offset: const Offset(-6, 0),
+          child: ElevatedButton(
+            onPressed: _controller.decreaseProductQuantity,
+            child: const Icon(Icons.remove_rounded, size: 24, color: Colors.white),
+            style: ElevatedButton.styleFrom(
+              shadowColor: Colors.transparent,
+              minimumSize: const Size(45, 45),
+              padding: const EdgeInsets.only(right: 8, bottom: 1),
+              elevation: 0,
+              primary: const Color(0XFFFF8C3E),
+              onPrimary: Colors.white,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(50),
+                  bottomRight: Radius.circular(50),
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
   Widget _bottomSection() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
       child: Container(
-        width: double.infinity,
         height: 60,
-        child: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            elevation: 4,
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            primary: Colors.black.withOpacity(0.9),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            textStyle: const TextStyle(
-              fontSize: 16.5,
-              letterSpacing: 0.5,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text('Añadir al carrito', style: TextStyle(color: Colors.white, letterSpacing: 0.64)),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 3),
-                child: Icon(FlutterIcons.shopping_cart_fea, size: 22),
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: ElevatedButton(
+            onPressed: _controller.addToCart,
+            style: ElevatedButton.styleFrom(
+              elevation: 4,
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              primary: Colors.black.withOpacity(0.9),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              textStyle: const TextStyle(
+                fontSize: 16.5,
+                letterSpacing: 0.5,
+                fontWeight: FontWeight.w500,
               ),
-            ],
+            ),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: 185,
+              height: 60,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text('Añadir al carrito', style: TextStyle(color: Colors.white, letterSpacing: 0.64)),
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 3),
+                    child: Icon(FlutterIcons.shopping_cart_fea, size: 22),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
