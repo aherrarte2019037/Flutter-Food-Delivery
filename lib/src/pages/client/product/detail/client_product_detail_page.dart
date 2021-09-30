@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:timeago/timeago.dart' as timeago;
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:food_delivery/src/models/product_model.dart';
@@ -56,12 +57,26 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 42),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _quantityButton()
-                      ],
+                    _quantityButton(),
+                    const SizedBox(height: 50),
+                    Container(
+                      height: 72,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _controller.product.name,
+                            style: const TextStyle(fontSize: 30,fontWeight: FontWeight.w500, color: Color(0XFF343434))
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            'Agregado ${timeago.format(_controller.product.createdAt ?? DateTime(0))}',
+                            style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w400, color: Color(0XFF8F8F8F))
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -188,6 +203,7 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
 
   Widget _quantityButton() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Transform.translate(
           offset: const Offset(6, 0),
@@ -219,7 +235,7 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
             controller: (controller) => _controller.productQuantityController = controller,
             child: Text(
               _controller.productQuantity.toString(),
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
+              style: const TextStyle(fontSize: 16.5, fontWeight: FontWeight.w500, color: Colors.white),
             ),
           ),
           style: ElevatedButton.styleFrom(
