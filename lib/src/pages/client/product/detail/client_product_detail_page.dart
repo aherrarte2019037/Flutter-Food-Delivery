@@ -43,7 +43,7 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _appBar(),
-      bottomNavigationBar: _bottomSection(),
+      bottomNavigationBar: _addToCartButton(),
       body: Container(
         padding: const EdgeInsets.only(bottom: 30),
         height: height,
@@ -61,23 +61,7 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
                   children: [
                     _quantityButton(),
                     const SizedBox(height: 50),
-                    Container(
-                      height: 72,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _controller.product.name,
-                            style: const TextStyle(fontSize: 30,fontWeight: FontWeight.w500, color: Color(0XFF343434))
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            'Agregado ${timeago.format(_controller.product.createdAt ?? DateTime(0))}',
-                            style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w400, color: Color(0XFF8F8F8F))
-                          ),
-                        ],
-                      ),
-                    ),
+                    _nameSection()
                   ],
                 ),
               ),
@@ -274,7 +258,75 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
     );
   }
 
-  Widget _bottomSection() {
+  Widget _nameSection() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              _controller.product.name,
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.w500,
+                color: Colors.black.withOpacity(0.9),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Transform.translate(
+                  offset: const Offset(0, -1),
+                  child: const Icon(
+                    FlutterIcons.clock_faw5,
+                    size: 14,
+                    color: Color(0XFF8F8F8F),
+                  ),
+                ),
+                Text(
+                  ' Agregado ${timeago.format(_controller.product.createdAt!)}',
+                  style: const TextStyle(
+                    fontSize: 14.5,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0XFF8F8F8F),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(right: 3.5, top: 3.5),
+              child: Text(
+                'Q',
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0XFFFE9B57),
+                ),
+              ),
+            ),
+            Text(
+              _controller.product.price.toString(),
+              style: TextStyle(
+                fontSize: 38,
+                fontWeight: FontWeight.w700,
+                color: Colors.black.withOpacity(0.9),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _addToCartButton() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
       child: Container(

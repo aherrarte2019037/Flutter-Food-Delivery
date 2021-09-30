@@ -5,6 +5,7 @@ class Product {
   String name;
   String description;
   int price;
+  int calories;
   bool? available;
   List<String>? images;
   dynamic category;
@@ -14,6 +15,7 @@ class Product {
     required this.name,
     required this.description,
     required this.price,
+    required this.calories,
     this.id,
     this.available,
     this.images,
@@ -27,6 +29,7 @@ class Product {
     name       : json["name"],
     description: json["description"],
     price      : json["price"],
+    calories      : json["calories"],
     available  : json["available"],
     images     : json["images"] != null ? List<String>.from(json["images"].map((x) => x)) : null,
     category   : json["category"],
@@ -42,6 +45,7 @@ class Product {
     "name"       : name,
     "description": description,
     "price"      : price,
+    "calories"   : calories,
     "available"  : available,
     "images"     : images != null ? List<dynamic>.from(images!.map((x) => x)) : null,
     "category"   : category,

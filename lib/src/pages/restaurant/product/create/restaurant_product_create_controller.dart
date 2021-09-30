@@ -21,6 +21,7 @@ class RestaurantProductCreateController {
   Map<String, TextEditingController> textFieldControllers = {
     'name': TextEditingController(),
     'price': TextEditingController(),
+    'calories': TextEditingController(),
     'description': TextEditingController(),
     'category': TextEditingController(),
   };
@@ -79,9 +80,10 @@ class RestaurantProductCreateController {
     }
 
     product = Product(
-      name: textFieldControllers['name']!.text,
-      price: int.parse(textFieldControllers['price']!.text),
-      category: textFieldControllers['category']!.text,
+      name       : textFieldControllers['name']!.text,
+      price      : int.parse(textFieldControllers['price']!.text),
+      calories   : int.parse(textFieldControllers['calories']!.text),
+      category   : textFieldControllers['category']!.text,
       description: textFieldControllers['description']!.text
     );
     createProductIsLoading = true;

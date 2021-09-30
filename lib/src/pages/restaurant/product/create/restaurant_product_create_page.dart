@@ -71,6 +71,8 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
                 const SizedBox(height: 35),
                 _textFieldPrice(),
                 const SizedBox(height: 35),
+                _textFieldCalories(),
+                const SizedBox(height: 35),
                 _dropDownCategories(),
                 const SizedBox(height: 35),
                 _textFieldDescription(),
@@ -81,9 +83,7 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: _controller.images.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _uploadedCardImage(_controller.images[index], index);
-                  },
+                  itemBuilder: (_, index) => _uploadedCardImage(_controller.images[index], index),
                 ),
               ],
             ),
@@ -188,6 +188,7 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
                               name: 'No hay productos recientes',
                               description: '',
                               price: 0,
+                              calories: 0,
                               images: [
                                 'assets/images/product-category-image.png'
                               ],
@@ -301,6 +302,32 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
         hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
+          borderRadius: BorderRadius.circular(14),
+        ),
+      ),
+    );
+  }
+
+  Widget _textFieldCalories() {
+    return TextField(
+      controller: _controller.textFieldControllers['calories'],
+      textInputAction: TextInputAction.done,
+      keyboardType: TextInputType.number,
+      cursorColor: Colors.grey,
+      style: const TextStyle(color: Colors.black, fontSize: 18),
+      decoration: InputDecoration(
+        labelText: 'Calorías',
+        labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        hintText: 'Calorías Del Producto',
+        hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
           borderRadius: BorderRadius.circular(14),
