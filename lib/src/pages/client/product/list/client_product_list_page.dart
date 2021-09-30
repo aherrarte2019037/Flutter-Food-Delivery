@@ -360,6 +360,8 @@ class _ProductListState extends State<ClientProductListPage> {
             itemCount: categoryGrouped['products'].length,
               itemBuilder: (_, index) {
                 Product product = Product.fromJson(categoryGrouped['products'][index]);
+                product.category = categoryGrouped['category']['name'].toString();
+
                 return _productCard(product);
               },
             ),

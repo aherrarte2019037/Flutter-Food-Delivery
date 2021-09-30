@@ -5,7 +5,7 @@ class ClientProductDetailController {
   late BuildContext context;
   late Function updateView;
   late AnimationController productQuantityController;
-  Product product = Product(name: '', description: '', price: 0, calories: 0, images: [], createdAt: DateTime(0));
+  Product product = Product(name: '', description: '', price: 0, calories: 0, images: [], createdAt: DateTime(0), category: '', available: true);
   int actualCarouselIndex = 0;
   int productQuantity = 1;
 

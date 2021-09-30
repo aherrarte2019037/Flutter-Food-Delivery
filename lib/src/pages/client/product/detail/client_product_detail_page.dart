@@ -61,7 +61,9 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
                   children: [
                     _quantityButton(),
                     const SizedBox(height: 50),
-                    _nameSection()
+                    _nameSection(),
+                    const SizedBox(height: 40),
+                    _chipsSection(),
                   ],
                 ),
               ),
@@ -326,6 +328,58 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
     );
   }
 
+  Widget _chipsSection() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            const Icon(
+              FlutterIcons.fire_faw5s,
+              color: Color(0XFFFF8C3E),
+              size: 20,
+            ),
+            const SizedBox(width: 5),
+            const Text(
+              '195 Cal',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            const Icon(FlutterIcons.md_restaurant_ion, color: Colors.redAccent, size: 23),
+            const SizedBox(width: 7),
+            Text(
+              _controller.product.category,
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              _controller.product.available! ? FlutterIcons.md_checkmark_circle_ion : FlutterIcons.md_close_circle_ion,
+              color: _controller.product.available! ? Colors.greenAccent : Colors.redAccent,
+              size: 23,
+            ),
+            const SizedBox(width: 5),
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Text(
+                _controller.product.available! ? 'Disponible' : 'No Disponible',
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget _addToCartButton() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
@@ -334,7 +388,7 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
         child: Align(
           alignment: Alignment.centerRight,
           child: ElevatedButton(
-            onPressed: _controller.addToCart,
+            onPressed: _controller.product.available! ? _controller.addToCart : () {},
             style: ElevatedButton.styleFrom(
               elevation: 4,
               padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -354,10 +408,16 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text('Añadir al carrito', style: TextStyle(color: Colors.white, letterSpacing: 0.64)),
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 3),
-                    child: Icon(FlutterIcons.shopping_cart_fea, size: 22),
+                  Text(
+                    _controller.product.available! ? 'Añadir al carrito' : 'No disponible',
+                    style: const TextStyle(color: Colors.white, letterSpacing: 0.64),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 3),
+                    child: Icon(
+                      _controller.product.available! ? FlutterIcons.shopping_cart_fea : FlutterIcons.ban_sli,
+                      size: 22,
+                    ),
                   ),
                 ],
               ),
