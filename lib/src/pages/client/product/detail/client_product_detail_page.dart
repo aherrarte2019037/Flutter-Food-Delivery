@@ -187,7 +187,7 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
             height: 20,
             width: 20,
             image: image,
-            placeholder: 'assets/images/loading.gif',
+            placeholder: 'assets/images/picture-loading.gif',
             fit: BoxFit.contain,
           ),
     );
