@@ -461,8 +461,8 @@ class _ProductListState extends State<ClientProductListPage> {
                           ),
                         ),
                         OutlinedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(FlutterIcons.plus_fea, size: 19, color: Colors.white),
+                          onPressed: () => _controller.showProductDetailModal(product),
+                          icon: const Icon(FlutterIcons.more_horizontal_fea, size: 19, color: Colors.white),
                           label: const Text(''),
                           style: OutlinedButton.styleFrom(
                             elevation: 4,

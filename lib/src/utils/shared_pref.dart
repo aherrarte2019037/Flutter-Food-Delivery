@@ -14,7 +14,7 @@ class SharedPref {
     final prefs = await SharedPreferences.getInstance();
     final value = prefs.getString(key);
 
-    return value == null? false:jsonDecode(value);
+    return value == null ? false : jsonDecode(value);
   }
 
   static Future<bool> exists(String key) async {

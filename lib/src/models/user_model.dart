@@ -23,13 +23,13 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-    email    : json["email"],
-    password : json["password"],
-    firstName: json["firstName"],
-    lastName : json["lastName"],
-    image    : json["image"],
-    id       : json["_id"],
-    roles    : List<Role>.from(json["roles"].map((x) => Role.fromJson(x))),
+    email      : json["email"],
+    password   : json["password"],
+    firstName  : json["firstName"],
+    lastName   : json["lastName"],
+    image      : json["image"],
+    id         : json["_id"],
+    roles      : List<Role>.from(json["roles"].map((x) => Role.fromJson(x))),
     createdAt  : json["createdAt"] != null ? DateTime.parse(json["createdAt"]) : null,
   );
 

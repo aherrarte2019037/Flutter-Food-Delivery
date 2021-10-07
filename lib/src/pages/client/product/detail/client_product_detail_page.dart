@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:timeago/timeago.dart' as timeago;
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:food_delivery/src/models/product_model.dart';
@@ -45,27 +44,37 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
       appBar: _appBar(),
       bottomNavigationBar: _addToCartButton(),
       body: Container(
-        padding: const EdgeInsets.only(bottom: 30),
+        padding: const EdgeInsets.only(bottom: 10),
         height: height,
         width: width,
-        child: Column(
-          children: [
-            const SizedBox(height: 4),
-            _imageCarousel(),
-            const SizedBox(height: 30),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 42),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _quantityButton(),
-                    const SizedBox(height: 50),
-                    _nameSection(),
-                    const SizedBox(height: 40),
-                    _chipsSection(),
-                  ],
-                ),
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 4),
+                  _imageCarousel(),
+                  const SizedBox(height: 30),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 42),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _quantityButton(),
+                          const SizedBox(height: 50),
+                          _nameSection(),
+                          const SizedBox(height: 25),
+                          _chipsSection(),
+                          const SizedBox(height: 35),
+                          _descriptionSection()
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -128,20 +137,17 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
       height: 225,
       child: Column(
         children: [
-          CarouselSlider.builder(
-            itemCount: _controller.product.images!.length,
-            itemBuilder: (_, index, __) => _imageCarouselItem(_controller.product.images![index]),
-            options: CarouselOptions(
-              height: 220,
-              enlargeCenterPage: true,
-              enableInfiniteScroll: false,
-              onPageChanged: (index, _) => {
-                setState(() => {
-                  _controller.actualCarouselIndex = index
-                })
-              },
+          if (_controller.product.images!.isNotEmpty)
+            CarouselSlider.builder(
+              itemCount: _controller.product.images!.length,
+              itemBuilder: (_, index, __) => _imageCarouselItem(_controller.product.images![index]),
+              options: CarouselOptions(
+                height: 220,
+                enlargeCenterPage: true,
+                enableInfiniteScroll: false,
+                onPageChanged: (index, _) => _controller.setActualCarouselIndex(index),
+              ),
             ),
-          ),
           Expanded(
             child: ListView.separated(
               shrinkWrap: true,
@@ -277,27 +283,33 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
                 color: Colors.black.withOpacity(0.9),
               ),
             ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Transform.translate(
-                  offset: const Offset(0, -1),
-                  child: const Icon(
-                    FlutterIcons.clock_faw5,
-                    size: 14,
-                    color: Color(0XFF8F8F8F),
+            if (_controller.isProductPurchased['purchased'] == true)
+            Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Row(
+                children: [
+                  Transform.translate(
+                    offset: const Offset(0, -1),
+                    child: const Icon(
+                      FlutterIcons.shopping_cart_fea,
+                      size: 17,
+                      color: Color(0XFF8F8F8F),
+                    ),
                   ),
-                ),
-                Text(
-                  ' Agregado ${timeago.format(_controller.product.createdAt!)}',
-                  style: const TextStyle(
-                    fontSize: 14.5,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0XFF8F8F8F),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 6),
+                    child: Text(
+                      '${_controller.isProductPurchased['product'].quantity} en el carrito',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0XFF8F8F8F),
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            )
+                ],
+              ),
+            ),
           ],
         ),
         Row(
@@ -314,12 +326,18 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
                 ),
               ),
             ),
-            Text(
-              _controller.product.price.toString(),
-              style: TextStyle(
-                fontSize: 38,
-                fontWeight: FontWeight.w700,
-                color: Colors.black.withOpacity(0.9),
+            ZoomIn(
+              from: 1,
+              manualTrigger: true,
+              duration: const Duration(milliseconds: 300),
+              controller: (controller) => _controller.productPriceController = controller,
+              child: Text(
+                (_controller.product.price * _controller.productQuantity).toString(),
+                style: TextStyle(
+                  fontSize: 38,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black.withOpacity(0.9),
+                ),
               ),
             ),
           ],
@@ -329,52 +347,115 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
   }
 
   Widget _chipsSection() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
           children: [
-            const Icon(
-              FlutterIcons.fire_faw5s,
-              color: Color(0XFFFF8C3E),
-              size: 20,
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Transform.translate(
+                    offset: const Offset(0, -1.4),
+                    child: const Icon(
+                      FlutterIcons.fire_faw5s,
+                      color: Color(0XFFFF8C3E),
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    '${_controller.product.calories.toString()} Cal',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(width: 5),
-            const Text(
-              '195 Cal',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+            const SizedBox(width: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(FlutterIcons.md_restaurant_ion, color: Colors.redAccent, size: 23),
+                  const SizedBox(width: 7),
+                  Text(
+                    _controller.product.category,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            const Icon(FlutterIcons.md_restaurant_ion, color: Colors.redAccent, size: 23),
-            const SizedBox(width: 7),
-            Text(
-              _controller.product.category,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-            ),
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(
-              _controller.product.available! ? FlutterIcons.md_checkmark_circle_ion : FlutterIcons.md_close_circle_ion,
-              color: _controller.product.available! ? Colors.greenAccent : Colors.redAccent,
-              size: 23,
-            ),
-            const SizedBox(width: 5),
-            Padding(
-              padding: const EdgeInsets.only(top: 2),
-              child: Text(
-                _controller.product.available! ? 'Disponible' : 'No Disponible',
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+            const SizedBox(width: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 9.5, horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Transform.translate(
+                    offset: const Offset(0, -1),
+                    child: Icon(
+                      _controller.product.available! ? FlutterIcons.md_checkmark_circle_ion : FlutterIcons.md_close_circle_ion,
+                      color: _controller.product.available! ? Colors.greenAccent : Colors.redAccent,
+                      size: 23,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    _controller.product.available! ? 'Disponible' : 'No Disponible',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _descriptionSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Descripción',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 15),
+        Text(
+          '${_controller.product.description}.',
+          style: const TextStyle(fontSize: 16, color: Color(0XFF7A7A7A)),
         ),
       ],
     );

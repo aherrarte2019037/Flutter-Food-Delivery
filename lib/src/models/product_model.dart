@@ -36,9 +36,7 @@ class Product {
     createdAt  : json["createdAt"] != null ? DateTime.parse(json["createdAt"]) : null,
   );
 
-  static List<Product> fromJsonList(List json) {
-    return json.map((product) => Product.fromJson(product)).toList();
-  }
+  static List<Product> fromJsonList(List json) => json.map((product) => Product.fromJson(product)).toList();
 
   Map<String, dynamic> toJson() => {
     "_id"        : id,

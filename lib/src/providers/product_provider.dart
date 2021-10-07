@@ -10,17 +10,16 @@ import 'package:food_delivery/src/utils/shared_pref.dart';
 class ProductProvider {
   final String _url = Environment.apiDelivery;
   final String _api = 'api/products';
+  final Map<String, String> authHeaders = {
+    'Content-type': 'application/json',
+    'Authorization': 'Bearer ${SharedPref.authToken}'
+  };
 
   Future<ResponseApi?> getLatestProducts() async {
     try {
       Uri request = Uri.http(_url, '$_api/latest');
 
-      Map<String, String> headers = {
-        'Content-type' : 'application/json',
-        'Authorization': 'Bearer ${SharedPref.authToken}'
-      };
-
-      final response = await http.get(request, headers: headers);
+      final response = await http.get(request, headers: authHeaders);
       final data = jsonDecode(response.body);
 
       ResponseApi responseApi = ResponseApi.fromJson(data);
@@ -38,12 +37,7 @@ class ProductProvider {
     try {
       Uri request = Uri.http(_url, '$_api/groupBy/$field');
 
-      Map<String, String> headers = {
-        'Content-type' : 'application/json',
-        'Authorization': 'Bearer ${SharedPref.authToken}'
-      };
-
-      final response = await http.get(request, headers: headers);
+      final response = await http.get(request, headers: authHeaders);
       final data = jsonDecode(response.body);
 
       ResponseApi responseApi = ResponseApi.fromJson(data);

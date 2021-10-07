@@ -10,6 +10,10 @@ import 'package:path/path.dart';
 class UserProvider {
   final String _url = Environment.apiDelivery;
   final String _api = 'api/users';
+  final Map<String, String> authHeaders = {
+    'Content-type': 'application/json',
+    'Authorization': 'Bearer ${SharedPref.authToken}'
+  };
 
   Future<Stream?> register(User user, File? image) async {
     try {
@@ -57,12 +61,7 @@ class UserProvider {
       Uri request = Uri.http(_url, '$_api/$id');
       String body = json.encode(editUser);
 
-      Map<String, String> headers = {
-        'Content-type': 'application/json',
-        'Authorization': 'Bearer ${SharedPref.authToken}'
-      };
-
-      final response = await http.put(request, headers: headers, body: body);
+      final response = await http.put(request, headers: authHeaders, body: body);
       final data = json.decode(response.body);
       return ResponseApi.fromJson(data);
 

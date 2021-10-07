@@ -12,21 +12,16 @@ class ProductCategoryProvider {
   final String _url = Environment.apiDelivery;
   final String _api = 'api/products/categories';
   late BuildContext context;
-
-  void init(BuildContext context) {
-    this.context = context;
-  }
+  final Map<String, String> authHeaders = {
+    'Content-type': 'application/json',
+    'Authorization': 'Bearer ${SharedPref.authToken}'
+  };
 
   Future<List<ProductCategory>> getAll() async {
     try {
       Uri request = Uri.http(_url, '$_api/all');
-      
-      Map<String, String> headers = {
-        'Content-type': 'application/json',
-        'Authorization': 'Bearer ${SharedPref.authToken}'
-      };
 
-      final response = await http.get(request, headers: headers);
+      final response = await http.get(request, headers: authHeaders);
       final data = jsonDecode(response.body);
 
       ResponseApi responseApi = ResponseApi.fromJson(data);
@@ -43,13 +38,8 @@ class ProductCategoryProvider {
   Future<List<ProductCategory>> getCategoriesWithProducts() async {
     try {
       Uri request = Uri.http(_url, '$_api/withProducts');
-      
-      Map<String, String> headers = {
-        'Content-type': 'application/json',
-        'Authorization': 'Bearer ${SharedPref.authToken}'
-      };
 
-      final response = await http.get(request, headers: headers);
+      final response = await http.get(request, headers: authHeaders);
       final data = jsonDecode(response.body);
 
       ResponseApi responseApi = ResponseApi.fromJson(data);
@@ -66,13 +56,8 @@ class ProductCategoryProvider {
   Future<ResponseApi?> getLatestCategories() async {
     try {
       Uri request = Uri.http(_url, '$_api/latest');
-      
-      Map<String, String> headers = {
-        'Content-type': 'application/json',
-        'Authorization': 'Bearer ${SharedPref.authToken}'
-      };
 
-      final response = await http.get(request, headers: headers);
+      final response = await http.get(request, headers: authHeaders);
       final data = jsonDecode(response.body);
 
       ResponseApi responseApi = ResponseApi.fromJson(data);
