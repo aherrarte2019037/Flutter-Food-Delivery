@@ -122,7 +122,7 @@ class _ProductListState extends State<ClientProductListPage> {
             Stack(
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _controller.goToOrderCreate,
                   child: const Icon(FlutterIcons.shopping_cart_fea, size: 24.5, color: Colors.black),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(2),

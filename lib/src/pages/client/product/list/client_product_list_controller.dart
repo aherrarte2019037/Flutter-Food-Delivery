@@ -25,9 +25,9 @@ class ClientProductListController {
     updateView();
   }
 
-  void openDrawer() {
-    scaffoldKey.currentState?.openDrawer();
-  }
+  void openDrawer() => scaffoldKey.currentState?.openDrawer();
+
+  void goToOrderCreate() => Navigator.pushNamed(context, 'client/order/create');
 
   Future<List> getProductsGrouped() async {
     List productsGrouped = await productProvider.productsGroupBy('category');

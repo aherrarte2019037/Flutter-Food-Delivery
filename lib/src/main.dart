@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/src/pages/client/order/client_order_create_page.dart';
 import 'package:food_delivery/src/pages/client/product/list/client_product_list_page.dart';
 import 'package:food_delivery/src/pages/delivery/order/list/delivery_order_list_page.dart';
 import 'package:food_delivery/src/pages/login/login_page.dart';
@@ -50,6 +51,7 @@ class _MainAppState extends State<MainApp> {
         'roles': (BuildContext context) => const RolesPage(),
         'profile': (BuildContext context) => const ProfilePage(),
         'client/product/list': (BuildContext context) => const ClientProductListPage(),
+        'client/order/create': (BuildContext context) => const ClientOrderCreatePage(),
         'restaurant/order/list': (BuildContext context) => const RestaurantOrderListPage(),
         'restaurant/category/create': (BuildContext context) => const RestaurantCategoryCreatePage(),
         'restaurant/product/create': (BuildContext context) => const RestaurantProductCreatePage(),
