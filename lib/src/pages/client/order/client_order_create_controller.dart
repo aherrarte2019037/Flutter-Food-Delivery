@@ -8,12 +8,14 @@ import 'package:food_delivery/src/utils/iterable_extension.dart';
 class ClientOrderCreateController {
   late BuildContext context;
   late Function updateView;
+  late AnimationController totalController;
+  ShoppingCart shoppingCart = ShoppingCart(subTotal: 0, total: 0, products: []);
   Map<String, AnimationController> quantityControllers = {};
   Map<String, AnimationController> priceControllers = {};
   Map<String, GlobalKey<AnimatedListState>> animatedListKeys = {};
-  bool confirmOrderIsLoading = false;
   ShoppingCartProvider shoppingCartProvider = ShoppingCartProvider();
   Map<dynamic, List<ShoppingCartItem>> productsByCategory = {};
+  bool confirmOrderIsLoading = false;
 
   void init(BuildContext context, Function updateView) async {
     this.context = context;
@@ -30,7 +32,7 @@ class ClientOrderCreateController {
   }
 
   Future<void> groupProductsByCategory() async {
-    ShoppingCart shoppingCart = await shoppingCartProvider.getUserShoppingCart() ?? ShoppingCart(subTotal: 0, total: 0, products: []);
+    shoppingCart = await shoppingCartProvider.getUserShoppingCart() ?? ShoppingCart(subTotal: 0, total: 0, products: []);
     productsByCategory = shoppingCart.products!.groupBy((product) => product.product.category['name']);
   }
 
@@ -50,6 +52,10 @@ class ClientOrderCreateController {
     int index = productsByCategory[product.category['name']]!.indexWhere((element) => element.product.id == product.id);
     productsByCategory[product.category['name']]![index].quantity++;
 
+    shoppingCart.subTotal += product.price;
+    shoppingCart.total += product.price;
+
+    totalController.repeat();
     quantityControllers[product.id]?.repeat();
     priceControllers[product.id]?.repeat();
 
@@ -61,10 +67,13 @@ class ClientOrderCreateController {
     if (productsByCategory[product.category['name']]![index].quantity == 1) return;
 
     productsByCategory[product.category['name']]![index].quantity--;
-    
+    shoppingCart.total -= product.price;
+    shoppingCart.subTotal -= product.price;
+
+    totalController.repeat();
     quantityControllers[product.id]?.repeat();
     priceControllers[product.id]?.repeat();
-
+    
     updateView();
   }
 
@@ -79,6 +88,9 @@ class ClientOrderCreateController {
         updateView();
       });
     }
+
+    shoppingCart.total -= item.quantity * item.product.price;
+    shoppingCart.subTotal -= item.quantity * item.product.price;
 
     productsByCategory[category]?.remove(item);
     animatedListKeys[category]!.currentState!.removeItem(

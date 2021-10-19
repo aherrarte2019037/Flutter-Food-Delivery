@@ -317,39 +317,72 @@ class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
   Widget _confirmOrder() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
-      child: Container(
-        height: 60,
-        child: ElevatedButton(
-          onPressed: _controller.confirmOrderIsLoading ? () {} : _controller.confirmOrder,
-          style: ElevatedButton.styleFrom(
-            elevation: 4,
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            primary: Colors.black.withOpacity(0.9),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            textStyle: const TextStyle(
-              fontSize: 16.5,
-              letterSpacing: 0.5,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
             children: [
-              const Text('Confirmar orden', style: TextStyle(color: Colors.white)),
-              Padding(
-                padding: EdgeInsets.only(bottom: _controller.confirmOrderIsLoading ? 4 : 3),
-                child: _controller.confirmOrderIsLoading
-                  ? Container(
-                      width: 20,
-                      height: 20,
-                      child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
-                    )
-                  : const Icon(FlutterIcons.md_checkmark_ion, size: 28),
-              )
+              const Text(
+                'Total ',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+              ),
+              ZoomIn(
+                from: 1,
+                manualTrigger: true,
+                duration: const Duration(milliseconds: 300),
+                controller: (controller) => _controller.totalController = controller,
+                child: Text(
+                  'Q${_controller.shoppingCart.total}',
+                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                ),
+              ),
             ],
           ),
-        ),
+          const SizedBox(height: 6),
+          const Text(
+            'Descuento 0% (Q0)',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0XFF999999)),
+          ),
+          const SizedBox(height: 20),
+          Container(
+            height: 60,
+            child: ElevatedButton(
+              onPressed: _controller.confirmOrderIsLoading
+                ? () {}
+                : _controller.confirmOrder,
+              style: ElevatedButton.styleFrom(
+                elevation: 4,
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                primary: Colors.black.withOpacity(0.9),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                textStyle: const TextStyle(
+                  fontSize: 16.5,
+                  letterSpacing: 0.5,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text('Confirmar orden', style: TextStyle(color: Colors.white)),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: _controller.confirmOrderIsLoading ? 4 : 3),
+                    child: _controller.confirmOrderIsLoading
+                      ? Container(
+                          width: 20,
+                          height: 20,
+                          child: const CircularProgressIndicator(
+                                color: Colors.white, strokeWidth: 3),
+                        )
+                      : const Icon(FlutterIcons.md_checkmark_ion, size: 28),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
