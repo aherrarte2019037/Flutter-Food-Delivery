@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:food_delivery/src/models/product_model.dart';
 import 'package:food_delivery/src/pages/client/product/detail/client_product_detail_controller.dart';
+import 'package:food_delivery/src/widgets/custom_fade_in_image.dart';
 
 class ClientProductDetailPage extends StatefulWidget {
   final Product product;
@@ -178,18 +179,12 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
     return Container(
       width: 220,
       margin: const EdgeInsets.symmetric(horizontal: 8),
-      child: image.contains('assets')
-        ? Image.asset(
-            image,
-            fit: BoxFit.cover,
-          )
-        : FadeInImage.assetNetwork(
-            height: 20,
-            width: 20,
-            image: image,
-            placeholder: 'assets/images/picture-loading.gif',
-            fit: BoxFit.contain,
-          ),
+      child: CustomFadeInImage(
+        image: image,
+        placeholder: 'assets/images/picture-loading.gif',
+        fit: BoxFit.contain,
+        size: const Size(20, 20),
+      ),
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:food_delivery/src/models/user_model.dart';
 import 'package:food_delivery/src/utils/shared_pref.dart';
 import 'package:food_delivery/src/utils/string_extension.dart';
+import 'package:food_delivery/src/widgets/custom_fade_in_image.dart';
 import 'package:food_delivery/src/widgets/drawer/user_drawer_controller.dart';
 
 class UserDrawer extends StatefulWidget {
@@ -148,21 +149,15 @@ class _UserDrawerState extends State<UserDrawer> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(50),
-              child: Container(
-                height: 70,
-                width: 70,
-                child: user.image!.contains('assets')
-                  ? Image.asset(
-                      user.image!,
-                      fit: BoxFit.cover,
-                    )
-                  : FadeInImage.assetNetwork(
-                      height: 70,
-                      width: 70,
-                      image: user.image!,
-                      placeholder: 'assets/images/loading.gif',
-                      fit: BoxFit.cover,
-                    ),
+                child: Container(
+                  height: 70,
+                  width: 70,
+                  child: CustomFadeInImage(
+                    image: user.image!,
+                    placeholder: 'assets/images/loading.gif',
+                    fit: BoxFit.cover,
+                    size: const Size(70, 70),
+                  ),
                 ),
             ),
             const SizedBox(width: 10),

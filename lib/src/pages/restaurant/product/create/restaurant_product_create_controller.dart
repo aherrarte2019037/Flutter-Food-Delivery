@@ -122,9 +122,7 @@ class RestaurantProductCreateController {
     updateView();
   }
 
-  void dismissImage(DismissDirection direction, File image) {
-    images.remove(image);
-  }
+  void dismissImage(DismissDirection direction, File image) => images.remove(image);
 
   void resetControllers() {
     for (var controller in textFieldControllers.values) {

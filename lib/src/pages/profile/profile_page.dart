@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:food_delivery/src/utils/current_user_role.dart';
+import 'package:food_delivery/src/widgets/custom_fade_in_image.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -145,18 +146,12 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Container(
             height: 145,
             width: 145,
-            child: image.contains('assets')
-              ? Image.asset(
-                  image,
-                  fit: BoxFit.cover,
-                )
-              : FadeInImage.assetNetwork(
-                  height: 70,
-                  width: 70,
-                  image: image,
-                  placeholder: 'assets/images/loading.gif',
-                  fit: BoxFit.cover,
-                ),
+            child: CustomFadeInImage(
+              image: image,
+              placeholder: 'assets/images/loading.gif',
+              fit: BoxFit.cover,
+              size: const Size(70, 70),
+            ),
           ),
         ),
         Positioned(
