@@ -48,44 +48,45 @@ class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
           children: [
             const SizedBox(height: 25),
             Expanded(
-              child: ListView.separated(
-                physics: const BouncingScrollPhysics(),
-                itemCount: _controller.productsByCategory.keys.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 40),
-                itemBuilder: (_, categoryIndex) {
-                  String category = _controller.productsByCategory.keys.toList()[categoryIndex];
+              child: _controller.productsByCategory.keys.isNotEmpty
+                ? ListView.separated(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: _controller.productsByCategory.keys.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 40),
+                    itemBuilder: (_, categoryIndex) {
+                      String category = _controller.productsByCategory.keys.toList()[categoryIndex];
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        category.capitalize(),
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      AnimatedList(
-                        key: _controller.animatedListKeys[category],
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        initialItemCount: _controller.productsByCategory[category]!.length,
-                        itemBuilder: (_, itemIndex, animation) => Container(
-                          margin: EdgeInsets.only(top: itemIndex == 0 ? 0 : 30 ),
-                          child: _shoppingCartItem(
-                            item: _controller.productsByCategory.values.toList()[categoryIndex][itemIndex],
-                            animation: animation,
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            category.capitalize(),
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
+                          const SizedBox(height: 20),
+                          AnimatedList(
+                            key: _controller.animatedListKeys[category],
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            initialItemCount: _controller.productsByCategory[category]!.length,
+                            itemBuilder: (_, itemIndex, animation) => Container(
+                              margin: EdgeInsets.only(top: itemIndex == 0 ? 0 : 30 ),
+                              child: _shoppingCartItem(
+                                item: _controller.productsByCategory.values.toList()[categoryIndex][itemIndex],
+                                animation: animation,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  )
+                : _emptyShoppingCart(),
             ),
-
           ],
         ),
       ),
@@ -127,7 +128,7 @@ class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
                   ),
                 ),
                 Text(
-                  '${_controller.getItemsCount()} items',
+                  '${_controller.getItemsCount()} ${_controller.getItemsCount() == 1 ? 'item': 'items'}',
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -150,6 +151,30 @@ class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _emptyShoppingCart() {
+    return Transform.translate(
+      offset: const Offset(0, -30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: double.infinity,
+            height: 250,
+            child: Image.asset(
+              'assets/images/empty-cart.png',
+              fit: BoxFit.contain,
+            ),
+          ),
+          const Text(
+            'Carrito Vacío',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0XFF3556A0)),
+          ),
+        ],
       ),
     );
   }
@@ -315,76 +340,75 @@ class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
   }
 
   Widget _confirmOrder() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
+    return _controller.productsByCategory.keys.isNotEmpty
+      ? Padding(
+          padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Total ',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+              Row(
+                children: [
+                  const Text(
+                    'Total ',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                  ),
+                  ZoomIn(
+                    from: 1,
+                    manualTrigger: true,
+                    duration: const Duration(milliseconds: 300),
+                    controller: (controller) => _controller.totalController = controller,
+                    child: Text(
+                      'Q${_controller.shoppingCart.total}',
+                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ],
               ),
-              ZoomIn(
-                from: 1,
-                manualTrigger: true,
-                duration: const Duration(milliseconds: 300),
-                controller: (controller) => _controller.totalController = controller,
-                child: Text(
-                  'Q${_controller.shoppingCart.total}',
-                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+              const SizedBox(height: 6),
+              const Text(
+                'Descuento 0% (Q0)',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0XFF999999)),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: _controller.confirmOrderIsLoading ? () {} : _controller.confirmOrder,
+                  style: ElevatedButton.styleFrom(
+                    elevation: 4,
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    primary: Colors.black.withOpacity(0.9),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    textStyle: const TextStyle(
+                      fontSize: 16.5,
+                      letterSpacing: 0.5,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text('Confirmar orden', style: TextStyle(color: Colors.white)),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: _controller.confirmOrderIsLoading ? 4 : 3),
+                        child: _controller.confirmOrderIsLoading
+                          ? Container(
+                              width: 20,
+                              height: 20,
+                              child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+                            )
+                          : const Icon(FlutterIcons.md_checkmark_ion, size: 28),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 6),
-          const Text(
-            'Descuento 0% (Q0)',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0XFF999999)),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            height: 60,
-            child: ElevatedButton(
-              onPressed: _controller.confirmOrderIsLoading
-                ? () {}
-                : _controller.confirmOrder,
-              style: ElevatedButton.styleFrom(
-                elevation: 4,
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                primary: Colors.black.withOpacity(0.9),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                textStyle: const TextStyle(
-                  fontSize: 16.5,
-                  letterSpacing: 0.5,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text('Confirmar orden', style: TextStyle(color: Colors.white)),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: _controller.confirmOrderIsLoading ? 4 : 3),
-                    child: _controller.confirmOrderIsLoading
-                      ? Container(
-                          width: 20,
-                          height: 20,
-                          child: const CircularProgressIndicator(
-                                color: Colors.white, strokeWidth: 3),
-                        )
-                      : const Icon(FlutterIcons.md_checkmark_ion, size: 28),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+        )
+      : const SizedBox.shrink();
   }
 
 }

@@ -33,7 +33,7 @@ class ClientOrderCreateController {
 
   Future<void> groupProductsByCategory() async {
     shoppingCart = await shoppingCartProvider.getUserShoppingCart() ?? ShoppingCart(subTotal: 0, total: 0, products: []);
-    productsByCategory = shoppingCart.products!.groupBy((product) => product.product.category['name']);
+    productsByCategory = shoppingCart.products?.groupBy((product) => product.product.category['name']) ?? {};
   }
 
   int getItemsCount() {
@@ -49,6 +49,7 @@ class ClientOrderCreateController {
   void goBack() => Navigator.pop(context);
 
   void addItem(Product product) {
+    shoppingCartProvider.addProductToShoppingCart(product, 1);
     int index = productsByCategory[product.category['name']]!.indexWhere((element) => element.product.id == product.id);
     productsByCategory[product.category['name']]![index].quantity++;
 
@@ -66,7 +67,9 @@ class ClientOrderCreateController {
     int index = productsByCategory[product.category['name']]!.indexWhere((element) => element.product.id == product.id);
     if (productsByCategory[product.category['name']]![index].quantity == 1) return;
 
+    shoppingCartProvider.deleteProductFromShoppingCart(product, 1);
     productsByCategory[product.category['name']]![index].quantity--;
+    
     shoppingCart.total -= product.price;
     shoppingCart.subTotal -= product.price;
 
@@ -78,6 +81,7 @@ class ClientOrderCreateController {
   }
 
   void deleteProduct({required ShoppingCartItem item, required Function buildWidget}) {
+    shoppingCartProvider.deleteProductFromShoppingCart(item.product, 100000);
     String category = item.product.category['name'];
     int categoryLength = productsByCategory[category]!.length;
     int index = productsByCategory[category]!.indexWhere((element) => element.product.id == item.product.id);

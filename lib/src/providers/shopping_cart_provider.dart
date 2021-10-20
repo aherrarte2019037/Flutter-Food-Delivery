@@ -60,7 +60,26 @@ class ShoppingCartProvider {
       Uri request = Uri.http(_url, _api);
       String body = jsonEncode({ 'product': product.id, 'quantity': quantity });
 
-      final response = await http.post(request, headers: authHeaders, body: body);
+      final response = await http.put(request, headers: authHeaders, body: body);
+      final data = jsonDecode(response.body);
+
+      ResponseApi responseApi = ResponseApi.fromJson(data);
+      ShoppingCart cart = ShoppingCart.fromJson(responseApi.data);
+      
+      return cart;
+
+    } catch (e) {
+      print('Error: $e');
+      return null;
+    }
+  }
+
+  Future<ShoppingCart?> deleteProductFromShoppingCart(Product product, int quantity) async {
+    try {
+      Uri request = Uri.http(_url, '$_api/remove');
+      String body = jsonEncode({ 'product': product.id, 'quantity': quantity });
+
+      final response = await http.put(request, headers: authHeaders, body: body);
       final data = jsonDecode(response.body);
 
       ResponseApi responseApi = ResponseApi.fromJson(data);
