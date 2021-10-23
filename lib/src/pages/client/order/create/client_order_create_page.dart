@@ -38,7 +38,7 @@ class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _appBar(),
-      bottomNavigationBar: _confirmOrder(),
+      bottomNavigationBar: _goToAddressList(),
       body: Container(
         padding: const EdgeInsets.only(bottom: 30, left: 42, right: 42),
         height: height,
@@ -164,15 +164,16 @@ class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
         children: [
           Container(
             width: double.infinity,
-            height: 250,
+            height: 220,
             child: Image.asset(
               'assets/images/empty-cart.png',
               fit: BoxFit.contain,
             ),
           ),
+          const SizedBox(height: 15),
           const Text(
-            'Carrito Vacío',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0XFF3556A0)),
+            'Tu carrito esta vacío',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0XFF0C0C0C)),
           ),
         ],
       ),
@@ -339,7 +340,7 @@ class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
     );
   }
 
-  Widget _confirmOrder() {
+  Widget _goToAddressList() {
     return _controller.productsByCategory.keys.isNotEmpty
       ? Padding(
           padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
@@ -370,11 +371,11 @@ class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
                 'Descuento 0% (Q0)',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0XFF999999)),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               Container(
                 height: 60,
                 child: ElevatedButton(
-                  onPressed: _controller.confirmOrderIsLoading ? () {} : _controller.confirmOrder,
+                  onPressed: _controller.goToAddressList,
                   style: ElevatedButton.styleFrom(
                     elevation: 4,
                     padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -391,15 +392,9 @@ class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Text('Confirmar orden', style: TextStyle(color: Colors.white)),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: _controller.confirmOrderIsLoading ? 4 : 3),
-                        child: _controller.confirmOrderIsLoading
-                          ? Container(
-                              width: 20,
-                              height: 20,
-                              child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
-                            )
-                          : const Icon(FlutterIcons.md_checkmark_ion, size: 28),
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 3),
+                        child: Icon(FlutterIcons.md_checkmark_ion, size: 28),
                       )
                     ],
                   ),

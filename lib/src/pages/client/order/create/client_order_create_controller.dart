@@ -108,4 +108,6 @@ class ClientOrderCreateController {
 
   }
 
+  void goToAddressList() => Navigator.pushNamed(context, 'client/address/list');
+
 }

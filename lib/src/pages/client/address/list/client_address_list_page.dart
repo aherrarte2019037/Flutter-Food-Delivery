@@ -34,7 +34,7 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _appBar(),
-      bottomNavigationBar: _createAddress(),
+      bottomNavigationBar: _controller.addressList.isNotEmpty ? _confirmButton() : null,
       body: Container(
         padding: const EdgeInsets.only(bottom: 30, left: 42, right: 42),
         height: height,
@@ -42,11 +42,66 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(
-              child: Text('Lista De Direcciones'),
-            )
+            SizedBox(height: !_controller.addressList.isNotEmpty ? 35 : 25),
+            Expanded(
+              child: !_controller.addressList.isNotEmpty
+                ? _addressList()
+                : _emptyAddressList(),
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _addressList() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Dirección de entrega',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+        const SizedBox(height: 30),
+        Expanded(
+          child: ListView.separated(
+            physics: const BouncingScrollPhysics(),
+            itemCount: _controller.addressList.length + 1,
+            separatorBuilder: (_, __) => const SizedBox(height: 40),
+            itemBuilder: (_, categoryIndex) => _addressItem(),
+          ),
+        ), 
+      ],
+    );
+  }
+
+  Widget _addressItem() {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      width: double.infinity,
+      height: 80,
+      color: Colors.green,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            'assets/images/location.png',
+            fit: BoxFit.contain,
+            height: 50,
+            width: 50,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              
+            ],
+          )
+        ],
       ),
     );
   }
@@ -75,7 +130,7 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
               child: const Icon(Icons.arrow_back_rounded, size: 30, color: Colors.black),
             ),
             const Text(
-              'Direcciones',
+              'Entrega',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
@@ -92,15 +147,67 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
                 onPrimary: Colors.grey,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
               ),
-              child: const Icon(Icons.more_horiz, size: 30, color: Colors.black),
+              child: const Icon(Icons.add_rounded, size: 30, color: Colors.black),
             ),
           ],
         ),
       ),
     );
   }
+  
+  Widget _emptyAddressList() {
+    return Transform.translate(
+      offset: const Offset(0, -30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: double.infinity,
+            height: 240,
+            child: Image.asset(
+              'assets/images/empty-address.png',
+              fit: BoxFit.contain,
+            ),
+          ),
+          const SizedBox(height: 15),
+          const Text(
+            'No tienes direcciones',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0XFF0C0C0C)),
+          ),
+          const SizedBox(height: 20),
+          Container(
+            width: 46,
+            height: 46,
+            padding: const EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.24),
+                  spreadRadius: 2,
+                  blurRadius: 7,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Ink(
+              decoration: const ShapeDecoration(color: Colors.black, shape: CircleBorder()),
+              child: IconButton(
+                onPressed: _controller.goToCreateAddress,
+                icon: const Icon(Icons.add_rounded),
+                iconSize: 28,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-  Widget _createAddress() {
+  Widget _confirmButton() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
       child: Container(
@@ -122,10 +229,10 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text('Añadir', style: TextStyle(color: Colors.white)),
+              const Text('Continuar', style: TextStyle(color: Colors.white)),
               const Padding(
                 padding: EdgeInsets.only(bottom: 3),
-                child: Icon(FlutterIcons.edit_ent, size: 22),
+                child: Icon(FlutterIcons.md_checkmark_ion, size: 28),
               ),
             ],
           ),

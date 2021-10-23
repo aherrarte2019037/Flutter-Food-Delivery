@@ -27,6 +27,11 @@ class ClientProductDetailController {
   }
 
   void verifyProductPurchased() {
+    if (productsPurchased.isEmpty) {
+      isProductPurchased['purchased'] = false;
+      isProductPurchased['product'] = null;
+    }
+
     productsPurchased.any((item) {
       if (item.product.id == product.id) {
         isProductPurchased['purchased'] = true;
@@ -39,6 +44,13 @@ class ClientProductDetailController {
   }
 
   void goBack() => Navigator.pop(context);
+
+  Future<void> goToCart() async {
+    await Navigator.pushNamed(context, 'client/order/create');
+    productsPurchased = await shoppingCartProvider.getProductsPurchased();
+    verifyProductPurchased();
+    updateView();
+  }
 
   void increaseProductQuantity() {
     productQuantity++;

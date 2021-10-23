@@ -34,7 +34,7 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _appBar(),
-      bottomNavigationBar: _createAddress(),
+      bottomNavigationBar: _createAddressButton(),
       body: Container(
         padding: const EdgeInsets.only(bottom: 30, left: 42, right: 42),
         height: height,
@@ -75,7 +75,7 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
               child: const Icon(Icons.arrow_back_rounded, size: 30, color: Colors.black),
             ),
             const Text(
-              'Añadir',
+              'Añadir Dirección',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
@@ -100,7 +100,7 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
     );
   }
 
-  Widget _createAddress() {
+  Widget _createAddressButton() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
       child: Container(
@@ -125,7 +125,7 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
               const Text('Añadir', style: TextStyle(color: Colors.white)),
               const Padding(
                 padding: EdgeInsets.only(bottom: 3),
-                child: Icon(FlutterIcons.edit_ent, size: 22),
+                child: Icon(FlutterIcons.md_checkmark_ion, size: 28),
               ),
             ],
           ),

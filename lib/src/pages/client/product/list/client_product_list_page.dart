@@ -418,7 +418,7 @@ class _ProductListState extends State<ClientProductListPage> {
                             fit: BoxFit.contain,
                             loadingBuilder: (_, child, progress) {
                               if (progress == null) return child;
-      
+                        
                               return Transform.translate(
                                 offset: const Offset(1, -2),
                                 child: const ShimmerWidget(height: 70, width: 70, radius: 50),

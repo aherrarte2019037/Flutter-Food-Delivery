@@ -43,7 +43,7 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _appBar(),
-      bottomNavigationBar: _addToCartButton(),
+      bottomNavigationBar: _controller.product.available! ? _cartButton() : _notAvailableButton(),
       body: Container(
         padding: const EdgeInsets.only(bottom: 10),
         height: height,
@@ -266,46 +266,13 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              _controller.product.name,
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w500,
-                color: Colors.black.withOpacity(0.9),
-              ),
-            ),
-            if (_controller.isProductPurchased['purchased'] == true)
-            Padding(
-              padding: const EdgeInsets.only(top: 6),
-              child: Row(
-                children: [
-                  Transform.translate(
-                    offset: const Offset(0, -1),
-                    child: const Icon(
-                      FlutterIcons.shopping_cart_fea,
-                      size: 17,
-                      color: Color(0XFF8F8F8F),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 6),
-                    child: Text(
-                      '${_controller.isProductPurchased['product'].quantity} en el carrito',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0XFF8F8F8F),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+        Text(
+          _controller.product.name,
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w500,
+            color: Colors.black.withOpacity(0.9),
+          ),
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -456,7 +423,7 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
     );
   }
 
-  Widget _addToCartButton() {
+  Widget _cartButton() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
       child: Container(
@@ -464,7 +431,53 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
         child: Align(
           alignment: Alignment.centerRight,
           child: ElevatedButton(
-            onPressed: _controller.product.available! ? _controller.addToCart : () {},
+            onPressed: _controller.isProductPurchased['purchased']
+              ? _controller.goToCart
+              : _controller.addToCart,
+            style: ElevatedButton.styleFrom(
+              elevation: 4,
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              primary: Colors.black.withOpacity(0.9),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              textStyle: const TextStyle(
+                fontSize: 16.5,
+                letterSpacing: 0.5,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            child: Container(
+              width: 185,
+              height: 60,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    _controller.isProductPurchased['purchased'] ? 'Ver en el carrito' : 'Añadir al carrito',
+                    style: const TextStyle(color: Colors.white, letterSpacing: 0.64),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 3),
+                    child: Icon(FlutterIcons.shopping_cart_fea, size: 22),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _notAvailableButton() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
+      child: Container(
+        height: 60,
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: ElevatedButton(
+            onPressed: _controller.addToCart,
             style: ElevatedButton.styleFrom(
               elevation: 4,
               padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -484,16 +497,13 @@ class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    _controller.product.available! ? 'Añadir al carrito' : 'No disponible',
-                    style: const TextStyle(color: Colors.white, letterSpacing: 0.64),
+                  const Text(
+                    'No Disponible',
+                    style: TextStyle(color: Colors.white, letterSpacing: 0.64),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 3),
-                    child: Icon(
-                      _controller.product.available! ? FlutterIcons.shopping_cart_fea : FlutterIcons.ban_sli,
-                      size: 22,
-                    ),
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 3),
+                    child: Icon(FlutterIcons.ban_sli, size: 22),
                   ),
                 ],
               ),
