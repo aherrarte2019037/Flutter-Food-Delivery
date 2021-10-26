@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:food_delivery/src/pages/client/address/list/client_address_list_controller.dart';
+import 'package:food_delivery/src/widgets/address_item.dart';
 
 class ClientAddressListPage extends StatefulWidget {
   const ClientAddressListPage({Key? key}) : super(key: key);
@@ -66,41 +67,64 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
             color: Colors.black,
           ),
         ),
-        const SizedBox(height: 30),
+        const SizedBox(height: 15),
         Expanded(
           child: ListView.separated(
             physics: const BouncingScrollPhysics(),
-            itemCount: _controller.addressList.length + 1,
-            separatorBuilder: (_, __) => const SizedBox(height: 40),
-            itemBuilder: (_, categoryIndex) => _addressItem(),
+            itemCount: _controller.addressList.length + 3,
+            separatorBuilder: (_, __) => _listSeparator(),
+            itemBuilder: (_, index) => AddressItem(
+              value: index.toString(),
+              groupValue: _controller.addressSelected,
+              name: 'Nombre $index',
+              address: 'Chester Bennett 3476 Aliquet',
+              onChanged: _controller.addressItemChanged(),
+            ),
           ),
         ), 
       ],
     );
   }
 
-  Widget _addressItem() {
+  Widget _listSeparator() {
     return Container(
-      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.only(left: 22),
+      height: 26,
       width: double.infinity,
-      height: 80,
-      color: Colors.green,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            'assets/images/location.png',
-            fit: BoxFit.contain,
-            height: 50,
-            width: 50,
+          Container(
+            width: 3,
+            height: 3,
+            margin: const EdgeInsets.only(bottom: 5),
+            decoration: const BoxDecoration(
+              color: Color(0XFFFF8C3E),
+              shape: BoxShape.circle,
+            ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              
-            ],
-          )
+          Transform.translate(
+            offset: const Offset(-0.5, 0),
+            child: Container(
+              width: 4,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 5),
+              decoration: const BoxDecoration(
+                color: Color(0XFFFF8C3E),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          Container(
+            width: 3,
+            height: 3,
+            margin: const EdgeInsets.only(bottom: 5),
+            decoration: const BoxDecoration(
+              color: Color(0XFFFF8C3E),
+              shape: BoxShape.circle,
+            ),
+          ),
         ],
       ),
     );

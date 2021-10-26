@@ -39,13 +39,34 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
         padding: const EdgeInsets.only(bottom: 30, left: 42, right: 42),
         height: height,
         width: width,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Center(
-              child: Text('Crear Dirección'),
-            )
-          ],
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              Container(
+                width: double.infinity,
+                height: 190,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/images/create-address.webp'),
+                    fit: BoxFit.cover,
+                    alignment: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
+              SizedBox(height: height * 0.035),
+              _textFieldName(),
+              SizedBox(height: height * 0.035),
+              _textFieldDescription(),
+              SizedBox(height: height * 0.035),
+              _textFieldReferences(),
+              SizedBox(height: height * 0.035),
+              _locationButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -100,6 +121,103 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
     );
   }
 
+  Widget _textFieldName() {
+    return TextField(
+      controller: _controller.textFieldControllers['name'],
+      autofocus: false,
+      cursorColor: Colors.grey,
+      style: const TextStyle(color: Colors.black, fontSize: 18),
+      decoration: InputDecoration(
+        labelText: 'Nombre',
+        labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        hintText: 'Nombre De Dirección',
+        hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
+          borderRadius: BorderRadius.circular(14),
+        ),
+      ),
+    );
+  }
+
+  Widget _textFieldDescription() {
+    return TextField(
+      autofocus: false,
+      textInputAction: TextInputAction.done,
+      controller: _controller.textFieldControllers['description'],
+      minLines: 3,
+      maxLines: 3,
+      cursorColor: Colors.grey,
+      style: const TextStyle(color: Colors.black, fontSize: 18),
+      decoration: InputDecoration(
+        labelText: 'Dirección',
+        labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        hintText: 'Dirección detallada',
+        hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
+          borderRadius: BorderRadius.circular(14),
+        ),
+      ),
+    );
+  }
+
+  Widget _textFieldReferences() {
+    return TextField(
+      autofocus: false,
+      textInputAction: TextInputAction.done,
+      controller: _controller.textFieldControllers['references'],
+      minLines: 3,
+      maxLines: 3,
+      cursorColor: Colors.grey,
+      style: const TextStyle(color: Colors.black, fontSize: 18),
+      decoration: InputDecoration(
+        labelText: 'Referencias',
+        labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        hintText: 'Lugares conocidos o información importante',
+        hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
+          borderRadius: BorderRadius.circular(14),
+        ),
+      ),
+    );
+  }
+
+  Widget _locationButton() {
+    return OutlinedButton.icon(
+      onPressed: () {},
+      label: const Text(' Establecer ubicación', style: TextStyle(color: Colors.white)),
+      icon: const Icon(FlutterIcons.location_arrow_faw, color: Colors.white, size: 18),
+      style: OutlinedButton.styleFrom(
+        primary: Colors.white,
+        side: const BorderSide(style: BorderStyle.none),
+        backgroundColor: Colors.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        elevation: 2,
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
+      ),
+    );
+  }
+
   Widget _createAddressButton() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
@@ -125,7 +243,7 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
               const Text('Añadir', style: TextStyle(color: Colors.white)),
               const Padding(
                 padding: EdgeInsets.only(bottom: 3),
-                child: Icon(FlutterIcons.md_checkmark_ion, size: 28),
+                child: Icon(FlutterIcons.edit_ent, size: 22),
               ),
             ],
           ),
