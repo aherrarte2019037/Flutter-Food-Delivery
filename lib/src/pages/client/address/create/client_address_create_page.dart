@@ -60,7 +60,7 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
               SizedBox(height: height * 0.035),
               _textFieldName(),
               SizedBox(height: height * 0.035),
-              _textFieldDescription(),
+              _textFieldAddress(),
               SizedBox(height: height * 0.035),
               _textFieldReferences(),
               SizedBox(height: height * 0.035),
@@ -146,11 +146,11 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
     );
   }
 
-  Widget _textFieldDescription() {
+  Widget _textFieldAddress() {
     return TextField(
       autofocus: false,
       textInputAction: TextInputAction.done,
-      controller: _controller.textFieldControllers['description'],
+      controller: _controller.textFieldControllers['address'],
       minLines: 3,
       maxLines: 3,
       cursorColor: Colors.grey,
@@ -187,7 +187,7 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
         labelText: 'Referencias',
         labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintText: 'Lugares conocidos o información importante',
+        hintText: 'Lugares cercanos o información importante',
         hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
         contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
         enabledBorder: OutlineInputBorder(
@@ -204,7 +204,7 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
 
   Widget _locationButton() {
     return OutlinedButton.icon(
-      onPressed: () {},
+      onPressed: _controller.goToSelectAddress,
       label: const Text(' Establecer ubicación', style: TextStyle(color: Colors.white)),
       icon: const Icon(FlutterIcons.location_arrow_faw, color: Colors.white, size: 18),
       style: OutlinedButton.styleFrom(

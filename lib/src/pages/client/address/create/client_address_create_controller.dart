@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:food_delivery/src/pages/client/address/map/client_address_map_page.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class ClientAddressCreateController {
   late BuildContext context;
@@ -15,6 +17,13 @@ class ClientAddressCreateController {
   }
 
   void goBack() => Navigator.pop(context);
+
+  void goToSelectAddress() {
+    showMaterialModalBottomSheet(
+      context: context,
+      builder: (_) => const ClientAddressMapPage(),
+    );
+  }
 
   void createAddress() {
     
