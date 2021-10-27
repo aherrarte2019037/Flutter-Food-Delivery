@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -34,15 +35,18 @@ class _ClientAddressMapPageState extends State<ClientAddressMapPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _appBar(),
-      bottomNavigationBar: _selectAddressButton(),
       body: Container(
-        padding: const EdgeInsets.only(bottom: 30, left: 42, right: 42),
         height: height,
         width: width,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
+          alignment: Alignment.bottomCenter,
           children: [
-            const Text('Seleccionar dirección')
+            _map(),
+            Positioned(
+              bottom: 42,
+              width: width,
+              child: _selectAddressButton(),
+            ),
           ],
         ),
       ),
@@ -98,16 +102,25 @@ class _ClientAddressMapPageState extends State<ClientAddressMapPage> {
     );
   }
 
+  Widget _map() {
+    return GoogleMap(
+      zoomControlsEnabled: false,
+      mapType: MapType.normal,
+      initialCameraPosition: _controller.cameraPosition,
+      onMapCreated: _controller.onMapCreated,
+    );
+  }
+
   Widget _selectAddressButton() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
+      padding: const EdgeInsets.symmetric(horizontal: 42),
       child: Container(
         height: 60,
         child: ElevatedButton(
           onPressed: () {},
           style: ElevatedButton.styleFrom(
             elevation: 4,
-            padding: const EdgeInsets.symmetric(horizontal: 40),
+            padding: const EdgeInsets.symmetric(horizontal: 30),
             primary: Colors.black.withOpacity(0.9),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             textStyle: const TextStyle(
@@ -120,10 +133,10 @@ class _ClientAddressMapPageState extends State<ClientAddressMapPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text('Continuar', style: TextStyle(color: Colors.white)),
+              const Text('Seleccionar ubicación', style: TextStyle(color: Colors.white)),
               const Padding(
-                padding: EdgeInsets.only(bottom: 3),
-                child: Icon(FlutterIcons.md_checkmark_ion, size: 28),
+                padding: EdgeInsets.only(bottom: 2),
+                child: Icon(FlutterIcons.location_arrow_faw, size: 22),
               ),
             ],
           ),

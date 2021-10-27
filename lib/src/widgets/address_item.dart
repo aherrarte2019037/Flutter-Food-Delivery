@@ -26,7 +26,7 @@ class AddressItem<T> extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Image.asset(
-            isSelected ? 'assets/images/location.png' : 'assets/images/location-disabled.png',
+            isSelected ? 'assets/images/location.png' : 'assets/images/location-disabled2.png',
             fit: BoxFit.contain,
             height: 45,
             width: 45,
@@ -38,9 +38,9 @@ class AddressItem<T> extends StatelessWidget {
             children: [
               Text(
                 name,
-                style: const TextStyle(
-                  color: Color(0XFFA4A9B5),
-                  fontSize: 15.5,
+                style: TextStyle(
+                  color: Color(isSelected ? 0XFFFF8C3E : 0XFFA4A9B5),
+                  fontSize: 15,
                   fontWeight: FontWeight.w500,
                 ),
               ),

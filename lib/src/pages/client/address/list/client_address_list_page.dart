@@ -35,21 +35,36 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _appBar(),
-      bottomNavigationBar: _controller.addressList.isNotEmpty ? _confirmButton() : null,
+      bottomNavigationBar: !_controller.addressList.isNotEmpty ? _confirmButton() : null,
       body: Container(
+        alignment: !_controller.addressList.isNotEmpty ? Alignment.topCenter : Alignment.center,
         padding: const EdgeInsets.only(bottom: 30, left: 42, right: 42),
         height: height,
         width: width,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: !_controller.addressList.isNotEmpty ? 35 : 25),
-            Expanded(
-              child: !_controller.addressList.isNotEmpty
-                ? _addressList()
-                : _emptyAddressList(),
-            ),
-          ],
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: !_controller.addressList.isNotEmpty ? 15 : 25),
+              !_controller.addressList.isNotEmpty ? _addressList() : _emptyAddressList(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _bannerImage() {
+    return Container(
+      width: double.infinity,
+      height: 190,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        image: const DecorationImage(
+          image: AssetImage('assets/images/list-address.webp'),
+          fit: BoxFit.cover,
+          alignment: Alignment.bottomCenter,
         ),
       ),
     );
@@ -57,31 +72,22 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
 
   Widget _addressList() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Dirección de entrega',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
+        _bannerImage(),
+        const SizedBox(height: 20),
+        ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: _controller.addressList.length + 3,
+          separatorBuilder: (_, __) => _listSeparator(),
+          itemBuilder: (_, index) => AddressItem(
+            value: index.toString(),
+            groupValue: _controller.addressSelected,
+            name: 'Nombre $index',
+            address: 'Chester Bennett 3476 Aliquet',
+            onChanged: _controller.addressItemChanged(),
           ),
         ),
-        const SizedBox(height: 15),
-        Expanded(
-          child: ListView.separated(
-            physics: const BouncingScrollPhysics(),
-            itemCount: _controller.addressList.length + 3,
-            separatorBuilder: (_, __) => _listSeparator(),
-            itemBuilder: (_, index) => AddressItem(
-              value: index.toString(),
-              groupValue: _controller.addressSelected,
-              name: 'Nombre $index',
-              address: 'Chester Bennett 3476 Aliquet',
-              onChanged: _controller.addressItemChanged(),
-            ),
-          ),
-        ), 
       ],
     );
   }
@@ -154,7 +160,7 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
               child: const Icon(Icons.arrow_back_rounded, size: 30, color: Colors.black),
             ),
             const Text(
-              'Entrega',
+              'Dirección de entrega',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
@@ -181,7 +187,7 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
   
   Widget _emptyAddressList() {
     return Transform.translate(
-      offset: const Offset(0, -30),
+      offset: const Offset(0, -25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -253,7 +259,7 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text('Continuar', style: TextStyle(color: Colors.white)),
+              const Text('Seleccionar', style: TextStyle(color: Colors.white)),
               const Padding(
                 padding: EdgeInsets.only(bottom: 3),
                 child: Icon(FlutterIcons.md_checkmark_ion, size: 28),

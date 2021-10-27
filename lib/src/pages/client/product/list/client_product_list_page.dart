@@ -48,6 +48,7 @@ class _ProductListState extends State<ClientProductListPage> {
         height: height,
         width: width,
         child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -69,8 +70,8 @@ class _ProductListState extends State<ClientProductListPage> {
               const SizedBox(height: 40),
               ListView.separated(
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: _controller.products.length,
                 shrinkWrap: true,
+                itemCount: _controller.products.length,
                 separatorBuilder: (_, __) => const SizedBox(height: 40),
                 itemBuilder: (_, index) {
                   if (_controller.products[index]['products'].length == 0) return const SizedBox.shrink();

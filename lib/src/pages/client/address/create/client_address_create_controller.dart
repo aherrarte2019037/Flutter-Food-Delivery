@@ -21,6 +21,8 @@ class ClientAddressCreateController {
   void goToSelectAddress() {
     showMaterialModalBottomSheet(
       context: context,
+      isDismissible: false,
+      enableDrag: false,
       builder: (_) => const ClientAddressMapPage(),
     );
   }
