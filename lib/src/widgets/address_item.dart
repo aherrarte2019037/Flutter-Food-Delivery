@@ -32,29 +32,37 @@ class AddressItem<T> extends StatelessWidget {
             width: 45,
           ),
           const SizedBox(width: 18),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                style: TextStyle(
-                  color: Color(isSelected ? 0XFFFF8C3E : 0XFFA4A9B5),
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Flexible(
+                  child: Text(
+                    name,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Color(isSelected ? 0XFFFF8C3E : 0XFFA4A9B5),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ),
-              ),
-              Text(
-                address,
-                style: const TextStyle(
-                  color: Color(0XFF34353B),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+                const SizedBox(height: 1.5),
+                Flexible(
+                  child: Text(
+                    address,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Color(0XFF34353B),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          const Spacer(),
           Transform.translate(
             offset: const Offset(0, 10),
             child: Radio(

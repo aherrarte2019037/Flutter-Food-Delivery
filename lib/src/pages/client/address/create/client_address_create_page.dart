@@ -63,14 +63,14 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
               _textFieldAddress(),
               SizedBox(height: height * 0.035),
               _textFieldReferences(),
-              SizedBox(height: height * 0.035),
+              SizedBox(height: height * 0.025),
               Row(
                 children: [
                   _locationButton(),
-                  const SizedBox(width: 20),
-                  if (_controller.addressData != null) _addressSelected()
+                  const SizedBox(width: 15),
+                  if (_controller.address != null) _changeLocationButton(),
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -130,6 +130,7 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
   Widget _textFieldName() {
     return TextField(
       controller: _controller.textFieldControllers['name'],
+      textInputAction: TextInputAction.next,
       autofocus: false,
       cursorColor: Colors.grey,
       style: const TextStyle(color: Colors.black, fontSize: 18),
@@ -154,9 +155,9 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
 
   Widget _textFieldAddress() {
     return TextField(
-      autofocus: false,
-      textInputAction: TextInputAction.done,
       controller: _controller.textFieldControllers['address'],
+      textInputAction: TextInputAction.next,
+      autofocus: false,
       minLines: 3,
       maxLines: 3,
       cursorColor: Colors.grey,
@@ -210,30 +211,38 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
 
   Widget _locationButton() {
     return OutlinedButton.icon(
-      onPressed: _controller.goToSelectAddress,
-      label: const Text(' Establecer ubicación', style: TextStyle(color: Colors.white)),
+      onPressed: _controller.address != null ? () {} : _controller.goToSelectAddress,
+      label: Text(
+        _controller.address != null ? 'Ubicación establecida' : 'Establecer ubicación',
+        style: const TextStyle(color: Colors.white),
+      ),
       icon: const Icon(FlutterIcons.location_arrow_faw, color: Colors.white, size: 18),
       style: OutlinedButton.styleFrom(
         primary: Colors.white,
         side: const BorderSide(style: BorderStyle.none),
         backgroundColor: Colors.black,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        elevation: 2,
+        elevation: 4,
         padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
       ),
     );
   }
 
-  Widget _addressSelected() {
-    return Row(
-      children: [
-        const Text(
-          'Ubicación establecida',
-          style: TextStyle(color: Color(0XFF25D996), fontWeight: FontWeight.w500),
-        ),
-        const SizedBox(width: 5),
-        const Icon(FlutterIcons.edit_ent, size: 18, color: Color(0XFF25D996)),
-      ],
+  Widget _changeLocationButton() {
+    return OutlinedButton.icon(
+      onPressed: _controller.goToSelectAddress,
+      label: const Text('', style: TextStyle(color: Colors.white)),
+      icon: const Icon(FlutterIcons.md_refresh_ion, color: Colors.white, size: 25),
+      style: OutlinedButton.styleFrom(
+        primary: Colors.white,
+        side: const BorderSide(style: BorderStyle.none),
+        backgroundColor: Colors.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        fixedSize: const Size(48, 48),
+        minimumSize: const Size(48, 48),
+        elevation: 4,
+        padding: const EdgeInsets.only(left: 7, bottom: 2),
+      ),
     );
   }
 

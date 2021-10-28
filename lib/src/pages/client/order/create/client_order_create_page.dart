@@ -38,7 +38,7 @@ class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _appBar(),
-      bottomNavigationBar: _goToAddressList(),
+      bottomNavigationBar: _confirmOrderButton(),
       body: Container(
         padding: const EdgeInsets.only(bottom: 30, left: 42, right: 42),
         height: height,
@@ -340,7 +340,7 @@ class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
     );
   }
 
-  Widget _goToAddressList() {
+  Widget _confirmOrderButton() {
     return _controller.productsByCategory.keys.isNotEmpty
       ? Padding(
           padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),

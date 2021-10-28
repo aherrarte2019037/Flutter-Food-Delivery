@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:food_delivery/src/models/address_model.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as location;
 
-class ClientAddressMapController {
+class MapPageController {
   late BuildContext context;
   late Function updateView;
   late Position userPosition;
@@ -14,8 +15,7 @@ class ClientAddressMapController {
     target: LatLng(14.6477112, -90.4808864),
     zoom: 18,
   );
-  String address = 'Ubicación';
-  LatLng addressLatLng = const LatLng(14.6477112, -90.4808864);
+  Address address = Address(latitude: 0, longitude: 0);
 
   void init(BuildContext context, Function updateView) {
     this.context = context;
@@ -31,17 +31,16 @@ class ClientAddressMapController {
   }
 
   Future setDraggableAddress() async {
-    double latitude = cameraPosition.target.latitude;
-    double longitude = cameraPosition.target.longitude;
-    addressLatLng = LatLng(latitude, longitude);
+    address.latitude = cameraPosition.target.latitude;
+    address.longitude = cameraPosition.target.longitude;
 
-    List<Placemark> addresses = await placemarkFromCoordinates(latitude, longitude);
+    List<Placemark> addresses = await placemarkFromCoordinates(address.latitude, address.longitude);
     if (addresses.isNotEmpty) {
       String direction = addresses[0].thoroughfare ?? '';
       String street = addresses[0].subThoroughfare ?? '';
       String city = addresses[0].locality ?? '';
 
-      address = '$direction $street $city'.trim();
+      address.address = '$direction $street $city'.trim();
       updateView();
     }
   }
@@ -92,12 +91,7 @@ class ClientAddressMapController {
   }
 
   void selectAddress() {
-    Map addressData = {
-      'address': address,
-      'latitude': addressLatLng.latitude,
-      'longitude': addressLatLng.longitude
-    };
-    Navigator.pop(context, addressData);
+    Navigator.pop(context, address);
   }
 
 }

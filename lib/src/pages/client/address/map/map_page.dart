@@ -4,17 +4,17 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:food_delivery/src/pages/client/address/map/client_address_map_controller.dart';
+import 'package:food_delivery/src/pages/client/address/map/map_controller.dart';
 
-class ClientAddressMapPage extends StatefulWidget {
-  const ClientAddressMapPage({Key? key}) : super(key: key);
+class MapPage extends StatefulWidget {
+  const MapPage({Key? key}) : super(key: key);
 
   @override
-  _ClientAddressMapPageState createState() => _ClientAddressMapPageState();
+  _MapPageState createState() => _MapPageState();
 }
 
-class _ClientAddressMapPageState extends State<ClientAddressMapPage> {
-  final _controller = ClientAddressMapController();
+class _MapPageState extends State<MapPage> {
+  final _controller = MapPageController();
 
   updateView() => setState(() {});
 
@@ -124,7 +124,7 @@ class _ClientAddressMapPageState extends State<ClientAddressMapPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           child: Text(
-            _controller.address,
+            _controller.address.address ?? 'Ubicación',
             style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
           ),
         ),

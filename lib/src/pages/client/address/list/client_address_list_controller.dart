@@ -1,14 +1,24 @@
 import 'package:flutter/cupertino.dart';
+import 'package:food_delivery/src/models/address_model.dart';
+import 'package:food_delivery/src/providers/address_provider.dart';
 
 class ClientAddressListController {
   late BuildContext context;
   late Function updateView;
-  List addressList = [];
-  String? addressSelected = '1';
+  AddressProvider addressProvider = AddressProvider();
+  List<Address> addresses = [];
+  String? addressSelected = '';
 
   void init(BuildContext context, Function updateView) {
     this.context = context;
     this.updateView = updateView;
+    getAddressList();
+  }
+
+  void getAddressList() async {
+    addresses = await addressProvider.getAllByUser();
+    if (addresses.isNotEmpty) addressSelected = addresses[0].id;
+    updateView();
   }
 
   ValueChanged addressItemChanged() {
@@ -20,6 +30,11 @@ class ClientAddressListController {
 
   void goBack() => Navigator.pop(context);
 
-  void goToCreateAddress() => Navigator.pushNamed(context, 'client/address/create');
+  void goToCreateAddress() async {
+    List<Address> addressesCreated = await Navigator.pushNamed(context, 'client/address/create') as List<Address>;
+    addresses.addAll(addressesCreated);
+    if (addresses.isNotEmpty) addressSelected = addresses[0].id;
+    updateView();
+  }
 
 }

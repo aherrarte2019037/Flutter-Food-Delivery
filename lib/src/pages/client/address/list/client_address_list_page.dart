@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/src/utils/string_extension.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -35,9 +36,9 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _appBar(),
-      bottomNavigationBar: !_controller.addressList.isNotEmpty ? _confirmButton() : null,
+      bottomNavigationBar: _controller.addresses.isNotEmpty ? _confirmButton() : null,
       body: Container(
-        alignment: !_controller.addressList.isNotEmpty ? Alignment.topCenter : Alignment.center,
+        alignment: _controller.addresses.isNotEmpty ? Alignment.topCenter : Alignment.center,
         padding: const EdgeInsets.only(bottom: 30, left: 42, right: 42),
         height: height,
         width: width,
@@ -46,8 +47,8 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: !_controller.addressList.isNotEmpty ? 15 : 25),
-              !_controller.addressList.isNotEmpty ? _addressList() : _emptyAddressList(),
+              SizedBox(height: _controller.addresses.isNotEmpty ? 15 : 25),
+              _controller.addresses.isNotEmpty ? _addressList() : _emptyAddressList(),
             ],
           ),
         ),
@@ -78,13 +79,13 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
         ListView.separated(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: _controller.addressList.length + 3,
+          itemCount: _controller.addresses.length,
           separatorBuilder: (_, __) => _listSeparator(),
           itemBuilder: (_, index) => AddressItem(
-            value: index.toString(),
+            value: _controller.addresses[index].id,
             groupValue: _controller.addressSelected,
-            name: 'Nombre $index',
-            address: 'Chester Bennett 3476 Aliquet',
+            name: _controller.addresses[index].name!.capitalize(),
+            address: _controller.addresses[index].address!.titleCase(),
             onChanged: _controller.addressItemChanged(),
           ),
         ),

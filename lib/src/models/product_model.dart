@@ -29,7 +29,7 @@ class Product {
     name       : json["name"],
     description: json["description"],
     price      : json["price"],
-    calories      : json["calories"],
+    calories   : json["calories"],
     available  : json["available"],
     images     : json["images"] != null ? List<String>.from(json["images"].map((x) => x)) : null,
     category   : json["category"],
