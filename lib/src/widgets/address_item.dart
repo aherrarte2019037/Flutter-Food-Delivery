@@ -26,7 +26,7 @@ class AddressItem<T> extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Image.asset(
-            isSelected ? 'assets/images/location.png' : 'assets/images/location-disabled2.png',
+            isSelected ? 'assets/images/location.png' : 'assets/images/location-disabled.png',
             fit: BoxFit.contain,
             height: 45,
             width: 45,

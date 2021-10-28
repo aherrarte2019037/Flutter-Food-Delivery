@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/src/pages/client/address/create/client_address_create_page.dart';
 import 'package:food_delivery/src/pages/client/address/list/client_address_list_page.dart';
-import 'package:food_delivery/src/pages/client/address/map/client_address_map_page.dart';
 import 'package:food_delivery/src/pages/client/order/create/client_order_create_page.dart';
 import 'package:food_delivery/src/pages/client/product/list/client_product_list_page.dart';
 import 'package:food_delivery/src/pages/delivery/order/list/delivery_order_list_page.dart';
@@ -56,7 +55,6 @@ class _MainAppState extends State<MainApp> {
         'client/product/list': (BuildContext context) => const ClientProductListPage(),
         'client/order/create': (BuildContext context) => const ClientOrderCreatePage(),
         'client/address/list': (BuildContext context) => const ClientAddressListPage(),
-        'client/address/map': (BuildContext context) => const ClientAddressMapPage(),
         'client/address/create': (BuildContext context) => const ClientAddressCreatePage(),
         'restaurant/order/list': (BuildContext context) => const RestaurantOrderListPage(),
         'restaurant/category/create': (BuildContext context) => const RestaurantCategoryCreatePage(),

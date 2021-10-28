@@ -64,7 +64,13 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
               SizedBox(height: height * 0.035),
               _textFieldReferences(),
               SizedBox(height: height * 0.035),
-              _locationButton(),
+              Row(
+                children: [
+                  _locationButton(),
+                  const SizedBox(width: 20),
+                  if (_controller.addressData != null) _addressSelected()
+                ],
+              )
             ],
           ),
         ),
@@ -215,6 +221,19 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
         elevation: 2,
         padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
       ),
+    );
+  }
+
+  Widget _addressSelected() {
+    return Row(
+      children: [
+        const Text(
+          'Ubicación establecida',
+          style: TextStyle(color: Color(0XFF25D996), fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(width: 5),
+        const Icon(FlutterIcons.edit_ent, size: 18, color: Color(0XFF25D996)),
+      ],
     );
   }
 

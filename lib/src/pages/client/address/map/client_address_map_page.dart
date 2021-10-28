@@ -42,11 +42,9 @@ class _ClientAddressMapPageState extends State<ClientAddressMapPage> {
           alignment: Alignment.bottomCenter,
           children: [
             _map(),
-            Positioned(
-              bottom: 42,
-              width: width,
-              child: _selectAddressButton(),
-            ),
+            _currentAddress(),
+            _locationIcon(),
+            _selectAddressButton(),
           ],
         ),
       ),
@@ -108,37 +106,76 @@ class _ClientAddressMapPageState extends State<ClientAddressMapPage> {
       mapType: MapType.normal,
       initialCameraPosition: _controller.cameraPosition,
       onMapCreated: _controller.onMapCreated,
+      myLocationButtonEnabled: false,
+      myLocationEnabled: false,
+      onCameraMove: (position) => _controller.cameraPosition = position,
+      onCameraIdle: () async => await _controller.setDraggableAddress(),
+    );
+  }
+
+  Widget _currentAddress() {
+    return Container(
+      margin: const EdgeInsets.only(top: 20),
+      alignment: Alignment.topCenter,
+      child: Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        color: Colors.black.withOpacity(0.9),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          child: Text(
+            _controller.address,
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _locationIcon() {
+    return Container(
+      alignment: Alignment.center,
+      child: Image.asset(
+        'assets/images/location-icon.png',
+        fit: BoxFit.contain,
+        height: 52,
+        width: 52,
+      ),
     );
   }
 
   Widget _selectAddressButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 42),
-      child: Container(
-        height: 60,
-        child: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            elevation: 4,
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            primary: Colors.black.withOpacity(0.9),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            textStyle: const TextStyle(
-              fontSize: 16.5,
-              letterSpacing: 0.5,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text('Seleccionar ubicación', style: TextStyle(color: Colors.white)),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 2),
-                child: Icon(FlutterIcons.location_arrow_faw, size: 22),
+    return Positioned(
+      bottom: 42,
+      width: MediaQuery.of(context).size.width,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 42),
+        child: Container(
+          height: 60,
+          child: ElevatedButton(
+            onPressed: _controller.selectAddress,
+            style: ElevatedButton.styleFrom(
+              elevation: 4,
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              primary: Colors.black.withOpacity(0.9),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              textStyle: const TextStyle(
+                fontSize: 16.5,
+                letterSpacing: 0.5,
+                fontWeight: FontWeight.w500,
               ),
-            ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('Seleccionar ubicación', style: TextStyle(color: Colors.white)),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 2),
+                  child: Icon(FlutterIcons.location_arrow_faw, size: 22),
+                ),
+              ],
+            ),
           ),
         ),
       ),

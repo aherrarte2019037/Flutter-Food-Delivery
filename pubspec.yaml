@@ -40,6 +40,8 @@ dependencies:
   animate_do: ^2.0.0
   google_maps_flutter: ^2.0.11
   geolocator: ^7.7.1
+  location: ^4.3.0
+  geocoding: ^2.0.1
 cupertino_icons: ^1.0.2
 
 dev_dependencies:

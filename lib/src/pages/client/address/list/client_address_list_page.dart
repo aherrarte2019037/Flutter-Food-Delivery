@@ -243,7 +243,7 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
       child: Container(
         height: 60,
         child: ElevatedButton(
-          onPressed: _controller.goToCreateAddress,
+          onPressed: () {},
           style: ElevatedButton.styleFrom(
             elevation: 4,
             padding: const EdgeInsets.symmetric(horizontal: 40),
