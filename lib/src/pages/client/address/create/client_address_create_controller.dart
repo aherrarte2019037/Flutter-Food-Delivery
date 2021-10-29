@@ -63,7 +63,7 @@ class ClientAddressCreateController {
 
     ResponseApi? responseApi = await addressProvider.create(address!);
     if (responseApi?.success == true) {
-      addressesCreated.add(responseApi!.data as Address);
+      addressesCreated.insert(0, responseApi!.data as Address);
       CustomSnackBar.showSuccess(context, 'Aviso', 'Dirección de entrega creada');
       resetControllers();
       updateView();

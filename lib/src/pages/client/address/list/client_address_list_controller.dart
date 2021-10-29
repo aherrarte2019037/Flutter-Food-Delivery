@@ -32,7 +32,7 @@ class ClientAddressListController {
 
   void goToCreateAddress() async {
     List<Address> addressesCreated = await Navigator.pushNamed(context, 'client/address/create') as List<Address>;
-    addresses.addAll(addressesCreated);
+    addresses.insertAll(0, addressesCreated);
     if (addresses.isNotEmpty) addressSelected = addresses[0].id;
     updateView();
   }

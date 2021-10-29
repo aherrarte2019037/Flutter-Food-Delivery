@@ -1,10 +1,18 @@
 extension StringExtension on String {
 
   String capitalize() {
-    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
+    return '${this[0].toUpperCase()}${substring(1).toLowerCase()}';
   }
 
-  String titleCase() => replaceAll(RegExp(' +'), ' ').split(" ").map((str) => str.capitalize()).join(" ");
+  String titleCase() {
+    try {
+      if (isEmpty) return this;
+      return split(' ').map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase()).join(' ');
+      
+    } catch (e) {
+      return this;
+    }
+  }
 
   String roleFormat() {
     switch (this) {

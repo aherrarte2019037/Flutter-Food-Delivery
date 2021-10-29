@@ -42,14 +42,16 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
         padding: const EdgeInsets.only(bottom: 30, left: 42, right: 42),
         height: height,
         width: width,
-        child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: _controller.addresses.isNotEmpty ? 15 : 25),
-              _controller.addresses.isNotEmpty ? _addressList() : _emptyAddressList(),
-            ],
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(30),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: _controller.addresses.isNotEmpty ? 15 : 25),
+                _controller.addresses.isNotEmpty ? _addressList() : _emptyAddressList(),
+              ],
+            ),
           ),
         ),
       ),

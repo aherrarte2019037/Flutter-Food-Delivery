@@ -25,8 +25,8 @@ class Address {
     references: json["references"],
     createdAt : json["createdAt"] != null ? DateTime.parse(json["createdAt"]) : null,
     address   : json["address"],
-    latitude  : json["latitude"],
-    longitude : json["longitude"],
+    latitude  : json["latitude"].toDouble(),
+    longitude : json["longitude"].toDouble(),
   );
 
   static List<Address> fromJsonList(List json) => json.map((address) => Address.fromJson(address)).toList();
