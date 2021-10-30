@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:food_delivery/src/models/address_model.dart';
 import 'package:food_delivery/src/models/order_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:food_delivery/src/models/response_api_model.dart';
@@ -14,18 +13,18 @@ class OrderProvider {
     'Authorization': 'Bearer ${SharedPref.authToken}'
   };
 
-  Future<Order?> create(Address address) async {
+  Future<ResponseApi?> create(String addressId) async {
     try {
       Uri request = Uri.http(_url, _api);
-      String body = jsonEncode(address.id);
+      String body = jsonEncode({ 'address': addressId });
 
       final response = await http.post(request, body: body, headers: authHeaders);
       final data = jsonDecode(response.body);
 
       ResponseApi responseApi = ResponseApi.fromJson(data);
-      if (responseApi.success!) return Order.fromJson(responseApi.data);
+      if (responseApi.success!) responseApi.data = Order.fromJson(responseApi.data);
       
-      return null;
+      return responseApi;
 
     } catch (e) {
       print('Error: $e');

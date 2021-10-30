@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:food_delivery/src/models/address_model.dart';
-import 'package:food_delivery/src/models/order_model.dart';
+import 'package:food_delivery/src/models/response_api_model.dart';
 import 'package:food_delivery/src/providers/address_provider.dart';
 import 'package:food_delivery/src/providers/order_provider.dart';
-import 'package:logger/logger.dart';
+import 'package:food_delivery/src/widgets/custom_snackbar.dart';
 
 class ClientAddressListController {
   late BuildContext context;
@@ -41,10 +41,9 @@ class ClientAddressListController {
     updateView();
   }
 
-  Future createOrder() async {
-    Address address = addresses.firstWhere((element) => element.id == addressSelected);
-    Order? order = await orderProvider.create(address);
-    Logger().d(order);
+  Future selectAddress() async {
+    ResponseApi? responseApi = await orderProvider.create(addressSelected!);
+    if (responseApi?.success == true) CustomSnackBar.showError(context, 'Error', 'Intenta otra vez');
   }
 
 }

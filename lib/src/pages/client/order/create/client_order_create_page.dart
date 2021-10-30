@@ -38,7 +38,7 @@ class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _appBar(),
-      bottomNavigationBar: _confirmOrderButton(),
+      bottomNavigationBar: _continueButton(),
       body: Container(
         padding: const EdgeInsets.only(bottom: 30, left: 42, right: 42),
         height: height,
@@ -340,7 +340,7 @@ class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
     );
   }
 
-  Widget _confirmOrderButton() {
+  Widget _continueButton() {
     return _controller.productsByCategory.keys.isNotEmpty
       ? Padding(
           padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
@@ -391,7 +391,7 @@ class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text('Confirmar orden', style: TextStyle(color: Colors.white)),
+                      const Text('Continuar', style: TextStyle(color: Colors.white)),
                       const Padding(
                         padding: EdgeInsets.only(bottom: 3),
                         child: Icon(FlutterIcons.md_checkmark_ion, size: 28),

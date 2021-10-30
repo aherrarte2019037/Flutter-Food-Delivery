@@ -36,7 +36,7 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _appBar(),
-      bottomNavigationBar: _controller.addresses.isNotEmpty ? _confirmButton() : null,
+      bottomNavigationBar: _controller.addresses.isNotEmpty ? _selectAddressButton() : null,
       body: Container(
         alignment: _controller.addresses.isNotEmpty ? Alignment.topCenter : Alignment.center,
         padding: const EdgeInsets.only(bottom: 30, left: 42, right: 42),
@@ -240,13 +240,13 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
     );
   }
 
-  Widget _confirmButton() {
+  Widget _selectAddressButton() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
       child: Container(
         height: 60,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: _controller.selectAddress,
           style: ElevatedButton.styleFrom(
             elevation: 4,
             padding: const EdgeInsets.symmetric(horizontal: 40),
