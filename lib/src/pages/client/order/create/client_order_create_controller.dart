@@ -104,10 +104,6 @@ class ClientOrderCreateController {
     );
   }
 
-  Future<void> confirmOrder() async {
-
-  }
-
   void goToAddressList() => Navigator.pushNamed(context, 'client/address/list');
 
 }

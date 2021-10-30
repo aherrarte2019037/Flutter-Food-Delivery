@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:food_delivery/src/pages/client/address/create/client_address_create_page.dart';
 import 'package:food_delivery/src/pages/client/address/list/client_address_list_page.dart';
 import 'package:food_delivery/src/pages/client/order/create/client_order_create_page.dart';
@@ -18,6 +19,8 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 void main() async {
+  await dotenv.load();
+
   WidgetsFlutterBinding.ensureInitialized();
 
   timeago.setLocaleMessages('es', timeago.EsMessages());

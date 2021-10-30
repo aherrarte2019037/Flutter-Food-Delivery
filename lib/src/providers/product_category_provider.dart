@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path/path.dart';
 import 'package:food_delivery/src/utils/shared_pref.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:food_delivery/src/api/environment.dart';
 import 'package:food_delivery/src/models/product_category_model.dart';
 import 'package:food_delivery/src/models/response_api_model.dart';
 
 class ProductCategoryProvider {
-  final String _url = Environment.apiDelivery;
+  final String _url = dotenv.env['APIDELIVERY']!;
   final String _api = 'api/products/categories';
   late BuildContext context;
   final Map<String, String> authHeaders = {

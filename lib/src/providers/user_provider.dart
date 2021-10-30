@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:food_delivery/src/api/environment.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:food_delivery/src/models/response_api_model.dart';
 import 'package:food_delivery/src/models/user_model.dart';
 import 'package:food_delivery/src/utils/shared_pref.dart';
@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 
 class UserProvider {
-  final String _url = Environment.apiDelivery;
+  final String _url = dotenv.env['APIDELIVERY']!;
   final String _api = 'api/users';
   final Map<String, String> authHeaders = {
     'Content-type': 'application/json',
