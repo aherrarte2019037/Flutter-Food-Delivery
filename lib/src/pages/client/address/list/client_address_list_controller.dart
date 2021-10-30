@@ -43,7 +43,7 @@ class ClientAddressListController {
 
   Future selectAddress() async {
     ResponseApi? responseApi = await orderProvider.create(addressSelected!);
-    if (responseApi?.success == true) CustomSnackBar.showError(context, 'Error', 'Intenta otra vez');
+    if (responseApi?.success == false) CustomSnackBar.showError(context, 'Error', 'Intenta otra vez');
   }
 
 }

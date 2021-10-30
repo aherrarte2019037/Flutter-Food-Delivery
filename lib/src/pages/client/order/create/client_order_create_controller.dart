@@ -33,7 +33,7 @@ class ClientOrderCreateController {
 
   Future<void> groupProductsByCategory() async {
     shoppingCart = await shoppingCartProvider.getUserShoppingCart() ?? ShoppingCart(subTotal: 0, total: 0, products: []);
-    productsByCategory = shoppingCart.products?.groupBy((product) => product.product.category['name']) ?? {};
+    productsByCategory = shoppingCart.products?.groupBy((element) => element.product.category['name']) ?? {};
   }
 
   int getItemsCount() {
