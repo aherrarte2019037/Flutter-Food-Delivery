@@ -71,6 +71,27 @@ class UserProvider {
     }
   }
 
+  Future<User?> getProfile() async {
+    try {
+      Uri request = Uri.http(_url, '$_api/authenticated');
+
+      final response = await http.get(request, headers: authHeaders);
+      final data = json.decode(response.body);
+
+      ResponseApi responseApi = ResponseApi.fromJson(data);
+      if (responseApi.success == true) {
+        return User.fromJson(responseApi.data);
+
+      } else {
+        return null;
+      }
+
+    } catch (e) {
+      print('Error $e');
+      return null;
+    }
+  }
+
   Future<Stream?> editProfileImage(String id, File? image) async {
     try {
       Uri request = Uri.http(_url, '$_api/image/$id');

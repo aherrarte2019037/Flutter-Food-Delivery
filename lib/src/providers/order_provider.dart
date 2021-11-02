@@ -32,4 +32,20 @@ class OrderProvider {
     }
   }
 
+  Future<int> getPurchasedCount() async {
+    try {
+      Uri request = Uri.http(_url, '$_api/count/purchased');
+
+      final response = await http.get(request, headers: authHeaders);
+      final data = jsonDecode(response.body);
+
+      ResponseApi responseApi = ResponseApi.fromJson(data);      
+      return responseApi.data ?? 0;
+
+    } catch (e) {
+      print('Error: $e');
+      return 0;
+    }
+  }
+
 }

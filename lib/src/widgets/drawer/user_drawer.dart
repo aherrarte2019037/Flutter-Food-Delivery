@@ -40,10 +40,11 @@ class _UserDrawerState extends State<UserDrawer> {
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 50, bottom: 35),
           child: FutureBuilder(
-            future: _getUser(),
+            future: _drawerController.getUser(),
             builder: (_, AsyncSnapshot snapshot) {
               if (snapshot.hasData && !snapshot.hasError) {
                 User user = snapshot.data;
+
                 return Column(
                   children: [
                     _profileSection(user),
@@ -51,9 +52,7 @@ class _UserDrawerState extends State<UserDrawer> {
                       child: ListView.separated(
                         primary: false,
                         itemCount: _drawerController.getDrawerItems(user, widget.drawerType).length,
-                        separatorBuilder: (_,__) {
-                          return const SizedBox(height: 12);
-                        },
+                        separatorBuilder: (_,__) => const SizedBox(height: 12),
                         itemBuilder: (_, int index) {
                           return _drawerItem(
                             title: _drawerController.getDrawerItems(user, widget.drawerType)[index]['title'],
@@ -63,10 +62,6 @@ class _UserDrawerState extends State<UserDrawer> {
                         },
                       ),
                     ),
-                    if (user.roles!.length > 1) ...[
-                      _drawerItem(title: 'Roles', icon: FlutterIcons.md_grid_ion, route: 'roles'),
-                      const Spacer(),
-                    ],
                     _buttonLogout(),
                   ],
                 );
@@ -188,57 +183,113 @@ class _UserDrawerState extends State<UserDrawer> {
             ),
           ],
         ),
-        _profileChip()
+          if(widget.drawerType == 'CLIENT') _clientChip(),
+          if(widget.drawerType == 'RESTAURANT') _restaurantChip(),
+          if(widget.drawerType == 'DELIVERY') _deliveryChip(),
         ],
       ),
     );
   }
 
-  Widget _profileChip() {
+  Widget _clientChip() {
+    return FutureBuilder(
+      future: _drawerController.getPurchasedCount(),
+      builder: (_, AsyncSnapshot snapshot) {
+        if (snapshot.hasData && !snapshot.hasError) {
+          return Container(
+            padding: const EdgeInsets.only(top: 7, bottom: 7, right: 10, left: 13.5),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Icon(
+                  FlutterIcons.shopping_cart_faw,
+                  color: Colors.white,
+                  size: 16,
+                ),
+                const Text(
+                  'Compras Realizadas',
+                  style: TextStyle(color: Colors.white),
+                ),
+                Container(
+                  width: 18,
+                  height: 18,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  child: Center(
+                    child: Text(
+                      snapshot.data.toString(),
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          );
+        }
+
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget _restaurantChip() {
     return Container(
-      padding: const EdgeInsets.only(top: 7, bottom: 7, right: 10, left: 13.5),
+      padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 14),
       decoration: BoxDecoration(
         color: Colors.black,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(
-            FlutterIcons.shopping_cart_faw,
+            Icons.restaurant_menu,
             color: Colors.white,
-            size: 16,
+            size: 18,
           ),
+          const SizedBox(width: 10),
           const Text(
-            'Compras Realizadas',
+            'Restaurante',
             style: TextStyle(color: Colors.white),
           ),
-          Container(
-            width: 18,
-            height: 18,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-            ),
-            child: const Center(
-              child: Text(
-                '1',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12,
-                ),
-              ),
-            ),
-          )
         ],
       ),
     );
   }
 
-  Future<dynamic> _getUser() async {
-    User user = User.fromJson(await SharedPref.read('user'));
-    return user;
+  Widget _deliveryChip() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5.5, horizontal: 14),
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.delivery_dining_rounded,
+            color: Colors.white,
+            size: 22,
+          ),
+          const SizedBox(width: 10),
+          const Text(
+            'Repartidor',
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
+    );
   }
 
 }

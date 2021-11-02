@@ -48,6 +48,7 @@ class _ProductListState extends State<ClientProductListPage> {
         height: height,
         width: width,
         child: SingleChildScrollView(
+          controller: _controller.scrollController,
           physics: const ClampingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,14 +56,7 @@ class _ProductListState extends State<ClientProductListPage> {
               const SizedBox(height: 15),
               _bannerImage(),
               const SizedBox(height: 30),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Bievenido,', style: TextStyle(fontSize: 28)),
-                  const SizedBox(height: 4),
-                  const Text('Angel Herrarte', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500)),
-                ],
-              ),
+              _welcomeSection(),
               const SizedBox(height: 20),
               _searchBar(),
               const SizedBox(height: 35),
@@ -168,6 +162,23 @@ class _ProductListState extends State<ClientProductListPage> {
     );
   }
 
+  Widget _welcomeSection() {
+   return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Bienvenido,', style: TextStyle(fontSize: 28)),
+        const SizedBox(height: 4),
+        Text(
+          '${_controller.user?.firstName.capitalize() ?? ''} ${_controller.user?.lastName.capitalize() ?? ''}',
+          style: const TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _searchBar() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -254,53 +265,56 @@ class _ProductListState extends State<ClientProductListPage> {
   }
 
   Widget _categoryChip(ProductCategory category, Animation<double> animation, int index) {
-    return Padding(
-      padding: EdgeInsets.only(right: index + 1 < _controller.categories.length ? 12 : 0),
-      child: SlideTransition(
-        position: animation.drive(Tween(begin: const Offset(1, 0), end: const Offset(0, 0))),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            color: const Color(0XFFe7e7e7),
-          ),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: category.image!.contains('assets')
-                    ? ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image.asset(
-                          category.image!,
-                          fit: BoxFit.cover,
-                        ),
-                    )
-                    : AspectRatio(
-                      aspectRatio: 1/1,
-                      child: ClipRRect(
+    return GestureDetector(
+      onTap: () => _controller.scrollToCategory(category),
+      child: Padding(
+        padding: EdgeInsets.only(right: index + 1 < _controller.categories.length ? 12 : 0),
+        child: SlideTransition(
+          position: animation.drive(Tween(begin: const Offset(1, 0), end: const Offset(0, 0))),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              color: const Color(0XFFe7e7e7),
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: category.image!.contains('assets')
+                      ? ClipRRect(
                         borderRadius: BorderRadius.circular(50),
-                        child: FadeInImage.assetNetwork(
-                            image: category.image!,
-                            placeholder: 'assets/images/loading.gif',
+                        child: Image.asset(
+                            category.image!,
                             fit: BoxFit.cover,
                           ),
+                      )
+                      : AspectRatio(
+                        aspectRatio: 1/1,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: FadeInImage.assetNetwork(
+                              image: category.image!,
+                              placeholder: 'assets/images/loading.gif',
+                              fit: BoxFit.cover,
+                            ),
+                        ),
                       ),
-                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Text(
-                category.name!.capitalize(),
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
+                const SizedBox(width: 10),
+                Text(
+                  category.name!.capitalize(),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-            ],
+                const SizedBox(width: 8),
+              ],
+            ),
           ),
         ),
       ),
@@ -362,7 +376,7 @@ class _ProductListState extends State<ClientProductListPage> {
               itemBuilder: (_, index) {
                 Product product = Product.fromJson(categoryGrouped['products'][index]);
                 product.category = categoryGrouped['category']['name'].toString();
-
+    
                 return _productCard(product);
               },
             ),
@@ -379,7 +393,7 @@ class _ProductListState extends State<ClientProductListPage> {
         onTap: () => _controller.showProductDetailModal(product),
         child: Container(
           width: 175,
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 18),
+          padding: const EdgeInsets.symmetric(horizontal: 18),
           decoration: BoxDecoration(
             color: const Color(0XFFF8F8F8),
             borderRadius: BorderRadius.circular(28),

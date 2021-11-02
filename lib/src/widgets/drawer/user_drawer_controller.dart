@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:food_delivery/src/models/user_model.dart';
+import 'package:food_delivery/src/providers/order_provider.dart';
 import 'package:food_delivery/src/utils/shared_pref.dart';
 
 class UserDrawerController {
   late BuildContext context;
+  OrderProvider orderProvider = OrderProvider();
   List<Map> clientDrawerItems = [
     { 'title': 'Perfil', 'icon': FlutterIcons.md_person_ion, 'route': 'profile' },
     { 'title': 'Compras', 'icon': FlutterIcons.shopping_cart_fea },
@@ -44,8 +46,13 @@ class UserDrawerController {
     { 'title': 'Notificaciones', 'icon': FlutterIcons.bell_mco },
   ];
 
-  void init(BuildContext context) async {
+  void init(BuildContext context) {
     this.context = context;
+  }
+
+  Future<int> getPurchasedCount() async {
+    int count = await orderProvider.getPurchasedCount();
+    return count;
   }
 
   Future<dynamic> getUser() async {
@@ -54,9 +61,17 @@ class UserDrawerController {
   }
   
   List<Map> getDrawerItems(User user, String drawerType) {
-    if(drawerType == 'CLIENT') return clientDrawerItems;
-    if(drawerType == 'RESTAURANT') return restaurantDrawerItems;
-    if(drawerType == 'DELIVERY') return deliveryDrawerItems;
+    Map rolesItem = { 'title': 'Roles', 'icon': FlutterIcons.md_grid_ion, 'route': 'roles' };
+
+    if (user.roles!.length > 1) {
+      clientDrawerItems.add(rolesItem);
+      restaurantDrawerItems.add(rolesItem);
+      deliveryDrawerItems.add(rolesItem);
+    }
+
+    if (drawerType == 'CLIENT') return clientDrawerItems;
+    if (drawerType == 'RESTAURANT') return restaurantDrawerItems;
+    if (drawerType == 'DELIVERY') return deliveryDrawerItems;
 
     return [];
   }
