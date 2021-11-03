@@ -1,8 +1,10 @@
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:food_delivery/src/models/order_model.dart';
 import 'package:food_delivery/src/pages/restaurant/order/list/restaurant_order_list_controller.dart';
 import 'package:food_delivery/src/utils/string_extension.dart';
 import 'package:food_delivery/src/widgets/drawer/user_drawer.dart';
@@ -54,7 +56,8 @@ class _DelivRestaurantListPageState extends State<RestaurantOrderListPage> {
               _welcomeSection(),
               const SizedBox(height: 20),
               _searchBar(),
-              const SizedBox(height: 35),
+               const SizedBox(height: 35),
+              _orderStatusChipSection(),
             ],
           ),
         ),
@@ -182,6 +185,96 @@ class _DelivRestaurantListPageState extends State<RestaurantOrderListPage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _orderStatusChipSection() {
+    return Container(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Pedidos',
+            style: TextStyle(color: Color(0XFF292929), fontSize: 18, fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(height: 15),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(40),
+            child: Container(
+              height: 55,
+              child: _controller.orderStatusChipsIsLoading
+                ? Container(
+                    padding: const EdgeInsets.all(10),
+                    width: 55,
+                    height: 50,
+                    child: const CircularProgressIndicator(color: Colors.black, strokeWidth: 3),
+                  )
+                : AnimatedList(
+                    key: _controller.orderStatusListKey,
+                    scrollDirection: Axis.horizontal,
+                    initialItemCount: _controller.statusList.length,
+                    itemBuilder: (_, index, animation) {
+                      OrderStatus status = EnumToString.fromString(OrderStatus.values, _controller.statusList[index])!;
+
+                      return _orderStatusChip(status, animation, index);
+                    },
+                  )
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _orderStatusChip(OrderStatus status, Animation<double> animation, int index) {    
+    return Padding(
+      padding: EdgeInsets.only(right: index + 1 < _controller.statusList.length ? 12 : 0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(50),
+        child: Material(
+          color: const Color(0XFFe7e7e7),
+          child: InkWell(
+            customBorder: const StadiumBorder(),
+            onTap: () {},
+            child: SlideTransition(
+              position: animation.drive(Tween(begin: const Offset(1, 0), end: const Offset(0, 0))),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.asset(
+                                _controller.statusImages[status]!,
+                                fit: BoxFit.cover,
+                              ),
+                          )
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      EnumToString.convertToString(status, camelCase: true),
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 

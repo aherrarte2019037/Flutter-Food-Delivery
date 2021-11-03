@@ -48,4 +48,26 @@ class OrderProvider {
     }
   }
 
+  Future<Map<String, List<Order>>> getOrdersGroupedByStatus() async {
+    try {
+      Uri request = Uri.http(_url, '$_api/groupBy/status');
+
+      final response = await http.get(request, headers: authHeaders);
+      final data = jsonDecode(response.body);
+
+      ResponseApi responseApi = ResponseApi.fromJson(data);
+      if (!responseApi.success!) return {};
+
+      Map<String, List<Order>> orders = {
+        for (var item in responseApi.data.keys) item: Order.fromJsonList(responseApi.data[item]),
+      };
+
+      return orders;
+      
+    } catch (e) {
+      print('Error: $e');
+      return {};
+    }
+  }
+
 }

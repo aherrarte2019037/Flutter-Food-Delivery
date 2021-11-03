@@ -4,7 +4,7 @@ import 'package:food_delivery/src/models/address_model.dart';
 import 'package:food_delivery/src/models/shopping_cart_model.dart';
 import 'package:food_delivery/src/models/user_model.dart';
 
-enum Status { pagado, despachado, enCamino, entregado  }
+enum OrderStatus { pagado, despachado, enCamino, entregado  }
 
 class Order {
   String? id;
@@ -14,7 +14,7 @@ class Order {
   double? deliveryLongitude;
   Address? address;
   ShoppingCart? cart;
-  Status? status;
+  OrderStatus? status;
   DateTime? createdAt;
 
   Order({
@@ -37,7 +37,7 @@ class Order {
     deliveryLongitude: json["deliveryLongitude"].toDouble(),
     address          : json["address"] != null ? Address.fromJson(json["address"]) : null,
     cart             : json["cart"] != null ? ShoppingCart.fromJson(json["cart"]) : null,
-    status           : EnumToString.fromString(Status.values, json["status"] ?? 'pagado'),
+    status           : EnumToString.fromString(OrderStatus.values, json["status"] ?? 'PAGADO'),
     createdAt        : json["createdAt"] != null ? DateTime.parse(json["createdAt"]) : null,
   );
 

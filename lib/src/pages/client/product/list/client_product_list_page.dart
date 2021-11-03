@@ -265,55 +265,61 @@ class _ProductListState extends State<ClientProductListPage> {
   }
 
   Widget _categoryChip(ProductCategory category, Animation<double> animation, int index) {
-    return GestureDetector(
-      onTap: () => _controller.scrollToCategory(category),
-      child: Padding(
-        padding: EdgeInsets.only(right: index + 1 < _controller.categories.length ? 12 : 0),
-        child: SlideTransition(
-          position: animation.drive(Tween(begin: const Offset(1, 0), end: const Offset(0, 0))),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
-              color: const Color(0XFFe7e7e7),
-            ),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: category.image!.contains('assets')
-                      ? ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.asset(
-                            category.image!,
-                            fit: BoxFit.cover,
-                          ),
-                      )
-                      : AspectRatio(
-                        aspectRatio: 1/1,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: FadeInImage.assetNetwork(
-                              image: category.image!,
-                              placeholder: 'assets/images/loading.gif',
-                              fit: BoxFit.cover,
+    return Padding(
+      padding: EdgeInsets.only(right: index + 1 < _controller.categories.length ? 12 : 0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(50),
+        child: Material(
+          color: const Color(0XFFe7e7e7),
+          child: InkWell(
+            customBorder: const StadiumBorder(),
+            onTap: () => _controller.scrollToCategory(category),
+            child: SlideTransition(
+              position: animation.drive(Tween(begin: const Offset(1, 0), end: const Offset(0, 0))),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: category.image!.contains('assets')
+                          ? ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.asset(
+                                category.image!,
+                                fit: BoxFit.cover,
+                              ),
+                          )
+                          : AspectRatio(
+                            aspectRatio: 1/1,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: FadeInImage.assetNetwork(
+                                  image: category.image!,
+                                  placeholder: 'assets/images/loading.gif',
+                                  fit: BoxFit.cover,
+                                ),
                             ),
-                        ),
+                          ),
                       ),
-                  ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      category.name!.capitalize(),
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
                 ),
-                const SizedBox(width: 10),
-                Text(
-                  category.name!.capitalize(),
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(width: 8),
-              ],
+              ),
             ),
           ),
         ),
