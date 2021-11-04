@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:food_delivery/src/models/order_model.dart';
 import 'package:food_delivery/src/models/user_model.dart';
+import 'package:food_delivery/src/pages/restaurant/order/detail/restaurant_order_detail_page.dart';
 import 'package:food_delivery/src/providers/order_provider.dart';
 import 'package:food_delivery/src/providers/user_provider.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class RestaurantOrderListController {
   late Function updateView;
@@ -77,7 +79,10 @@ class RestaurantOrderListController {
   }
 
   void showOrderDetailModal(Order order) {
-
+    showMaterialModalBottomSheet(
+      context: context,
+      builder: (_) =>  RestaurantOrderDetailPage(order: order),
+    );
   }
 
 }

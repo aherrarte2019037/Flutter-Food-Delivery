@@ -67,7 +67,7 @@ class _UserDrawerState extends State<UserDrawer> {
                 );
               }
 
-              return const Text('No Hay Datos');
+              return const SizedBox.shrink();
             },
           ),
         ),

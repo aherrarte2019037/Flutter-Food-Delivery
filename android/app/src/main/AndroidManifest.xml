@@ -3,6 +3,18 @@
 
    <uses-permission android:name="android.permission.INTERNET"/>
 
+   <queries>
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+            <data android:scheme="tel" />
+        </intent>
+
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="*/*" />
+        </intent>
+   </queries>
+
    <application
         android:label="food_delivery"
         android:icon="@mipmap/ic_launcher"

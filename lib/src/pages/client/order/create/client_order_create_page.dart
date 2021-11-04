@@ -220,9 +220,9 @@ class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
                   const SizedBox(height: 4),
                   ZoomIn(
                     from: 1,
-                  manualTrigger: true,
-                  duration: const Duration(milliseconds: 300),
-                  controller: (controller) => _controller.priceControllers[item.product.id!] = controller,
+                    manualTrigger: true,
+                    duration: const Duration(milliseconds: 300),
+                    controller: (controller) => _controller.priceControllers[item.product.id!] = controller,
                     child: Text(
                       'Q${(item.product.price * item.quantity).toString()}',
                       style: const TextStyle(
