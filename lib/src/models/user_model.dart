@@ -33,6 +33,8 @@ class User {
     createdAt  : json["createdAt"] != null ? DateTime.parse(json["createdAt"]) : null,
   );
 
+  static List<User> fromJsonList(List json) => json.map((user) => User.fromJson(user)).toList();
+
   Map<String, dynamic> toJson() => {
     "email"    : email,
     "password" : password,

@@ -32,6 +32,25 @@ class OrderProvider {
     }
   }
 
+  Future<ResponseApi?> assignDelivery(String delivery) async {
+    try {
+      Uri request = Uri.http(_url, '$_api/delivery/$delivery');
+      String body = jsonEncode({});
+
+      final response = await http.put(request, body: body, headers: authHeaders);
+      final data = jsonDecode(response.body);
+
+      ResponseApi responseApi = ResponseApi.fromJson(data);
+      if (responseApi.success!) responseApi.data = Order.fromJson(responseApi.data);
+      
+      return responseApi;
+      
+    } catch (e) {
+      print('Error: $e');
+      return null;
+    }
+  }
+
   Future<int> getPurchasedCount() async {
     try {
       Uri request = Uri.http(_url, '$_api/count/purchased');

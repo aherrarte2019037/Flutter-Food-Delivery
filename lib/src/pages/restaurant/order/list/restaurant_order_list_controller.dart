@@ -78,11 +78,14 @@ class RestaurantOrderListController {
     );
   }
 
-  void showOrderDetailModal(Order order) {
-    showMaterialModalBottomSheet(
+  Future showOrderDetailModal(Order order) async {
+    await showMaterialModalBottomSheet(
+      enableDrag: false,
       context: context,
       builder: (_) =>  RestaurantOrderDetailPage(order: order),
     );
+    ordersGrouped = await orderProvider.getOrdersGroupedByStatus();
+    updateView();
   }
 
 }

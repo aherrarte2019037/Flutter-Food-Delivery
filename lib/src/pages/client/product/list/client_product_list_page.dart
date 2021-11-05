@@ -39,8 +39,8 @@ class _ProductListState extends State<ClientProductListPage> {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     
     return Scaffold(
-      key: _controller.scaffoldKey,
       backgroundColor: Colors.white,
+      key: _controller.scaffoldKey,
       appBar: _appBar(),
       drawer: UserDrawer(drawerType: 'CLIENT'),
       body: Container(

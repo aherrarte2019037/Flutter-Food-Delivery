@@ -92,6 +92,27 @@ class UserProvider {
     }
   }
 
+  Future<List<User>> getByRole(String role) async {
+    try {
+      Uri request = Uri.http(_url, '$_api/role/$role');
+
+      final response = await http.get(request, headers: authHeaders);
+      final data = json.decode(response.body);
+
+      ResponseApi responseApi = ResponseApi.fromJson(data);
+      if (responseApi.success == true) {
+        return User.fromJsonList(responseApi.data);
+
+      } else {
+        return [];
+      }
+      
+    } catch (e) {
+      print('Error: $e');
+      return [];
+    }
+  }
+
   Future<Stream?> editProfileImage(String id, File? image) async {
     try {
       Uri request = Uri.http(_url, '$_api/image/$id');
