@@ -14,8 +14,9 @@ import 'package:search_choices/search_choices.dart';
 
 class RestaurantOrderDetailPage extends StatefulWidget {
   final Order order;
+  final Function updateParentOrders;
 
-  const RestaurantOrderDetailPage({Key? key, required this.order}) : super(key: key);
+  const RestaurantOrderDetailPage({Key? key, required this.order, required this.updateParentOrders}) : super(key: key);
 
   @override
   _RestaurantOrderDetailPageState createState() => _RestaurantOrderDetailPageState();
@@ -30,7 +31,7 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
   void initState() {
     super.initState();
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      _controller.init(context, updateView, widget.order);
+      _controller.init(context, updateView, widget.updateParentOrders, widget.order);
     });
   }
 

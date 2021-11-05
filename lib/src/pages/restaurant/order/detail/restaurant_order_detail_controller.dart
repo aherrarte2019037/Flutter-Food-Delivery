@@ -12,6 +12,7 @@ import 'package:food_delivery/src/widgets/custom_fade_in_image.dart';
 class RestaurantOrderDetailController {
   late BuildContext context;
   late Function updateView;
+  late Function updateParentOrders;
   late Function openDeliveryDialog;
   UserProvider userProvider = UserProvider();
   OrderProvider orderProvider = OrderProvider();
@@ -22,10 +23,11 @@ class RestaurantOrderDetailController {
   Order order = Order();
   int productCount = 0;
 
-  void init(BuildContext context, Function updateView, Order order) async {
+  void init(BuildContext context, Function updateView, Function updateParentOrders, Order order) async {
     this.context = context;
     this.updateView = updateView;
     this.order = order;
+    this.updateParentOrders = updateParentOrders;
     productCount = order.cart?.products?.length ?? 0;
     await setDeliveryUserItems();
     updateView();
@@ -77,9 +79,10 @@ class RestaurantOrderDetailController {
 
   void assignDelivery() => openDeliveryDialog('');
 
-  void confirmOrder() {
-    orderProvider.assignDelivery(order.delivery!.id!);
+  Future confirmOrder() async {
+    await orderProvider.assignDelivery(order.delivery!.id!);
     order.status = OrderStatus.despachado;
+    updateParentOrders();
     updateView();
   }
 
