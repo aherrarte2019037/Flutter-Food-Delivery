@@ -60,7 +60,7 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
               const SizedBox(height: 40),
               if (_controller.order.delivery != null) _deliverySection(),
               _clientSection(),
-              const SizedBox(height: 40),
+              const SizedBox(height: 48),
               _productSection(),
             ],
           ),
@@ -380,104 +380,123 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
   }
 
   Widget _deliverySection() {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 40),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 45),
+      child: Row(
         children: [
-          GestureDetector(
-            onTap: _controller.assignDelivery,
+          Expanded(
             child: Container(
-              width: 146,
-              child: Row(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Repartidor',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
-                  ),
-                  if (_controller.order.status == OrderStatus.pagado)
-                  Transform.translate(
-                    offset: const Offset(-6, -0.5),
-                    child: IconButton(
-                      onPressed: _controller.assignDelivery,
-                      icon: const Icon(FlutterIcons.md_refresh_ion, color: Colors.black, size: 22),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Stack(
+                        children: [
+                          Container(
+                            width: 55,
+                            height: 55,
+                            child: CustomFadeInImage(
+                              image: _controller.order.delivery?.image ?? 'assets/images/loading.gif',
+                              placeholder: 'assets/images/loading.gif',
+                              fit: BoxFit.contain,
+                              size: const Size(55, 55),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              width: 27,
+                              height: 27,
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: const Icon(Icons.delivery_dining_rounded, color: Colors.white, size: 16),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 12),
+                      Container(
+                        height: 55,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${_controller.order.delivery?.firstName} ${_controller.order.delivery?.lastName}',
+                              style: const TextStyle(
+                                color: Color(0XFF303030),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                              ),
+                            ),
+                            Text(
+                              '${_controller.order.delivery?.email}',
+                              style: const TextStyle(
+                                color: Color(0XFF303030),
+                                fontWeight: FontWeight.w400,
+                                fontSize: 13.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Spacer(),
+                      if (_controller.order.status == OrderStatus.pagado && _controller.order.delivery != null)
+                      Container(
+                        width: 45,
+                        height: 45,
+                        padding: const EdgeInsets.only(bottom: 3),
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: IconButton(
+                          onPressed: _controller.assignDelivery,
+                          icon: const Icon(FlutterIcons.md_refresh_ion, color: Colors.white, size: 25),
+                        ),
+                      ),
+                      const SizedBox(width: 9),
+                      Container(
+                        width: 45,
+                        height: 45,
+                        padding: const EdgeInsets.only(bottom: 3),
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: IconButton(
+                          onPressed: () => _controller.sendUserEmail(_controller.order.delivery?.email ?? ''),
+                          icon: const Icon(FlutterIcons.md_mail_ion, color: Colors.white, size: 20),
+                        ),
+                      ),
+                      const SizedBox(width: 9),
+                      Container(
+                        width: 45,
+                        height: 45,
+                        padding: const EdgeInsets.only(top: 1),
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: IconButton(
+                          onPressed: () => _controller .sendUserEmail(_controller.order.delivery?.email ?? ''),
+                          icon: const Icon(FlutterIcons.phone_faw, color: Colors.white, size: 21.5),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-          ),
-          SizedBox(height: _controller.order.status == OrderStatus.pagado ? 7 : 15 ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 55,
-                width: 55,
-                child: CustomFadeInImage(
-                  image: _controller.order.user?.image ?? 'assets/images/loading.gif',
-                  placeholder: 'assets/images/loading.gif',
-                  fit: BoxFit.contain,
-                  size: const Size(55, 55),
-                ),
-              ),
-              const SizedBox(width: 18),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${_controller.order.delivery?.firstName} ${_controller.order.delivery?.lastName}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    '${_controller.order.delivery?.email}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Container(
-                width: 50,
-                height: 50,
-                padding: const EdgeInsets.only(bottom: 3),
-                decoration: BoxDecoration(
-                  color: const Color(0XFFf1f1f3),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: IconButton(
-                  onPressed: () => _controller.sendUserEmail(_controller.order.delivery?.email ?? ''),
-                  icon: const Icon(FlutterIcons.md_mail_ion, color: Color(0XFF9896a2), size: 24),
-                ),
-              ),
-              const SizedBox(width: 15),
-              Container(
-                width: 50,
-                height: 50,
-                padding: const EdgeInsets.only(top: 1, left: 1),
-                decoration: BoxDecoration(
-                  color: const Color(0XFFf1f1f3),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: IconButton(
-                  onPressed: () => _controller.sendUserEmail(_controller.order.delivery?.email ?? ''),
-                  icon: const Icon(FlutterIcons.phone_faw, color: Color(0XFF9896a2), size: 25),
-                ),
-              ),
-            ],
           ),
         ],
       ),
@@ -485,89 +504,108 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
   }
 
   Widget _clientSection() {
-    return Container(
-      padding: const EdgeInsets.all(0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Cliente',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Stack(
+                      children: [
+                        Container(
+                          width: 55,
+                          height: 55,
+                          child: CustomFadeInImage(
+                            image: _controller.order.user?.image ?? 'assets/images/loading.gif',
+                            placeholder: 'assets/images/loading.gif',
+                            fit: BoxFit.contain,
+                            size: const Size(55, 55),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            width: 27,
+                            height: 27,
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: const Icon(FlutterIcons.shopping_bag_ent, color: Colors.white, size: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 12),
+                    Container(
+                      height: 55,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${_controller.order.user?.firstName} ${_controller.order.user?.lastName}',
+                            style: const TextStyle(
+                              color: Color(0XFF303030),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                            ),
+                          ),
+                          Text(
+                            '${_controller.order.user?.email}',
+                            style: const TextStyle(
+                              color: Color(0XFF303030),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                    Container(
+                      width: 45,
+                      height: 45,
+                      padding: const EdgeInsets.only(bottom: 3),
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: IconButton(
+                        onPressed: () => _controller.sendUserEmail(_controller.order.user?.email ?? ''),
+                        icon: const Icon(FlutterIcons.md_mail_ion, color: Colors.white, size: 20),
+                      ),
+                    ),
+                    const SizedBox(width: 9),
+                    Container(
+                      width: 45,
+                      height: 45,
+                      padding: const EdgeInsets.only(top: 1),
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: IconButton(
+                        onPressed: () => _controller .sendUserEmail(_controller.order.user?.email ?? ''),
+                        icon: const Icon(FlutterIcons.phone_faw, color: Colors.white, size: 21.5),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 15),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 55,
-                width: 55,
-                child: CustomFadeInImage(
-                  image: _controller.order.user?.image ?? 'assets/images/loading.gif',
-                  placeholder: 'assets/images/loading.gif',
-                  fit: BoxFit.contain,
-                  size: const Size(55, 55),
-                ),
-              ),
-              const SizedBox(width: 18),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${_controller.order.user?.firstName} ${_controller.order.user?.lastName}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    '${_controller.order.user?.email}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Container(
-                width: 50,
-                height: 50,
-                padding: const EdgeInsets.only(bottom: 3),
-                decoration: BoxDecoration(
-                  color: const Color(0XFFf1f1f3),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: IconButton(
-                  onPressed: () => _controller.sendUserEmail(_controller.order.user?.email ?? ''),
-                  icon: const Icon(FlutterIcons.md_mail_ion, color: Color(0XFF9896a2), size: 24),
-                ),
-              ),
-              const SizedBox(width: 15),
-              Container(
-                width: 50,
-                height: 50,
-                padding: const EdgeInsets.only(top: 1, left: 1),
-                decoration: BoxDecoration(
-                  color: const Color(0XFFf1f1f3),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: IconButton(
-                  onPressed: () => _controller.sendUserEmail(_controller.order.user?.email ?? ''),
-                  icon: const Icon(FlutterIcons.phone_faw, color: Color(0XFF9896a2), size: 25),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
