@@ -419,13 +419,13 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: 62,
-                width: 62,
+                height: 55,
+                width: 55,
                 child: CustomFadeInImage(
                   image: _controller.order.user?.image ?? 'assets/images/loading.gif',
                   placeholder: 'assets/images/loading.gif',
                   fit: BoxFit.contain,
-                  size: const Size(62, 62),
+                  size: const Size(55, 55),
                 ),
               ),
               const SizedBox(width: 18),
@@ -506,13 +506,13 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: 62,
-                width: 62,
+                height: 55,
+                width: 55,
                 child: CustomFadeInImage(
                   image: _controller.order.user?.image ?? 'assets/images/loading.gif',
                   placeholder: 'assets/images/loading.gif',
                   fit: BoxFit.contain,
-                  size: const Size(62, 62),
+                  size: const Size(55, 55),
                 ),
               ),
               const SizedBox(width: 18),
