@@ -87,7 +87,21 @@ class RestaurantOrderListController {
   }
 
   Future updateOrdersGrouped() async {
+    for (var i = 0; i < statusList.length; i++) {
+      orderStatusListKey.currentState?.removeItem(0, (_, __) => Container());
+    }
+
+    statusList = [];
     ordersGrouped = await orderProvider.getOrdersGroupedByStatus();
+    List<String> status = ordersGrouped.keys.toList();
+
+    for (var i = 0; i < status.length; i++) {
+      Future.delayed(const Duration(milliseconds: 0), () {
+        statusList.add(status[i]);
+        orderStatusListKey.currentState?.insertItem(statusList.length - 1);
+      });
+    }
+    
     updateView();
   }
 

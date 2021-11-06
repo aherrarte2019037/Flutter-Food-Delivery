@@ -259,14 +259,14 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
           Container(
             width: 55,
             height: 55,
-            padding: const EdgeInsets.only(bottom: 1),
+            padding: const EdgeInsets.only(bottom: 1, right: 1),
             decoration: BoxDecoration(
               color: const Color(0XFFFF8C3E),
               borderRadius: BorderRadius.circular(20),
             ),
             child: IconButton(
               onPressed: () {},
-              icon: const Icon(FlutterIcons.location_arrow_faw, color: Colors.white, size: 30),
+              icon: const Icon(FlutterIcons.location_arrow_faw, color: Colors.white, size: 28),
             ),
           ),
           const SizedBox(height: 15),

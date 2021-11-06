@@ -80,8 +80,8 @@ class RestaurantOrderDetailController {
   void assignDelivery() => openDeliveryDialog('');
 
   Future confirmOrder() async {
-    await orderProvider.assignDelivery(order.delivery!.id!);
     order.status = OrderStatus.despachado;
+    await orderProvider.assignDelivery(order.id!, order.delivery!.id!);
     updateParentOrders();
     updateView();
   }

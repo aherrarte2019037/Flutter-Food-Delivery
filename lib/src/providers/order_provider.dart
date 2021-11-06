@@ -32,10 +32,10 @@ class OrderProvider {
     }
   }
 
-  Future<ResponseApi?> assignDelivery(String delivery) async {
+  Future<ResponseApi?> assignDelivery(String orderId, String deliveryId) async {
     try {
-      Uri request = Uri.http(_url, '$_api/delivery/$delivery');
-      String body = jsonEncode({});
+      Uri request = Uri.http(_url, '$_api/$orderId/delivery');
+      String body = jsonEncode({ 'delivery': deliveryId });
 
       final response = await http.put(request, body: body, headers: authHeaders);
       final data = jsonDecode(response.body);
