@@ -59,7 +59,6 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
               _detailSection(),
               const SizedBox(height: 40),
               if (_controller.order.delivery != null) _deliverySection(),
-              if (_controller.order.delivery!= null) const SizedBox(height: 40),
               _clientSection(),
               const SizedBox(height: 40),
               _productSection(),
@@ -382,6 +381,7 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
 
   Widget _deliverySection() {
     return Container(
+      margin: const EdgeInsets.only(bottom: 40),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
       ),
