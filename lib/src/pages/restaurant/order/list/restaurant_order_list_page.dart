@@ -14,10 +14,10 @@ class RestaurantOrderListPage extends StatefulWidget {
   const RestaurantOrderListPage({Key? key}) : super(key: key);
 
   @override
-  _DelivRestaurantListPageState createState() => _DelivRestaurantListPageState();
+  _RestaurantOrderListState createState() => _RestaurantOrderListState();
 }
 
-class _DelivRestaurantListPageState extends State<RestaurantOrderListPage> {
+class _RestaurantOrderListState extends State<RestaurantOrderListPage> {
   final RestaurantOrderListController _controller = RestaurantOrderListController();
 
   updateView() => setState(() {});
