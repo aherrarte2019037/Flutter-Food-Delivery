@@ -39,7 +39,7 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
       bottomNavigationBar: _controller.addresses.isNotEmpty ? _selectAddressButton() : null,
       body: Container(
         alignment: _controller.addresses.isNotEmpty ? Alignment.topCenter : Alignment.center,
-        padding: const EdgeInsets.only(bottom: 30, left: 42, right: 42),
+        padding: const EdgeInsets.only(left: 42, right: 42),
         height: height,
         width: width,
         child: ClipRRect(
@@ -91,6 +91,7 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
             onChanged: _controller.addressItemChanged(),
           ),
         ),
+        const SizedBox(height: 42),
       ],
     );
   }

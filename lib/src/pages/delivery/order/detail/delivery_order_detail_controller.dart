@@ -5,6 +5,8 @@ import 'package:food_delivery/src/models/shopping_cart_item_model.dart';
 import 'package:food_delivery/src/providers/order_provider.dart';
 import 'package:food_delivery/src/providers/user_provider.dart';
 import 'package:food_delivery/src/utils/launch_url.dart';
+import 'package:food_delivery/src/widgets/order_tracker/order_tracker_page.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class DeliveryOrderDetailController {
   late BuildContext context;
@@ -45,6 +47,14 @@ class DeliveryOrderDetailController {
   Future startDelivery() async {
     orderProvider.editStatus(order.id!, OrderStatus.enCamino);
     order.status = OrderStatus.enCamino;
+
+    await showMaterialModalBottomSheet(
+      context: context,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (_) => const OrderTracker(),
+    );
+    updateView();
   }
 
 }

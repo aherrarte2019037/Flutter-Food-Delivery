@@ -42,7 +42,7 @@ class _RestaurantOrderListState extends State<RestaurantOrderListPage> {
       appBar: _appBar(),
       drawer: UserDrawer(drawerType: 'RESTAURANT'),
       body:  Container(
-        padding: const EdgeInsets.only(bottom: 30, left: 42, right: 42),
+        padding: const EdgeInsets.only(left: 42, right: 42),
         height: height,
         width: width,
         child: SingleChildScrollView(
@@ -72,6 +72,7 @@ class _RestaurantOrderListState extends State<RestaurantOrderListPage> {
                   return _orderStatusList(status);
                 },
               ),
+              const SizedBox(height: 42),
             ],
           ),
         ),

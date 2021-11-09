@@ -44,7 +44,7 @@ class _ProductListState extends State<ClientProductListPage> {
       appBar: _appBar(),
       drawer: UserDrawer(drawerType: 'CLIENT'),
       body: Container(
-        padding: const EdgeInsets.only(bottom: 30, left: 42, right: 42),
+        padding: const EdgeInsets.only(left: 42, right: 42),
         height: height,
         width: width,
         child: SingleChildScrollView(
@@ -73,6 +73,7 @@ class _ProductListState extends State<ClientProductListPage> {
                   return _foodCategoryList(_controller.products[index]);
                 },
               ),
+              const SizedBox(height: 42),
             ],
           ),
         ),

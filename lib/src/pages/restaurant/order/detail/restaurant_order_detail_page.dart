@@ -710,7 +710,8 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
 
   Widget _confirmButton() {
     return AnimatedContainer(
-      duration: const Duration(seconds: 4),
+      margin: EdgeInsets.only(top: _controller.order.delivery != null && _controller.order.status == OrderStatus.pagado ? 20 : 0),
+      duration: const Duration(milliseconds: 400),
       height: _controller.order.delivery != null && _controller.order.status == OrderStatus.pagado ? 60 : 0,
       child: ElevatedButton(
         onPressed: _controller.confirmOrder,
@@ -742,6 +743,7 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
 
   Widget _assignDeliveryButton() {
     return Container(
+      margin: const EdgeInsets.only(top: 20),
       height: 60,
       child: ElevatedButton(
         onPressed: _controller.assignDelivery,
@@ -798,7 +800,6 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
                 fontWeight: FontWeight.w400,
                 color: Color(0XFFA2A2A2)),
           ),
-          if (_controller.order.status == OrderStatus.pagado) const SizedBox(height: 20),
           if (_controller.order.delivery == null && _controller.order.status == OrderStatus.pagado) _assignDeliveryButton(),
           _confirmButton()
         ],
