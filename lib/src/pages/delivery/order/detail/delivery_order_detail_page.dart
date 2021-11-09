@@ -472,12 +472,13 @@ class _DeliveryOrderDetailPageState extends State<DeliveryOrderDetailPage> {
 
   Widget _startDeliveryButton() {
     return Container(
+      width: 185,
       height: 60,
       child: ElevatedButton(
         onPressed: _controller.startDelivery,
         style: ElevatedButton.styleFrom(
           elevation: 4,
-          padding: const EdgeInsets.symmetric(horizontal: 40),
+          padding: const EdgeInsets.symmetric(horizontal: 28),
           primary: Colors.black.withOpacity(0.9),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           textStyle: const TextStyle(
@@ -490,7 +491,7 @@ class _DeliveryOrderDetailPageState extends State<DeliveryOrderDetailPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text('Iniciar Entrega', style: TextStyle(color: Colors.white)),
+            const Text('Entregar', style: TextStyle(color: Colors.white)),
             const Padding(
               padding: EdgeInsets.only(bottom: 3),
               child: Icon(Icons.delivery_dining_rounded, size: 28),
@@ -503,33 +504,43 @@ class _DeliveryOrderDetailPageState extends State<DeliveryOrderDetailPage> {
 
   Widget _totalSection() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              const Text(
-                'Total ',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-              ),
-              Text(
-                'Q${_controller.order.cart?.total}',
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
-          const SizedBox(height: 2),
-          const Text(
-            'Descuento 0% (Q0)',
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-                color: Color(0XFFA2A2A2)),
-          ),
-          if (_controller.order.status == OrderStatus.despachado) _startDeliveryButton(),
-        ],
+      padding: const EdgeInsets.only(bottom: 40, left: 42, right: 42, top: 10),
+      child: Container(
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    const Text(
+                      'Total ',
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      'Q${_controller.order.cart?.total}',
+                      style: const TextStyle(
+                          fontSize: 22, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 3),
+                const Text(
+                  'Descuento 0% (Q0)',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0XFFA2A2A2)),
+                ),
+              ],
+            ),
+            if (_controller.order.status == OrderStatus.despachado) _startDeliveryButton(),
+          ],
+        ),
       ),
     );
   }

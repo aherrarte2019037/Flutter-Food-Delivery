@@ -625,9 +625,9 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: _controller.order.cart?.products?.length ?? 0,
+          itemCount: 2,
           separatorBuilder: (_, __) => const SizedBox(height: 25),
-          itemBuilder: (_, index) => _shoppingCartItem(_controller.order.cart!.products![index]),
+          itemBuilder: (_, index) => _shoppingCartItem(_controller.order.cart!.products![0]),
         ),        
       ],
     );
@@ -709,15 +709,14 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
   }
 
   Widget _confirmButton() {
-    return AnimatedContainer(
-      margin: EdgeInsets.only(top: _controller.order.delivery != null && _controller.order.status == OrderStatus.pagado ? 20 : 0),
-      duration: const Duration(milliseconds: 400),
-      height: _controller.order.delivery != null && _controller.order.status == OrderStatus.pagado ? 60 : 0,
+    return Container(
+      width: 185,
+      height: 60,
       child: ElevatedButton(
         onPressed: _controller.confirmOrder,
         style: ElevatedButton.styleFrom(
           elevation: 4,
-          padding: const EdgeInsets.symmetric(horizontal: 40),
+          padding: const EdgeInsets.symmetric(horizontal: 28),
           primary: Colors.black.withOpacity(0.9),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           textStyle: const TextStyle(
@@ -730,10 +729,10 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text('Despachar Pedido', style: TextStyle(color: Colors.white)),
+            const Text('Despachar', style: TextStyle(color: Colors.white)),
             const Padding(
               padding: EdgeInsets.only(bottom: 3),
-              child: Icon(FlutterIcons.md_checkmark_ion, size: 28),
+              child: Icon(Icons.check_rounded, size: 28),
             ),
           ],
         ),
@@ -743,13 +742,13 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
 
   Widget _assignDeliveryButton() {
     return Container(
-      margin: const EdgeInsets.only(top: 20),
+      width: 185,
       height: 60,
       child: ElevatedButton(
         onPressed: _controller.assignDelivery,
         style: ElevatedButton.styleFrom(
           elevation: 4,
-          padding: const EdgeInsets.symmetric(horizontal: 40),
+          padding: const EdgeInsets.symmetric(horizontal: 28),
           primary: Colors.black.withOpacity(0.9),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           textStyle: const TextStyle(
@@ -762,7 +761,7 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text('Asignar Repartidor', style: TextStyle(color: Colors.white)),
+            const Text('Asignar', style: TextStyle(color: Colors.white)),
             const Padding(
               padding: EdgeInsets.only(bottom: 3),
               child: Icon(Icons.delivery_dining_rounded, size: 28),
@@ -775,34 +774,44 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
 
   Widget _totalSection() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              const Text(
-                'Total ',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-              ),
-              Text(
-                'Q${_controller.order.cart?.total}',
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
-          const SizedBox(height: 2),
-          const Text(
-            'Descuento 0% (Q0)',
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-                color: Color(0XFFA2A2A2)),
-          ),
-          if (_controller.order.delivery == null && _controller.order.status == OrderStatus.pagado) _assignDeliveryButton(),
-          _confirmButton()
-        ],
+      padding: const EdgeInsets.only(bottom: 40, left: 42, right: 42, top: 10),
+      child: Container(
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    const Text(
+                      'Total ',
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      'Q${_controller.order.cart?.total}',
+                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 3),
+                const Text(
+                  'Descuento 0% (Q0)',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0XFFA2A2A2),
+                  ),
+                ),
+              ],
+            ),
+            if (_controller.order.delivery == null && _controller.order.status == OrderStatus.pagado) _assignDeliveryButton(),
+            if (_controller.order.delivery != null && _controller.order.status == OrderStatus.pagado) _confirmButton(),
+          ],
+        ),
       ),
     );
   }

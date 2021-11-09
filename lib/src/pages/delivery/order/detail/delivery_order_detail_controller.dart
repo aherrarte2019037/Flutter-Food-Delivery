@@ -45,15 +45,16 @@ class DeliveryOrderDetailController {
   }
 
   Future startDelivery() async {
-    orderProvider.editStatus(order.id!, OrderStatus.enCamino);
+    await orderProvider.editStatus(order.id!, OrderStatus.enCamino);
     order.status = OrderStatus.enCamino;
 
-    await showMaterialModalBottomSheet(
+    /* await showMaterialModalBottomSheet(
       context: context,
       isDismissible: false,
       enableDrag: false,
       builder: (_) => const OrderTracker(),
-    );
+    ); */
+    updateParentOrders();
     updateView();
   }
 
