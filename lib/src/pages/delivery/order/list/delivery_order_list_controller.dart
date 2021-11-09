@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:food_delivery/src/models/order_model.dart';
 import 'package:food_delivery/src/models/user_model.dart';
-import 'package:food_delivery/src/pages/restaurant/order/detail/restaurant_order_detail_page.dart';
+import 'package:food_delivery/src/pages/delivery/order/detail/delivery_order_detail_page.dart';
 import 'package:food_delivery/src/providers/order_provider.dart';
 import 'package:food_delivery/src/providers/user_provider.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -18,19 +18,16 @@ class DeliveryOrderListController {
   OrderProvider orderProvider = OrderProvider();
   Map<String, List<Order>> ordersGrouped = {};
   Map<OrderStatus, String> statusImages = {
-    OrderStatus.pagado    : 'assets/images/paid-icon.png',
     OrderStatus.despachado: 'assets/images/product-category-image.png',
     OrderStatus.enCamino  : 'assets/images/location-icon.png',
     OrderStatus.entregado : 'assets/images/delivered-icon.png',
   };
   Map<OrderStatus, Icon> statusIcons = {
-    OrderStatus.pagado    : const Icon(FlutterIcons.md_card_ion, size: 24, color: Color(0XFF50C254)),
     OrderStatus.despachado: const Icon(FlutterIcons.md_card_ion, size: 24, color: Colors.blueAccent),
     OrderStatus.enCamino  : const Icon(FlutterIcons.md_card_ion, size: 24, color: Colors.deepPurpleAccent),
     OrderStatus.entregado : const Icon(FlutterIcons.md_card_ion, size: 24, color: Colors.orangeAccent),
   };
   Map<OrderStatus, Color> statusColors = {
-    OrderStatus.pagado    : const Color(0XFF50C254),
     OrderStatus.despachado: Colors.blueAccent,
     OrderStatus.enCamino  : Colors.deepPurpleAccent,
     OrderStatus.entregado : Colors.orangeAccent,
@@ -82,7 +79,7 @@ class DeliveryOrderListController {
     showMaterialModalBottomSheet(
       enableDrag: false,
       context: context,
-      builder: (_) =>  RestaurantOrderDetailPage(order: order, updateParentOrders: updateOrdersGrouped),
+      builder: (_) =>  DeliveryOrderDetailPage(order: order, updateParentOrders: updateOrdersGrouped),
     );
   }
 

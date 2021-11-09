@@ -53,7 +53,7 @@ class LoginController {
       RoleRedirect.redirect(user.roles!, context!);
       
     } else {
-      CustomSnackBar.showError(context, 'Aviso', response!.message!);
+      CustomSnackBar.showError(context, 'Aviso', response?.message ?? 'Error al iniciar sesión');
       updateView();
     }
   }

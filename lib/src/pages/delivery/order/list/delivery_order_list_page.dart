@@ -133,9 +133,9 @@ class _DeliveryOrderListPageState extends State<DeliveryOrderListPage> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         image: const DecorationImage(
-          image: AssetImage('assets/images/restaurant-order-list.gif'),
+          image: AssetImage('assets/images/delivery-order-list.gif'),
           fit: BoxFit.cover,
-          alignment: Alignment.topCenter,
+          alignment: Alignment.center,
         ),
       ),
     );

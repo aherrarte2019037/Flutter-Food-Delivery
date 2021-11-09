@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:food_delivery/src/models/order_model.dart';
 import 'package:http/http.dart' as http;
@@ -36,6 +37,25 @@ class OrderProvider {
     try {
       Uri request = Uri.http(_url, '$_api/$orderId/delivery');
       String body = jsonEncode({ 'delivery': deliveryId });
+
+      final response = await http.put(request, body: body, headers: authHeaders);
+      final data = jsonDecode(response.body);
+
+      ResponseApi responseApi = ResponseApi.fromJson(data);
+      if (responseApi.success!) responseApi.data = Order.fromJson(responseApi.data);
+      
+      return responseApi;
+      
+    } catch (e) {
+      print('Error: $e');
+      return null;
+    }
+  }
+
+  Future<ResponseApi?> editStatus(String orderId, OrderStatus status) async {
+    try {
+      Uri request = Uri.http(_url, '$_api/$orderId');
+      String body = jsonEncode({ 'status': EnumToString.convertToString(status) });
 
       final response = await http.put(request, body: body, headers: authHeaders);
       final data = jsonDecode(response.body);
