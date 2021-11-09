@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/scheduler.dart';
@@ -34,7 +36,6 @@ class _MapPageState extends State<MapPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: _appBar(),
       body: Container(
         height: height,
         width: width,
@@ -42,6 +43,8 @@ class _MapPageState extends State<MapPage> {
           alignment: Alignment.bottomCenter,
           children: [
             _map(),
+            _backButton(),
+            _locationButton(),
             _currentAddress(),
             _locationIcon(),
             _selectAddressButton(),
@@ -51,50 +54,51 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  AppBar _appBar() {
-    return AppBar(
-      elevation: 0,
-      backgroundColor: Colors.white,
-      automaticallyImplyLeading: false,
-      title: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ElevatedButton(
+  Widget _backButton() {
+    return Positioned(
+      top: 42,
+      left: 42,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+          child: ElevatedButton(
               onPressed: _controller.goBack,
               style: ElevatedButton.styleFrom(
-                shadowColor: Colors.transparent,
-                padding: const EdgeInsets.all(2),
+                padding: const EdgeInsets.all(0),
                 elevation: 0,
-                primary: Colors.white,
-                onPrimary: Colors.grey,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                minimumSize: const Size(55, 55),
+                primary: Colors.black.withOpacity(0.9),
+                onPrimary: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               ),
-              child: const Icon(Icons.arrow_back_rounded, size: 30, color: Colors.black),
+              child: const Icon(Icons.arrow_back_rounded, size: 28, color: Colors.white),
             ),
-            const Text(
-              'Selecciona tu ubicación',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {},
+        ),
+      ),
+    );
+  }
+
+  Widget _locationButton() {
+    return Positioned(
+      top: 115,
+      left: 42,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+          child: ElevatedButton(
+              onPressed: _controller.updateMapLocation,
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(2),
-                shadowColor: Colors.transparent,
+                padding: const EdgeInsets.all(0),
                 elevation: 0,
-                primary: Colors.white,
-                onPrimary: Colors.grey,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                minimumSize: const Size(55, 55),
+                primary: Colors.black.withOpacity(0.9),
+                onPrimary: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               ),
-              child: const Icon(Icons.more_horiz, size: 30, color: Colors.black),
+              child: const Icon(FlutterIcons.my_location_mdi, size: 26, color: Colors.white),
             ),
-          ],
         ),
       ),
     );
@@ -114,18 +118,23 @@ class _MapPageState extends State<MapPage> {
   }
 
   Widget _currentAddress() {
-    return Container(
-      margin: const EdgeInsets.only(top: 20),
-      alignment: Alignment.topCenter,
-      child: Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        color: Colors.black.withOpacity(0.9),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          child: Text(
-            _controller.address.address ?? 'Ubicación',
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+    return Positioned(
+      top: 38,
+      right: 42,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 150),
+        child: Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          color: const Color(0XFFFF8C3E),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 18.5, horizontal: 20),
+            child: Text(
+              _controller.address.address ?? 'Ubicación',
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
           ),
         ),
       ),

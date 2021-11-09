@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:food_delivery/src/models/order_model.dart';
 import 'package:food_delivery/src/widgets/order_tracker/order_tracker_controller.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/scheduler.dart';
@@ -7,7 +10,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
 class OrderTracker extends StatefulWidget {
-  const OrderTracker({Key? key}) : super(key: key);
+  final Order order;
+
+  const OrderTracker({Key? key, required this.order}) : super(key: key);
 
   @override
   _OrderTrackerState createState() => _OrderTrackerState();
@@ -22,7 +27,7 @@ class _OrderTrackerState extends State<OrderTracker> {
   void initState() {
     super.initState();
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      _controller.init(context, updateView);
+      _controller.init(context, updateView, widget.order);
     });
   }
 
@@ -34,7 +39,6 @@ class _OrderTrackerState extends State<OrderTracker> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: _appBar(),
       body: Container(
         height: height,
         width: width,
@@ -42,7 +46,7 @@ class _OrderTrackerState extends State<OrderTracker> {
           alignment: Alignment.bottomCenter,
           children: [
             _map(),
-            _currentAddress(),
+            _backButton(),
             _locationIcon(),
             _selectAddressButton(),
           ],
@@ -51,50 +55,26 @@ class _OrderTrackerState extends State<OrderTracker> {
     );
   }
 
-  AppBar _appBar() {
-    return AppBar(
-      elevation: 0,
-      backgroundColor: Colors.white,
-      automaticallyImplyLeading: false,
-      title: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ElevatedButton(
+  Widget _backButton() {
+    return Positioned(
+      top: 42,
+      left: 42,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+          child: ElevatedButton(
               onPressed: _controller.goBack,
               style: ElevatedButton.styleFrom(
-                shadowColor: Colors.transparent,
-                padding: const EdgeInsets.all(2),
+                padding: const EdgeInsets.all(0),
                 elevation: 0,
-                primary: Colors.white,
-                onPrimary: Colors.grey,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                minimumSize: const Size(55, 55),
+                primary: Colors.black.withOpacity(0.9),
+                onPrimary: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               ),
-              child: const Icon(Icons.arrow_back_rounded, size: 30, color: Colors.black),
+              child: const Icon(Icons.arrow_back_rounded, size: 28, color: Colors.white),
             ),
-            const Text(
-              'Selecciona tu ubicación',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(2),
-                shadowColor: Colors.transparent,
-                elevation: 0,
-                primary: Colors.white,
-                onPrimary: Colors.grey,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-              ),
-              child: const Icon(Icons.more_horiz, size: 30, color: Colors.black),
-            ),
-          ],
         ),
       ),
     );
@@ -110,25 +90,6 @@ class _OrderTrackerState extends State<OrderTracker> {
       myLocationEnabled: false,
       onCameraMove: (position) => _controller.cameraPosition = position,
       onCameraIdle: () async => await _controller.setDraggableAddress(),
-    );
-  }
-
-  Widget _currentAddress() {
-    return Container(
-      margin: const EdgeInsets.only(top: 20),
-      alignment: Alignment.topCenter,
-      child: Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        color: Colors.black.withOpacity(0.9),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          child: Text(
-            _controller.address.address ?? 'Ubicación',
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-          ),
-        ),
-      ),
     );
   }
 

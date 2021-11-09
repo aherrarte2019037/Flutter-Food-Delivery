@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:food_delivery/src/models/address_model.dart';
+import 'package:food_delivery/src/models/order_model.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -15,11 +16,13 @@ class OrderTrackerController {
     target: LatLng(14.6477112, -90.4808864),
     zoom: 18,
   );
+  Order order = Order();
   Address address = Address(latitude: 0, longitude: 0);
 
-  void init(BuildContext context, Function updateView) {
+  void init(BuildContext context, Function updateView, Order order) {
     this.context = context;
     this.updateView = updateView;
+    this.order = order;
     verifyGPS();
   }
 
