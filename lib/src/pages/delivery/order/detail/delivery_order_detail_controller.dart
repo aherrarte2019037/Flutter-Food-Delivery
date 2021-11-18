@@ -29,13 +29,6 @@ class DeliveryOrderDetailController {
 
   void goBack() => Navigator.pop(context);
 
-  Future confirmOrder() async {
-    order.status = OrderStatus.despachado;
-    await orderProvider.assignDelivery(order.id!, order.delivery!.id!);
-    updateParentOrders();
-    updateView();
-  }
-
   Future callUser(int phoneNumber) async {
     await LaunchUrl.phoneCall(phoneNumber);
   }

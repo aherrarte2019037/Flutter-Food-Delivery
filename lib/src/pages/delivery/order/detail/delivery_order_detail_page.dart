@@ -416,8 +416,10 @@ class _DeliveryOrderDetailPageState extends State<DeliveryOrderDetailPage> {
               children: [
                 Text(
                   item.product.name.capitalize(),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
                   style: TextStyle(
-                    fontSize: 22,
+                    fontSize: 20,
                     fontWeight: FontWeight.w500,
                     color: Colors.black.withOpacity(0.9),
                   ),
