@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:food_delivery/src/models/address_model.dart';
 import 'package:food_delivery/src/models/order_model.dart';
+import 'package:food_delivery/src/providers/map_provider.dart';
 import 'package:food_delivery/src/utils/launch_url.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -13,6 +14,7 @@ class OrderTrackerController {
   late Position userPosition;
   late BitmapDescriptor deliveryMarker;
   late BitmapDescriptor clientMarker;
+  MapProvider mapProvider = MapProvider();
   Completer<GoogleMapController> mapController = Completer();
   CameraPosition cameraPosition = const CameraPosition(
     target: LatLng(14.6477112, -90.4808864),
@@ -20,9 +22,12 @@ class OrderTrackerController {
   );
   Map<MarkerId, Marker> markers = {};
   Order order = Order();
+  bool detailExpanded = false;
+  ScrollController detailScrollController = ScrollController();
   Address address = Address(latitude: 0, longitude: 0);
+  Set<Polyline> polylines = {};
 
-  void init(BuildContext context, Function updateView, Order order) async {
+  Future<void> init(BuildContext context, Function updateView, Order order) async {
     this.context = context;
     this.updateView = updateView;
     this.order = order;
@@ -30,6 +35,12 @@ class OrderTrackerController {
     deliveryMarker = await createMarkerFromAsset('assets/images/location-icon.png');
     clientMarker = await createMarkerFromAsset('assets/images/destination-icon.png');
     verifyGPS();
+  }
+
+  Future<void> setPolylines(LatLng from, LatLng to, String polylineId) async {
+    Polyline polyline = await mapProvider.getPolylineByCoordinates(from, to, polylineId);
+    polylines.add(polyline);
+    updateView();
   }
 
   void goBack() => Navigator.pop(context, null);
@@ -74,6 +85,11 @@ class OrderTrackerController {
       addMarker('delivery', userPosition.latitude, userPosition.longitude, 'Ubicación Actual', '', deliveryMarker);
       addMarker('client', order.address!.latitude, order.address!.longitude, 'Ubicación De Entrega', '', clientMarker);
 
+      LatLng deliveryCoordinates = LatLng(userPosition.latitude, userPosition.longitude);
+      LatLng clientCoordinates = LatLng(order.address!.latitude, order.address!.longitude);
+
+      setPolylines(deliveryCoordinates, clientCoordinates, 'mapRoute');
+
     } catch (e) {
       print(e);
     }
@@ -112,6 +128,14 @@ class OrderTrackerController {
 
   Future sendUserEmail(String email) async {
     await LaunchUrl.sendEmail(email);
+  }
+
+  void expandOrderDetail() {
+    if (detailExpanded) {
+      detailScrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.easeInBack);
+    }
+    detailExpanded = !detailExpanded;
+    updateView();
   }
 
 }

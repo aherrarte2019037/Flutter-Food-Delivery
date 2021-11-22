@@ -45,6 +45,7 @@ dependencies:
   geocoding: ^2.0.1
   enum_to_string: ^2.0.1
   flutter_dotenv: ^5.0.2
+  flutter_polyline_points: ^1.0.0
 cupertino_icons: ^1.0.2
 
 dev_dependencies:

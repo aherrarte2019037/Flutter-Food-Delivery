@@ -1,8 +1,11 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:food_delivery/src/models/order_model.dart';
+import 'package:food_delivery/src/models/shopping_cart_item_model.dart';
+import 'package:food_delivery/src/utils/string_extension.dart';
 import 'package:food_delivery/src/widgets/custom_fade_in_image.dart';
 import 'package:food_delivery/src/widgets/order_tracker/order_tracker_controller.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -49,7 +52,7 @@ class _OrderTrackerState extends State<OrderTracker> {
             _backButton(),
             _locationButton(),
             _deliverOrderButton(),
-            _cardOrderWidget(),
+            _cardOrder(),
           ],
         ),
       ),
@@ -108,8 +111,9 @@ class _OrderTrackerState extends State<OrderTracker> {
 
   Widget _map() {
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.3),
+      padding: const EdgeInsets.only(bottom: 250),
       child: GoogleMap(
+        polylines: _controller.polylines,
         zoomControlsEnabled: false,
         mapType: MapType.normal,
         initialCameraPosition: _controller.cameraPosition,
@@ -123,9 +127,11 @@ class _OrderTrackerState extends State<OrderTracker> {
     );
   }
 
-  Widget _cardOrderWidget() {
-    return Container(
-      height: 370,
+  Widget _cardOrder() {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 550),
+      curve: Curves.easeInBack,
+      height: _controller.detailExpanded ? 540 : 340,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
@@ -145,7 +151,7 @@ class _OrderTrackerState extends State<OrderTracker> {
             ),
           ),
           Positioned.fill(
-            top: 120,
+            top: 110,
             child: Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -154,7 +160,13 @@ class _OrderTrackerState extends State<OrderTracker> {
                   topRight: Radius.circular(35),
                 ),
               ),
-              child: _orderDetail(),
+              child: SingleChildScrollView(
+                controller: _controller.detailScrollController,
+                physics: _controller.detailExpanded
+                  ? const ClampingScrollPhysics()
+                  : const NeverScrollableScrollPhysics(),
+                child: _orderDetail(),
+              ),
             ),
           ),
         ],
@@ -167,7 +179,7 @@ class _OrderTrackerState extends State<OrderTracker> {
       children: [
         Expanded(
           child: Container(
-            padding: const EdgeInsets.all(32),
+            padding: const EdgeInsets.all(27),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
             ),
@@ -180,14 +192,17 @@ class _OrderTrackerState extends State<OrderTracker> {
                   children: [
                     Stack(
                       children: [
-                        Container(
-                          width: 55,
-                          height: 55,
-                          child: CustomFadeInImage(
-                            image: _controller.order.user?.image ?? 'assets/images/profile-image.png',
-                            placeholder: 'assets/images/profile-image.png',
-                            fit: BoxFit.contain,
-                            size: const Size(55, 55),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Container(
+                            width: 55,
+                            height: 55,
+                            child: CustomFadeInImage(
+                              image: _controller.order.user?.image ?? 'assets/images/profile-image.png',
+                              placeholder: 'assets/images/profile-image.png',
+                              fit: BoxFit.contain,
+                              size: const Size(55, 55),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -271,24 +286,14 @@ class _OrderTrackerState extends State<OrderTracker> {
 
   Widget _orderDetail() {
     return Padding(
-      padding: const EdgeInsets.all(35),
+      padding: const EdgeInsets.only(left: 30, right: 30, top: 30, bottom: 30),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Dirección de entrega',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w400,
-              color: Color(0XFFA2A2A2),
-            ),
-          ),
-          const SizedBox(height: 8),
           Row(
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: 45,
+                height: 45,
                 decoration: BoxDecoration(
                   color: const Color(0XFFf4f4f4),
                   borderRadius: BorderRadius.circular(18),
@@ -304,54 +309,246 @@ class _OrderTrackerState extends State<OrderTracker> {
               ),
               const SizedBox(width: 14),
               Expanded(
-                child: Text(
-                  '${_controller.order.address?.address}',
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Dirección',
+                      style: TextStyle(
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0XFFA2A2A2),
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      '${_controller.order.address?.address}',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: const TextStyle(
+                        height: 1,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          const Spacer(),
-          const Text(
-            'Tiempo de llegada',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w400,
-              color: Color(0XFFA2A2A2),
-            ),
-          ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 24),
           Row(
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: 45,
+                height: 45,
                 decoration: BoxDecoration(
                   color: const Color(0XFFf4f4f4),
                   borderRadius: BorderRadius.circular(18),
+                  image: const DecorationImage(
+                    fit: BoxFit.fitWidth,
+                    image: AssetImage('assets/images/location.png'),
+                  ),
                 ),
                 child: Image.asset(
                   'assets/images/time.png',
                   fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(width: 10),
-              const Expanded(
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Tiempo de llegada',
+                      style: TextStyle(
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0XFFA2A2A2),
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      '${_controller.order.address?.address}',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: const TextStyle(
+                        height: 1,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInBack,
+            height: _controller.detailExpanded ? 35 : 20,
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Material(
+              color: Colors.black,
+              child: InkWell(
+                splashColor: Colors.white.withOpacity(0.2),
+                highlightColor: Colors.white.withOpacity(0.1),
+                onTap: _controller.expandOrderDetail,
+                child: Container(
+                  width: 60,
+                  height: 38,
+                  child: AnimatedRotation(
+                    curve: Curves.easeInBack,
+                    turns: _controller.detailExpanded ? 0 : 0.5,
+                    duration: const Duration(milliseconds: 500),
+                    child: const Icon(
+                      FlutterIcons.chevron_down_fea,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 30),
+          Stack(
+            children: [
+              const Align(
+                alignment: Alignment.topLeft,
                 child: Text(
-                  'Llegada estimada en 3 min...',
+                  'Productos',
+                  textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
+                  ),
+              ),
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _controller.order.cart?.products?.length ?? 0,
+                separatorBuilder: (_, __) => const SizedBox(height: 25),
+                itemBuilder: (_, index) => _shoppingCartItem(_controller.order.cart!.products![index]),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Container(
+            height: 60,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        const Text(
+                          'Total ',
+                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          'Q${_controller.order.cart?.total}',
+                          style: const TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 3),
+                    const Text(
+                      'Descuento 0% (Q0)',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0XFFA2A2A2)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _shoppingCartItem(ShoppingCartItem item) {
+    return Container(
+      height: 110,
+      child: Row(
+        children: [
+          Container(
+            child: CustomFadeInImage(
+              image: item.product.images![0],
+              placeholder: 'assets/images/picture-loading.gif',
+              fit: BoxFit.contain,
+              size: const Size(110, 110),
+            ),
+          ),
+          const SizedBox(width: 18),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  item.product.name.capitalize(),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   style: TextStyle(
-                    fontSize: 17,
+                    fontSize: 20,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black,
+                    color: Colors.black.withOpacity(0.9),
                   ),
+                ),
+                const SizedBox(height: 2),
+                Container(
+                  margin: const EdgeInsets.only(top: 3),
+                  padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(20)
+                  ),
+                  child: Text(
+                    'Cantidad ${item.quantity}',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      letterSpacing: 0.3,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                'Q${item.product.price.toString()}',
+                style: const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0XFFFF8C3E),
+                ),
+              ),
+              Text(
+                'Total Q${(item.product.price * item.quantity).toString()}',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0XFFA2A2A2),
                 ),
               ),
             ],
