@@ -504,6 +504,38 @@ class _DeliveryOrderDetailPageState extends State<DeliveryOrderDetailPage> {
     );
   }
 
+  Widget _goToOrderTrackerButton() {
+    return Container(
+      width: 185,
+      height: 60,
+      child: ElevatedButton(
+        onPressed: _controller.goToOrderTracker,
+        style: ElevatedButton.styleFrom(
+          elevation: 4,
+          padding: const EdgeInsets.symmetric(horizontal: 28),
+          primary: Colors.black.withOpacity(0.9),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          textStyle: const TextStyle(
+            fontSize: 16.5,
+            letterSpacing: 0.5,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text('Ver Mapa', style: TextStyle(color: Colors.white)),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 3),
+              child: Icon(Icons.map_rounded, size: 28),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _totalSection() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 40, left: 42, right: 42, top: 10),
@@ -541,6 +573,7 @@ class _DeliveryOrderDetailPageState extends State<DeliveryOrderDetailPage> {
               ],
             ),
             if (_controller.order.status == OrderStatus.despachado) _startDeliveryButton(),
+            if (_controller.order.status == OrderStatus.enCamino) _goToOrderTrackerButton(),
           ],
         ),
       ),

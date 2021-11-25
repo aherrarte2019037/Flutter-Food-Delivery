@@ -248,7 +248,7 @@ class _RestaurantOrderListState extends State<RestaurantOrderListPage> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(50),
         child: Material(
-          color: const Color(0XFFe7e7e7),
+          color: const Color(0XFFF2F2F2),
           child: InkWell(
             customBorder: const StadiumBorder(),
             onTap: () => _controller.scrollToStatus(status),

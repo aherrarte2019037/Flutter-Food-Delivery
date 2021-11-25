@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flash/flash.dart';
 
 class CustomSnackBar {
-  static showSuccess(BuildContext? context, String title, String message) {
+  static final EdgeInsets _margin = const EdgeInsets.only(left: 8, right: 8, top: 7);
+
+  static showSuccess({ required String title, required String message, BuildContext? context, EdgeInsets? margin }) {
     if (context == null) return;
 
     return showFlash(
@@ -12,7 +14,7 @@ class CustomSnackBar {
           return Flash.bar(
             position: FlashPosition.top,
             backgroundColor: Colors.white,
-            margin: const EdgeInsets.all(8),
+            margin: margin ?? _margin,
             borderRadius: const BorderRadius.all(Radius.circular(16)),
             forwardAnimationCurve: Curves.decelerate,
             enableVerticalDrag: true,
@@ -46,7 +48,7 @@ class CustomSnackBar {
         });
   }
 
-  static showError(BuildContext? context, String title, String message) {
+  static showError({ required String title, required String message, BuildContext? context, EdgeInsets? margin }) {
     if (context == null) return;
 
     return showFlash(
@@ -56,7 +58,7 @@ class CustomSnackBar {
           return Flash.bar(
             position: FlashPosition.top,
             backgroundColor: Colors.white,
-            margin: const EdgeInsets.all(8),
+            margin: margin ?? _margin,
             borderRadius: const BorderRadius.all(Radius.circular(16)),
             forwardAnimationCurve: Curves.decelerate,
             enableVerticalDrag: true,
@@ -89,4 +91,5 @@ class CustomSnackBar {
               ));
         });
   }
+
 }

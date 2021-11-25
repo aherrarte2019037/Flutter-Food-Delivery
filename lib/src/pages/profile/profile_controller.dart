@@ -49,12 +49,12 @@ class ProfileController {
 
   void editUser() async {
     if (controllers['firstName']!.text.isEmpty || controllers['lastName']!.text.isEmpty || controllers['email']!.text.isEmpty) {
-      CustomSnackBar.showError(context, 'Aviso', 'Ingresa todos los datos');
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Ingresa todos los datos');
       return;
     }
 
     if (!EmailValidator.validate(controllers['email']!.text)) {
-      CustomSnackBar.showError(context, 'Aviso', 'Correo inválido');
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Correo inválido');
       return;
     }
 
@@ -71,7 +71,7 @@ class ProfileController {
     ResponseApi? response = await userProvider.edit(userProfile!.id!, editedData);
 
     if (response?.success == true) {
-      CustomSnackBar.showSuccess(context, 'Perfil Editado', 'Se editaron los datos');
+      CustomSnackBar.showSuccess(context: context, title: 'Perfil Editado', message: 'Se editaron los datos');
       userProfile = User.fromJson(response!.data);
       SharedPref.save('user', userProfile);
       isEditing = false;
@@ -82,7 +82,7 @@ class ProfileController {
       editIsLoading = false;
       isEditing = true;
       updateView();
-      CustomSnackBar.showError(context, 'Aviso', response?.message ?? 'Error al editar usuario');
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: response?.message ?? 'Error al editar usuario');
     }
   }
 
@@ -104,7 +104,7 @@ class ProfileController {
         Navigator.pop(context);
 
       } else {
-        CustomSnackBar.showError(context, 'Aviso', response.message!);
+        CustomSnackBar.showError(context: context, title: 'Aviso', message: response.message!);
       }
     });
   }

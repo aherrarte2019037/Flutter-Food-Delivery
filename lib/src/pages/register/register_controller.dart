@@ -34,27 +34,27 @@ class RegisterController {
     if(requestFocusInputs()) return;
 
     if(!EmailValidator.validate(emailInput.text)) {
-      CustomSnackBar.showError(context, 'Aviso', 'Correo inválido');
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Correo inválido');
       return;
     }
 
     if(passwordInput.text != confirmInput.text) {
-      CustomSnackBar.showError(context, 'Aviso', 'Contraseñas no coinciden');
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Contraseñas no coinciden');
       return;
     }
 
     if(passwordInput.text.length < 6) {
-      CustomSnackBar.showError(context, 'Aviso', 'Contraseña con minímo 6 caracteres');
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Contraseña con minímo 6 caracteres');
       return;
     }
 
     if (!passwordInput.text.contains(RegExp(r'[0-9]'))) {
-      CustomSnackBar.showError(context, 'Aviso', 'Contraseña con al menos 1 dígito');
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Contraseña con al menos 1 dígito');
       return;
     }
 
     if (!passwordInput.text.contains(RegExp(r'[a-z]')) || !!passwordInput.text.contains(RegExp(r'[A-Z]'))) {
-      CustomSnackBar.showError(context, 'Aviso', 'Contraseña debe contener letras');
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Contraseña debe contener letras');
       return;
     }
 
@@ -76,11 +76,11 @@ class RegisterController {
       if (response.success == true) {
         ImagePickerDialog.hide();
         goToLoginPage();
-        CustomSnackBar.showSuccess(context, 'Registro exitoso','bienvenido ${response.data?['firstName']}');
+        CustomSnackBar.showSuccess(context: context, title: 'Registro exitoso', message: 'bienvenido ${response.data?['firstName']}');
 
       } else {
         ImagePickerDialog.hide();
-        CustomSnackBar.showError(context, 'Aviso', response.message!);
+        CustomSnackBar.showError(context: context, title: 'Aviso', message: response.message!);
       }
     });
   }

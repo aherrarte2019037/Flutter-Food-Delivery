@@ -47,13 +47,13 @@ class ClientAddressCreateController {
   void createAddress() async {
     for (var controller in textFieldControllers.values) {
       if(controller.text.isEmpty) {
-        CustomSnackBar.showError(context, 'Aviso', 'Ingresa todos los datos');
+        CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Ingresa todos los datos');
         return;
       }
     }
 
     if(address == null) {
-      CustomSnackBar.showError(context, 'Aviso', 'Establece tu ubicación');
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Establece tu ubicación');
       return;
     }
 
@@ -64,12 +64,12 @@ class ClientAddressCreateController {
     ResponseApi? responseApi = await addressProvider.create(address!);
     if (responseApi?.success == true) {
       addressesCreated.insert(0, responseApi!.data as Address);
-      CustomSnackBar.showSuccess(context, 'Aviso', 'Dirección de entrega creada');
+      CustomSnackBar.showSuccess(context: context, title: 'Aviso', message: 'Dirección de entrega creada');
       resetControllers();
       updateView();
       
     } else {
-      CustomSnackBar.showError(context, 'Aviso', responseApi!.message!);
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: responseApi!.message!);
     }
   }
 

@@ -36,7 +36,7 @@ class LoginController {
     String pass = passwordInput.text.trim();
 
     if (!EmailValidator.validate(email)) {
-      CustomSnackBar.showError(context, 'Aviso', 'Correo inválido, intenta de nuevo');
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Correo inválido, intenta de nuevo');
       return;
     }
 
@@ -53,7 +53,7 @@ class LoginController {
       RoleRedirect.redirect(user.roles!, context!);
       
     } else {
-      CustomSnackBar.showError(context, 'Aviso', response?.message ?? 'Error al iniciar sesión');
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: response?.message ?? 'Error al iniciar sesión');
       updateView();
     }
   }

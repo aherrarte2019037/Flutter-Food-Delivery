@@ -3,7 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:food_delivery/src/models/address_model.dart';
 import 'package:food_delivery/src/models/order_model.dart';
 import 'package:food_delivery/src/providers/map_provider.dart';
+import 'package:food_delivery/src/providers/order_provider.dart';
 import 'package:food_delivery/src/utils/launch_url.dart';
+import 'package:food_delivery/src/widgets/custom_snackbar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as location;
@@ -11,10 +13,12 @@ import 'package:location/location.dart' as location;
 class OrderTrackerController {
   late BuildContext context;
   late Function updateView;
-  late Position userPosition;
+  late Position deliveryPosition;
   late BitmapDescriptor deliveryMarker;
   late BitmapDescriptor clientMarker;
+  StreamSubscription? deliveryPositionStream;
   MapProvider mapProvider = MapProvider();
+  OrderProvider orderProvider = OrderProvider();
   Completer<GoogleMapController> mapController = Completer();
   CameraPosition cameraPosition = const CameraPosition(
     target: LatLng(14.6477112, -90.4808864),
@@ -44,6 +48,32 @@ class OrderTrackerController {
   }
 
   void goBack() => Navigator.pop(context, null);
+
+  bool verifyDeliverOrder() {
+    double distanceToClient = Geolocator.distanceBetween(
+      deliveryPosition.latitude,
+      deliveryPosition.longitude,
+      order.address!.latitude,
+      order.address!.longitude,
+    );
+    
+    return distanceToClient <= 100;
+  }
+
+  Future<void> deliverOrder() async {
+    if (!verifyDeliverOrder()) {
+      CustomSnackBar.showError(
+        context: context,
+        title: 'Aviso',
+        message: 'Debes estar cerca del cliente',
+        margin: const EdgeInsets.only(left: 41, right: 41, top: 7),
+      );
+      return;
+    }
+
+    await orderProvider.editStatus(order.id!, OrderStatus.entregado);
+    Navigator.pushNamedAndRemoveUntil(context, 'delivery/order/list', (route) => false);
+  }
 
   void addMarker(String id, double lat, double lng, String title, String content, BitmapDescriptor icon) {
     MarkerId markerId = MarkerId(id);
@@ -78,17 +108,30 @@ class OrderTrackerController {
     return await Geolocator.getCurrentPosition();
   }
 
+  void positionListener(Position position) {
+    deliveryPosition = position;
+    addMarker('delivery', position.latitude, position.longitude, 'Ubicación Actual', '', deliveryMarker);
+
+    animateMapCamera(position.latitude, position.longitude);
+    updateView();
+  }
+
   void updateMapLocation() async {
     try {
-      userPosition = await determinePosition();
-      await animateMapCamera(userPosition.latitude, userPosition.longitude);
-      addMarker('delivery', userPosition.latitude, userPosition.longitude, 'Ubicación Actual', '', deliveryMarker);
+      deliveryPosition = await determinePosition();
+      await animateMapCamera(deliveryPosition.latitude, deliveryPosition.longitude);
+      
+      addMarker('delivery', deliveryPosition.latitude, deliveryPosition.longitude, 'Ubicación Actual', '', deliveryMarker);
       addMarker('client', order.address!.latitude, order.address!.longitude, 'Ubicación De Entrega', '', clientMarker);
 
-      LatLng deliveryCoordinates = LatLng(userPosition.latitude, userPosition.longitude);
+      LatLng deliveryCoordinates = LatLng(deliveryPosition.latitude, deliveryPosition.longitude);
       LatLng clientCoordinates = LatLng(order.address!.latitude, order.address!.longitude);
 
       setPolylines(deliveryCoordinates, clientCoordinates, 'mapRoute');
+      deliveryPositionStream = Geolocator.getPositionStream(
+        desiredAccuracy: LocationAccuracy.best,
+        distanceFilter: 1
+      ).listen(positionListener);
 
     } catch (e) {
       print(e);
@@ -136,6 +179,10 @@ class OrderTrackerController {
     }
     detailExpanded = !detailExpanded;
     updateView();
+  }
+
+  void dispose() {
+    deliveryPositionStream?.cancel();
   }
 
 }

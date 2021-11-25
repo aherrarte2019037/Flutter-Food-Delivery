@@ -47,7 +47,7 @@ class RestaurantCategoryCreateController {
 
   void verifyCategoryData() {
     if (textFieldControllers['name']!.text.isEmpty || textFieldControllers['description']!.text.isEmpty) {
-      CustomSnackBar.showError(context, 'Aviso', 'Ingresa todos los datos');
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Ingresa todos los datos');
       return;
     }
 
@@ -74,7 +74,7 @@ class RestaurantCategoryCreateController {
       if (response.success == true) {
         ImagePickerDialog.hide();
         Navigator.popUntil(context, ModalRoute.withName('restaurant/category/create'));
-        CustomSnackBar.showSuccess(context, 'Felicidades','Categoría creada');
+        CustomSnackBar.showSuccess(context: context, title: 'Felicidades', message: 'Categoría creada');
         ProductCategory categoryCreated = ProductCategory.fromJson(response.data);
         createCategoryIsLoading = false;
         categoriesListKey.currentState?.insertItem(0, duration: const Duration(milliseconds: 800));
@@ -85,7 +85,7 @@ class RestaurantCategoryCreateController {
       } else {
         ImagePickerDialog.hide();
         Navigator.popUntil(context, ModalRoute.withName('restaurant/category/create'));
-        CustomSnackBar.showError(context, 'Aviso', response.message!);
+        CustomSnackBar.showError(context: context, title: 'Aviso', message: response.message!);
         createCategoryIsLoading = false;
         updateView();
       }

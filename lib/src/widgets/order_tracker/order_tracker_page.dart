@@ -24,7 +24,10 @@ class OrderTracker extends StatefulWidget {
 class _OrderTrackerState extends State<OrderTracker> {
   final _controller = OrderTrackerController();
 
-  updateView() => setState(() {});
+  updateView() {
+    if (!mounted) return;
+    setState(() => {});
+  }
 
   @override
   void initState() {
@@ -32,6 +35,12 @@ class _OrderTrackerState extends State<OrderTracker> {
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
       _controller.init(context, updateView, widget.order);
     });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -565,7 +574,7 @@ class _OrderTrackerState extends State<OrderTracker> {
       child: Container(
         height: 60,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: _controller.deliverOrder,
           style: ElevatedButton.styleFrom(
             elevation: 0,
             padding: const EdgeInsets.symmetric(horizontal: 30),

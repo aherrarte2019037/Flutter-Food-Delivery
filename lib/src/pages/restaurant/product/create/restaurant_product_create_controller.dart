@@ -74,7 +74,7 @@ class RestaurantProductCreateController {
   Future createProduct() async{
     for (var controller in textFieldControllers.values) {
       if(controller.text.isEmpty) {
-        CustomSnackBar.showError(context, 'Aviso', 'Ingresa todos los datos');
+        CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Ingresa todos los datos');
         return;
       }
     }
@@ -94,7 +94,7 @@ class RestaurantProductCreateController {
       ResponseApi response = ResponseApi.fromJson(jsonDecode(res));
     
       if (response.success == true) {
-        CustomSnackBar.showSuccess(context, 'Felicidades','Producto creado');
+        CustomSnackBar.showSuccess(context: context, title: 'Felicidades', message: 'Producto creado');
         Product productCreated = Product.fromJson(response.data);
         latestProducts.insert(0, productCreated);
         productsListKey.currentState?.insertItem(0, duration: const Duration(milliseconds: 500));
@@ -104,7 +104,7 @@ class RestaurantProductCreateController {
         
       } else {
         createProductIsLoading = false;
-        CustomSnackBar.showError(context, 'Aviso', response.message!);
+        CustomSnackBar.showError(context: context, title: 'Aviso', message: response.message!);
         updateView();
       }
     });
@@ -112,7 +112,7 @@ class RestaurantProductCreateController {
 
   void uploadImage() async {
     if(images.length == 4) {
-      CustomSnackBar.showError(context, 'Aviso', 'Máximo 4 imágenes');
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Máximo 4 imágenes');
       return;
     }
     File image = await ImagePickerDialog.showWithoutCallback(context);

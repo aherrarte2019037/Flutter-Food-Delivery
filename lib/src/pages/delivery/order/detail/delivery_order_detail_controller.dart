@@ -45,10 +45,19 @@ class DeliveryOrderDetailController {
       enableDrag: false,
       builder: (_) => OrderTracker(order: order),
     );
-    //await orderProvider.editStatus(order.id!, OrderStatus.enCamino);
+    await orderProvider.editStatus(order.id!, OrderStatus.enCamino);
     
-    //updateParentOrders();
+    updateParentOrders();
     updateView();
+  }
+
+  void goToOrderTracker() {
+    showMaterialModalBottomSheet(
+      context: context,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (_) => OrderTracker(order: order),
+    );
   }
 
 }

@@ -71,11 +71,11 @@ class ClientProductDetailController {
     ShoppingCart? cart = await shoppingCartProvider.addProductToShoppingCart(product, productQuantity);
 
     if (cart == null) {
-      CustomSnackBar.showError(context, 'Aviso', 'Error al añadir producto');
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Error al añadir producto');
       return;
     }
 
-    CustomSnackBar.showSuccess(context, 'Felicidades', 'Producto añadido al carrito');
+    CustomSnackBar.showSuccess(context: context, title: 'Felicidades', message: 'Producto añadido al carrito');
     productsPurchased = cart.products!;
     verifyProductPurchased();
     updateView();
