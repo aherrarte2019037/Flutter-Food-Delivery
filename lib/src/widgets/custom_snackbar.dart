@@ -29,6 +29,7 @@ class CustomSnackBar {
                     Text(
                       title,
                       style: const TextStyle(
+                        letterSpacing: 0.3,
                         color: Color(0XFF25D996),
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -75,7 +76,7 @@ class CustomSnackBar {
                         style: const TextStyle(
                           color: Color(0XFFFF4347),
                           fontSize: 16,
-                          fontWeight: FontWeight.w600),
+                          fontWeight: FontWeight.w600,),
                       ),
                     Transform.translate(
                       offset: const Offset(-3, 0),

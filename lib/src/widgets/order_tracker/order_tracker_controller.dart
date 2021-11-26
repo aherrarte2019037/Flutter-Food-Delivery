@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:food_delivery/src/models/address_model.dart';
 import 'package:food_delivery/src/models/order_model.dart';
+import 'package:food_delivery/src/models/role_model.dart';
 import 'package:food_delivery/src/providers/map_provider.dart';
 import 'package:food_delivery/src/providers/order_provider.dart';
 import 'package:food_delivery/src/utils/launch_url.dart';
@@ -26,20 +27,29 @@ class OrderTrackerController {
   );
   Map<MarkerId, Marker> markers = {};
   Order order = Order();
+  bool isDelivery = false;
   bool detailExpanded = false;
   ScrollController detailScrollController = ScrollController();
   Address address = Address(latitude: 0, longitude: 0);
   Set<Polyline> polylines = {};
 
-  Future<void> init(BuildContext context, Function updateView, Order order) async {
+  Future<void> init(BuildContext context, Function updateView, Order order, List<Role> currentRoles) async {
     this.context = context;
     this.updateView = updateView;
     this.order = order;
+    for (Role role in currentRoles) {
+      if (role.name == 'DELIVERY') {
+        isDelivery = true;
+        break;
+      }
+    }
     updateView();
     deliveryMarker = await createMarkerFromAsset('assets/images/location-icon.png');
     clientMarker = await createMarkerFromAsset('assets/images/destination-icon.png');
     verifyGPS();
   }
+
+  void goBack() => Navigator.pop(context, null);
 
   Future<void> setPolylines(LatLng from, LatLng to, String polylineId) async {
     Polyline polyline = await mapProvider.getPolylineByCoordinates(from, to, polylineId);
@@ -47,7 +57,13 @@ class OrderTrackerController {
     updateView();
   }
 
-  void goBack() => Navigator.pop(context, null);
+  void openGoogleMaps() {
+    LaunchUrl.openGoogleMaps(order.address!.latitude, order.address!.longitude);
+  }
+
+  void openWaze() {
+    LaunchUrl.openWaze(order.address!.latitude, order.address!.longitude);
+  }
 
   bool verifyDeliverOrder() {
     double distanceToClient = Geolocator.distanceBetween(
@@ -72,6 +88,12 @@ class OrderTrackerController {
     }
 
     await orderProvider.editStatus(order.id!, OrderStatus.entregado);
+    CustomSnackBar.showSuccess(
+      context: context,
+      title: 'Felicidades',
+      message: 'Orden entregada',
+      margin: const EdgeInsets.only(left: 41, right: 41, top: 7),
+    );
     Navigator.pushNamedAndRemoveUntil(context, 'delivery/order/list', (route) => false);
   }
 
@@ -165,12 +187,12 @@ class OrderTrackerController {
     return descriptor;
   }
 
-  Future callUser(int phoneNumber) async {
-    await LaunchUrl.phoneCall(phoneNumber);
+  Future callUser() async {
+    //await LaunchUrl.phoneCall(isDelivery ? order.user!.phone : order.delivery!.phone);
   }
 
-  Future sendUserEmail(String email) async {
-    await LaunchUrl.sendEmail(email);
+  Future sendUserEmail() async {
+    await LaunchUrl.sendEmail(isDelivery ? order.user!.email : order.delivery!.email);
   }
 
   void expandOrderDetail() {

@@ -149,9 +149,9 @@ class _DeliveryOrderDetailPageState extends State<DeliveryOrderDetailPage> {
               color: const Color(0XFFFF8C3E),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: IconButton(
-              onPressed: () {},
-              icon: const Icon(FlutterIcons.location_arrow_faw, color: Colors.white, size: 28),
+            child: const IconButton(
+              onPressed: null,
+              icon: Icon(FlutterIcons.location_arrow_faw, color: Colors.white, size: 28),
             ),
           ),
           const SizedBox(height: 15),

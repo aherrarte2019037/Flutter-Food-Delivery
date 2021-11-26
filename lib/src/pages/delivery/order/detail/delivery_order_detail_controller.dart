@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/src/models/order_model.dart';
 import 'package:food_delivery/src/models/shopping_cart_item_model.dart';
+import 'package:food_delivery/src/models/user_model.dart';
 import 'package:food_delivery/src/providers/order_provider.dart';
 import 'package:food_delivery/src/providers/user_provider.dart';
 import 'package:food_delivery/src/utils/launch_url.dart';
@@ -29,21 +30,25 @@ class DeliveryOrderDetailController {
 
   void goBack() => Navigator.pop(context);
 
-  Future callUser(int phoneNumber) async {
+  Future<void> callUser(int phoneNumber) async {
     await LaunchUrl.phoneCall(phoneNumber);
   }
 
-  Future sendUserEmail(String email) async {
+  Future<void> sendUserEmail(String email) async {
     await LaunchUrl.sendEmail(email);
   }
 
-  Future startDelivery() async {
+  Future<void> startDelivery() async {
     order.status = OrderStatus.enCamino;
+
+    User? user = await userProvider.getProfile();
+    if (user == null) return;
+
     showMaterialModalBottomSheet(
       context: context,
       isDismissible: false,
       enableDrag: false,
-      builder: (_) => OrderTracker(order: order),
+      builder: (_) => OrderTracker(order: order, currentRoles: user.roles ?? []),
     );
     await orderProvider.editStatus(order.id!, OrderStatus.enCamino);
     
@@ -51,12 +56,15 @@ class DeliveryOrderDetailController {
     updateView();
   }
 
-  void goToOrderTracker() {
+  Future<void> goToOrderTracker() async {
+    User? user = await userProvider.getProfile();
+    if (user == null) return;
+
     showMaterialModalBottomSheet(
       context: context,
       isDismissible: false,
       enableDrag: false,
-      builder: (_) => OrderTracker(order: order),
+      builder: (_) => OrderTracker(order: order, currentRoles: user.roles ?? []),
     );
   }
 

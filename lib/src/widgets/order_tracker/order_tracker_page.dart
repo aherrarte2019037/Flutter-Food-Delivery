@@ -1,9 +1,12 @@
 import 'dart:ui';
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:food_delivery/src/models/order_model.dart';
+import 'package:food_delivery/src/models/role_model.dart';
 import 'package:food_delivery/src/models/shopping_cart_item_model.dart';
 import 'package:food_delivery/src/utils/string_extension.dart';
 import 'package:food_delivery/src/widgets/custom_fade_in_image.dart';
@@ -14,8 +17,9 @@ import 'package:flutter/services.dart';
 
 class OrderTracker extends StatefulWidget {
   final Order order;
+  final List<Role> currentRoles;
 
-  const OrderTracker({Key? key, required this.order}) : super(key: key);
+  const OrderTracker({Key? key, required this.order, required this.currentRoles}) : super(key: key);
 
   @override
   _OrderTrackerState createState() => _OrderTrackerState();
@@ -33,7 +37,7 @@ class _OrderTrackerState extends State<OrderTracker> {
   void initState() {
     super.initState();
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      _controller.init(context, updateView, widget.order);
+      _controller.init(context, updateView, widget.order, widget.currentRoles);
     });
   }
 
@@ -60,7 +64,7 @@ class _OrderTrackerState extends State<OrderTracker> {
             _map(),
             _backButton(),
             _locationButton(),
-            _deliverOrderButton(),
+            if (_controller.isDelivery) _deliverOrderButton(),
             _cardOrder(),
           ],
         ),
@@ -140,14 +144,17 @@ class _OrderTrackerState extends State<OrderTracker> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 550),
       curve: Curves.easeInBack,
-      height: _controller.detailExpanded ? 540 : 340,
+      height: _controller.detailExpanded ? 618 : 418,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
       ),
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
+          if (_controller.isDelivery) _navigatorButtons(),
           Positioned.fill(
+            top: 78,
             child: Container(
               decoration: const BoxDecoration(
                 color: Colors.black,
@@ -156,11 +163,11 @@ class _OrderTrackerState extends State<OrderTracker> {
                   topRight: Radius.circular(35),
                 ),
               ),
-              child: _clientSection(),
+              child: _userDetailSection(),
             ),
           ),
           Positioned.fill(
-            top: 110,
+            top: 188,
             child: Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -183,7 +190,80 @@ class _OrderTrackerState extends State<OrderTracker> {
     );
   }
 
-  Widget _clientSection() {
+  Widget _navigatorButtons() {
+    return Positioned(
+      top: 0,
+      left: 42,
+      child: Container(
+        padding: const EdgeInsets.only(left: 2, right: 7),
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                bottomLeft: Radius.circular(20),
+              ),
+              child: ElevatedButton(
+                  onPressed: _controller.openGoogleMaps,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(0),
+                    elevation: 0,
+                    minimumSize: const Size(55, 55),
+                    primary: Colors.black.withOpacity(0.9),
+                    onPrimary: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      bottomLeft: Radius.circular(20),
+                    ),
+                  ),
+                  ),
+                  child: Image.asset(
+                    'assets/images/google-maps-icon.png',
+                    width: 29,
+                    height: 28,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+            ),
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+              child: ElevatedButton(
+                  onPressed: _controller.openWaze,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(0),
+                    elevation: 0,
+                    minimumSize: const Size(55, 55),
+                    primary: Colors.black.withOpacity(0.9),
+                    onPrimary: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
+                    ),
+                  ),
+                  ),
+                  child: Image.asset(
+                    'assets/images/waze-icon.png',
+                    width: 32,
+                    height: 32,
+                  ),
+                ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _userDetailSection() {
     return Row(
       children: [
         Expanded(
@@ -224,7 +304,11 @@ class _OrderTrackerState extends State<OrderTracker> {
                               color: Colors.black,
                               borderRadius: BorderRadius.circular(50),
                             ),
-                            child: const Icon(FlutterIcons.shopping_bag_ent, color: Colors.white, size: 12),
+                            child: Icon(
+                              _controller.isDelivery ? FlutterIcons.shopping_bag_ent : Icons.delivery_dining_rounded,
+                              color: Colors.white,
+                              size: _controller.isDelivery ? 12 : 16,
+                            ),
                           ),
                         ),
                       ],
@@ -236,6 +320,7 @@ class _OrderTrackerState extends State<OrderTracker> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          if (_controller.isDelivery)
                           Text(
                             '${_controller.order.user?.firstName} ${_controller.order.user?.lastName}',
                             style: const TextStyle(
@@ -244,8 +329,27 @@ class _OrderTrackerState extends State<OrderTracker> {
                               fontSize: 15,
                             ),
                           ),
+                          if (_controller.isDelivery)
                           Text(
                             '${_controller.order.user?.email}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13.5,
+                            ),
+                          ),
+                          if (!_controller.isDelivery)
+                          Text(
+                            '${_controller.order.delivery?.firstName} ${_controller.order.delivery?.lastName}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                            ),
+                          ),
+                          if (!_controller.isDelivery)
+                          Text(
+                            '${_controller.order.delivery?.email}',
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w400,
@@ -265,7 +369,7 @@ class _OrderTrackerState extends State<OrderTracker> {
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: IconButton(
-                        onPressed: () => _controller.sendUserEmail(_controller.order.user?.email ?? ''),
+                        onPressed: () => _controller.sendUserEmail(),
                         icon: const Icon(FlutterIcons.md_mail_ion, color: Colors.white, size: 23.5),
                       ),
                     ),
@@ -279,7 +383,7 @@ class _OrderTrackerState extends State<OrderTracker> {
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: IconButton(
-                        onPressed: () => _controller .sendUserEmail(_controller.order.user?.email ?? ''),
+                        onPressed: () => _controller.callUser(),
                         icon: const Icon(FlutterIcons.phone_faw, color: Colors.white, size: 25),
                       ),
                     ),
@@ -293,9 +397,29 @@ class _OrderTrackerState extends State<OrderTracker> {
     );
   }
 
+  Widget _orderStatusSection() {
+    return Container(
+      height: 48,
+      width: 140,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: const Color(0XFFF85571),
+        borderRadius: BorderRadius.circular(50),
+      ),
+      child: Text(
+        EnumToString.convertToString(_controller.order.status ?? OrderStatus.enCamino, camelCase: true).titleCase(),
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 17,
+          fontWeight: FontWeight.w500,
+        )
+      ),
+    );
+  }
+
   Widget _orderDetail() {
     return Padding(
-      padding: const EdgeInsets.only(left: 30, right: 30, top: 30, bottom: 30),
+      padding: const EdgeInsets.only(left: 30, right: 30, top: 28, bottom: 30),
       child: Column(
         children: [
           Row(
@@ -346,53 +470,39 @@ class _OrderTrackerState extends State<OrderTracker> {
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 26),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                width: 45,
-                height: 45,
-                decoration: BoxDecoration(
-                  color: const Color(0XFFf4f4f4),
-                  borderRadius: BorderRadius.circular(18),
-                  image: const DecorationImage(
-                    fit: BoxFit.fitWidth,
-                    image: AssetImage('assets/images/location.png'),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      const Text(
+                        'Total ',
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                      ),
+                      Text(
+                        'Q${_controller.order.cart?.total}',
+                        style: const TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.w500),
+                      ),
+                    ],
                   ),
-                ),
-                child: Image.asset(
-                  'assets/images/time.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Tiempo de llegada',
-                      style: TextStyle(
-                        fontSize: 14.5,
+                  const SizedBox(height: 3),
+                  const Text(
+                    'Descuento 0% (Q0)',
+                    style: TextStyle(
+                        fontSize: 16,
                         fontWeight: FontWeight.w400,
-                        color: Color(0XFFA2A2A2),
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      '${_controller.order.address?.address}',
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      style: const TextStyle(
-                        height: 1,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
+                        color: Color(0XFFA2A2A2)),
+                  ),
+                ],
               ),
+              _orderStatusSection(),
             ],
           ),
           AnimatedContainer(
@@ -425,20 +535,112 @@ class _OrderTrackerState extends State<OrderTracker> {
             ),
           ),
           const SizedBox(height: 30),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              width: 55,
+              height: 55,
+              padding: const EdgeInsets.only(bottom: 1, right: 1),
+              decoration: BoxDecoration(
+                color: const Color(0XFFFF8C3E),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const IconButton(
+                onPressed: null,
+                icon: Icon(FlutterIcons.location_arrow_faw, color: Colors.white, size: 28),
+              ),
+            ),
+          ),
+          const SizedBox(height: 15),
+          Text(
+            _controller.order.address?.address ?? '',
+            style: const TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+            ),
+          ),
+          const SizedBox(height: 20),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Detalles',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Referencias',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0XFFA2A2A2),
+                ),
+              ),
+              Text(
+                _controller.order.address?.references ?? 'No hay referencias',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Pedido realizado',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0XFFA2A2A2),
+                ),
+              ),
+              Text(
+                timeago.format(_controller.order.createdAt ?? DateTime(0)).capitalize(),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Estado',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0XFFA2A2A2),
+                ),
+              ),
+              Text(
+                EnumToString.convertToString(_controller.order.status ?? OrderStatus.enCamino, camelCase: true),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
           Stack(
             children: [
-              const Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Productos',
-                  textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
-                  ),
-              ),
               ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -447,43 +649,6 @@ class _OrderTrackerState extends State<OrderTracker> {
                 itemBuilder: (_, index) => _shoppingCartItem(_controller.order.cart!.products![index]),
               ),
             ],
-          ),
-          const SizedBox(height: 20),
-          Container(
-            height: 60,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      children: [
-                        const Text(
-                          'Total ',
-                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-                        ),
-                        Text(
-                          'Q${_controller.order.cart?.total}',
-                          style: const TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 3),
-                    const Text(
-                      'Descuento 0% (Q0)',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0XFFA2A2A2)),
-                    ),
-                  ],
-                ),
-              ],
-            ),
           ),
         ],
       ),
@@ -572,7 +737,7 @@ class _OrderTrackerState extends State<OrderTracker> {
       right: 42,
       top: 42,
       child: Container(
-        height: 60,
+        height: 55,
         child: ElevatedButton(
           onPressed: _controller.deliverOrder,
           style: ElevatedButton.styleFrom(
