@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:food_delivery/src/models/address_model.dart';
 import 'package:food_delivery/src/models/order_model.dart';
 import 'package:food_delivery/src/models/role_model.dart';
@@ -150,10 +151,14 @@ class OrderTrackerController {
       LatLng clientCoordinates = LatLng(order.address!.latitude, order.address!.longitude);
 
       setPolylines(deliveryCoordinates, clientCoordinates, 'mapRoute');
-      deliveryPositionStream = Geolocator.getPositionStream(
-        desiredAccuracy: LocationAccuracy.best,
-        distanceFilter: 1
-      ).listen(positionListener);
+
+      if (isDelivery) {
+        deliveryPositionStream = Geolocator.getPositionStream(
+          desiredAccuracy: LocationAccuracy.best,
+          distanceFilter: 1
+        ).listen(positionListener);
+      }
+
 
     } catch (e) {
       print(e);

@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:food_delivery/src/pages/client/address/create/client_address_create_page.dart';
 import 'package:food_delivery/src/pages/client/address/list/client_address_list_page.dart';
 import 'package:food_delivery/src/pages/client/order/create/client_order_create_page.dart';
+import 'package:food_delivery/src/pages/client/order/list/client_order_list_page.dart';
 import 'package:food_delivery/src/pages/client/product/list/client_product_list_page.dart';
 import 'package:food_delivery/src/pages/delivery/order/list/delivery_order_list_page.dart';
 import 'package:food_delivery/src/pages/login/login_page.dart';
@@ -57,6 +58,7 @@ class _MainAppState extends State<MainApp> {
         'profile': (BuildContext context) => const ProfilePage(),
         'client/product/list': (BuildContext context) => const ClientProductListPage(),
         'client/order/create': (BuildContext context) => const ClientOrderCreatePage(),
+        'client/order/list': (BuildContext context) => const ClientOrderListPage(),
         'client/address/list': (BuildContext context) => const ClientAddressListPage(),
         'client/address/create': (BuildContext context) => const ClientAddressCreatePage(),
         'restaurant/order/list': (BuildContext context) => const RestaurantOrderListPage(),

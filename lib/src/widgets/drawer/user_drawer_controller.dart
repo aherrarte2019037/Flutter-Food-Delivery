@@ -9,8 +9,9 @@ class UserDrawerController {
   late BuildContext context;
   OrderProvider orderProvider = OrderProvider();
   List<Map> clientDrawerItems = [
+    { 'title': 'Inicio', 'icon': Icons.home_rounded, 'route': 'client/product/list', 'size': 28.0 },
     { 'title': 'Perfil', 'icon': FlutterIcons.md_person_ion, 'route': 'profile' },
-    { 'title': 'Compras', 'icon': FlutterIcons.shopping_cart_fea },
+    { 'title': 'Mis Pedidos', 'icon': FlutterIcons.shopping_bag_ent, 'route': 'client/order/list', 'size': 20.5 },
     { 'title': 'Ajustes', 'icon': FlutterIcons.setting_ant },
     { 'title': 'Notificaciones', 'icon': FlutterIcons.bell_mco }
   ];

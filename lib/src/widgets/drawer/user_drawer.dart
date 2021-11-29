@@ -55,6 +55,7 @@ class _UserDrawerState extends State<UserDrawer> {
                         separatorBuilder: (_,__) => const SizedBox(height: 12),
                         itemBuilder: (_, int index) {
                           return _drawerItem(
+                            size: _drawerController.getDrawerItems(user, widget.drawerType)[index]['size'],
                             title: _drawerController.getDrawerItems(user, widget.drawerType)[index]['title'],
                             icon: _drawerController.getDrawerItems(user, widget.drawerType)[index]['icon'],
                             route: _drawerController.getDrawerItems(user, widget.drawerType)[index]['route'],
@@ -75,7 +76,7 @@ class _UserDrawerState extends State<UserDrawer> {
     );
   }
 
-  Widget _drawerItem({required String title, required IconData icon, required String route}) {
+  Widget _drawerItem({required String title, required IconData icon, required String route, double? size}) {
     return InkWell(
       splashColor: const Color(0XFFFF6600 ),
       borderRadius: BorderRadius.circular(15),
@@ -83,7 +84,7 @@ class _UserDrawerState extends State<UserDrawer> {
       child: ListTile(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         title: Text(title, style: const TextStyle(color: Colors.white)),
-        leading: Icon(icon, color: Colors.white),
+        leading: Icon(icon, color: Colors.white, size: size),
       ),
     );
   }

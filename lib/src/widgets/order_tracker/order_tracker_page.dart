@@ -399,20 +399,34 @@ class _OrderTrackerState extends State<OrderTracker> {
 
   Widget _orderStatusSection() {
     return Container(
-      height: 48,
-      width: 140,
+      height: 47,
+      width: 145,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: const Color(0XFFF85571),
         borderRadius: BorderRadius.circular(50),
+        border: Border.all(color: const Color(0XFF6670FF), width: 2)
       ),
-      child: Text(
-        EnumToString.convertToString(_controller.order.status ?? OrderStatus.enCamino, camelCase: true).titleCase(),
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 17,
-          fontWeight: FontWeight.w500,
-        )
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(width: 4),
+          Text(
+            EnumToString.convertToString(_controller.order.status ?? OrderStatus.enCamino, camelCase: true).titleCase(),
+            style: const TextStyle(
+              color: Color(0XFF6670FF),
+              fontSize: 17.5,
+              letterSpacing: 0.4,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(width: 2),
+          Image.asset(
+            'assets/images/clock.gif',
+            fit: BoxFit.contain,
+            width: 28, 
+            height: 28,
+          ),
+        ],
       ),
     );
   }
@@ -587,7 +601,7 @@ class _OrderTrackerState extends State<OrderTracker> {
                 ),
               ),
               Text(
-                _controller.order.address?.references ?? 'No hay referencias',
+                _controller.order.address?.references?.capitalize() ?? 'No hay referencias',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
