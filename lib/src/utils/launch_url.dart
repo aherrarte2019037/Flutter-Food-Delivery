@@ -1,3 +1,4 @@
+import 'package:logger/logger.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LaunchUrl {
@@ -22,7 +23,7 @@ class LaunchUrl {
       if (!launched) await launch(fallbackUrl, forceSafariVC: false, forceWebView: false);
       
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       await launch(fallbackUrl, forceSafariVC: false, forceWebView: false);
     }
   }
@@ -36,7 +37,7 @@ class LaunchUrl {
       if (!launched) await launch(fallbackUrl, forceSafariVC: false, forceWebView: false);
 
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       await launch(fallbackUrl, forceSafariVC: false, forceWebView: false);
     }
   }

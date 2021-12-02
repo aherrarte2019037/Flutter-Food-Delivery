@@ -5,6 +5,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as location;
+import 'package:logger/logger.dart';
 
 class MapPageController {
   late BuildContext context;
@@ -66,7 +67,7 @@ class MapPageController {
       await animateMapCamera(userPosition.latitude, userPosition.longitude);
 
     } catch (e) {
-      print(e);
+      Logger().d(e);
     }
   }
 

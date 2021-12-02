@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:food_delivery/src/models/response_api_model.dart';
 import 'package:food_delivery/src/utils/shared_pref.dart';
+import 'package:logger/logger.dart';
 
 class AddressProvider {
   final String _url = dotenv.env['APIDELIVERY']!;
@@ -29,7 +30,7 @@ class AddressProvider {
       return addresses;
 
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       return [];
     }
   }
@@ -48,7 +49,7 @@ class AddressProvider {
       return responseApi;
 
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       return null;
     }
   }
@@ -65,11 +66,11 @@ class AddressProvider {
       final response = await http.get(request);
       final data = jsonDecode(response.body);
 
-      print(data);
+      Logger().d(data);
       return data;
       
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       return null;
     }
   }

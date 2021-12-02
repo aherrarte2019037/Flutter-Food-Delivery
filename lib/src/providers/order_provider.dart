@@ -5,6 +5,7 @@ import 'package:food_delivery/src/models/order_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:food_delivery/src/models/response_api_model.dart';
 import 'package:food_delivery/src/utils/shared_pref.dart';
+import 'package:logger/logger.dart';
 
 class OrderProvider {
   final String _url = dotenv.env['APIDELIVERY']!;
@@ -28,7 +29,7 @@ class OrderProvider {
       return responseApi;
 
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       return null;
     }
   }
@@ -47,7 +48,7 @@ class OrderProvider {
       return responseApi;
       
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       return null;
     }
   }
@@ -66,7 +67,7 @@ class OrderProvider {
       return responseApi;
       
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       return null;
     }
   }
@@ -82,7 +83,7 @@ class OrderProvider {
       return responseApi.data ?? 0;
 
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       return 0;
     }
   }
@@ -104,7 +105,7 @@ class OrderProvider {
       return orders;
       
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       return {};
     }
   }

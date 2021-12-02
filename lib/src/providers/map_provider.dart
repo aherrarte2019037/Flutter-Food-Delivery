@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:logger/logger.dart';
 
 class MapProvider {
   final String _apiKeyMaps = dotenv.env['APIKEYMAPS']!;
@@ -24,7 +25,7 @@ class MapProvider {
       return polyline;
 
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       
       Polyline polyline = Polyline(
         polylineId: PolylineId(polylineId),

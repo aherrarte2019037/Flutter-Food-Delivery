@@ -6,13 +6,16 @@ import 'package:food_delivery/src/models/order_model.dart';
 import 'package:food_delivery/src/models/role_model.dart';
 import 'package:food_delivery/src/providers/map_provider.dart';
 import 'package:food_delivery/src/providers/order_provider.dart';
+import 'package:food_delivery/src/providers/socket_provider.dart';
 import 'package:food_delivery/src/utils/launch_url.dart';
 import 'package:food_delivery/src/widgets/custom_snackbar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as location;
+import 'package:logger/logger.dart';
 
 class OrderTrackerController {
+  late SocketProvider deliveryTrackerSocket;
   late BuildContext context;
   late Function updateView;
   late Position deliveryPosition;
@@ -38,6 +41,7 @@ class OrderTrackerController {
     this.context = context;
     this.updateView = updateView;
     this.order = order;
+    deliveryTrackerSocket = SocketProvider(nameSpace: '/orders/delivery/tracker', query: {'order': this.order.id});
     for (Role role in currentRoles) {
       if (role.name == 'DELIVERY') {
         isDelivery = true;
@@ -161,7 +165,7 @@ class OrderTrackerController {
 
 
     } catch (e) {
-      print(e);
+      Logger().d('Error: $e');
     }
   }
 
@@ -210,6 +214,7 @@ class OrderTrackerController {
 
   void dispose() {
     deliveryPositionStream?.cancel();
+    deliveryTrackerSocket.disconnect();
   }
 
 }

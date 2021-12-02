@@ -5,6 +5,7 @@ import 'package:food_delivery/src/models/response_api_model.dart';
 import 'package:food_delivery/src/models/user_model.dart';
 import 'package:food_delivery/src/utils/shared_pref.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 import 'package:path/path.dart';
 
 class UserProvider {
@@ -35,7 +36,7 @@ class UserProvider {
       return response.stream.transform(utf8.decoder);
 
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       return null;
     }
   }
@@ -51,7 +52,7 @@ class UserProvider {
       return ResponseApi.fromJson(data);
 
     } catch (e) {
-      print('Error $e');
+      Logger().d('Error: $e');
       return null;
     }
   }
@@ -66,7 +67,7 @@ class UserProvider {
       return ResponseApi.fromJson(data);
 
     } catch (e) {
-      print('Error $e');
+      Logger().d('Error: $e');
       return null;
     }
   }
@@ -87,7 +88,7 @@ class UserProvider {
       }
 
     } catch (e) {
-      print('Error $e');
+      Logger().d('Error: $e');
       return null;
     }
   }
@@ -108,7 +109,7 @@ class UserProvider {
       }
       
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       return [];
     }
   }
@@ -133,7 +134,7 @@ class UserProvider {
       return response.stream.transform(utf8.decoder);
 
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       return null;
     }
   }

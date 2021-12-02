@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:logger/logger.dart';
 import 'package:path/path.dart';
 import 'package:food_delivery/src/utils/shared_pref.dart';
 import 'package:http/http.dart' as http;
@@ -30,7 +31,7 @@ class ProductCategoryProvider {
       return categories;
 
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       return [];
     }
   }
@@ -48,7 +49,7 @@ class ProductCategoryProvider {
       return categories;
 
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       return [];
     }
   }
@@ -66,7 +67,7 @@ class ProductCategoryProvider {
       return responseApi;
 
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       return null;
     }
   }
@@ -92,7 +93,7 @@ class ProductCategoryProvider {
       return response.stream.transform(utf8.decoder);
 
     } catch (e) {
-      print('Error: $e');
+      Logger().d('Error: $e');
       return null;
     }
   }
