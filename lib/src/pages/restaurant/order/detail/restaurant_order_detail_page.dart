@@ -625,7 +625,7 @@ class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: 2,
+          itemCount: _controller.order.cart?.products?.length ?? 0,
           separatorBuilder: (_, __) => const SizedBox(height: 25),
           itemBuilder: (_, index) => _shoppingCartItem(_controller.order.cart!.products![0]),
         ),        

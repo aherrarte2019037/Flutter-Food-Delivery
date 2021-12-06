@@ -40,7 +40,7 @@ class _DeliveryOrderListPageState extends State<DeliveryOrderListPage> {
       key: _controller.scaffoldKey,
       backgroundColor: Colors.white,
       appBar: _appBar(),
-      drawer: UserDrawer(drawerType: 'RESTAURANT'),
+      drawer: UserDrawer(drawerType: 'DELIVERY'),
       body:  Container(
         padding: const EdgeInsets.only(left: 42, right: 42),
         height: height,

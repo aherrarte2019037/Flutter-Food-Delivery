@@ -53,6 +53,25 @@ class OrderProvider {
     }
   }
 
+   Future<ResponseApi?> edit(String orderId, Order order) async {
+    try {
+      Uri request = Uri.http(_url, '$_api/$orderId');
+      String body = jsonEncode(order);
+
+      final response = await http.put(request, body: body, headers: authHeaders);
+      final data = jsonDecode(response.body);
+
+      ResponseApi responseApi = ResponseApi.fromJson(data);
+      if (responseApi.success!) responseApi.data = Order.fromJson(responseApi.data);
+      
+      return responseApi;
+      
+    } catch (e) {
+      Logger().d('Error: $e');
+      return null;
+    }
+  }
+
   Future<ResponseApi?> editStatus(String orderId, OrderStatus status) async {
     try {
       Uri request = Uri.http(_url, '$_api/$orderId');

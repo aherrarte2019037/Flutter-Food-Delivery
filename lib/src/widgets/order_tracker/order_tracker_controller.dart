@@ -41,17 +41,41 @@ class OrderTrackerController {
     this.context = context;
     this.updateView = updateView;
     this.order = order;
-    deliveryTrackerSocket = SocketProvider(nameSpace: '/orders/delivery/tracker', query: {'order': this.order.id});
+    checkIsDelivery(currentRoles);
+    deliveryMarker = await createMarkerFromAsset('assets/images/location-icon.png');
+    clientMarker = await createMarkerFromAsset('assets/images/destination-icon.png');
+    deliveryTrackerSocket = SocketProvider(
+      nameSpace: 'orders/delivery/tracker',
+      query: { 'order': this.order.id },
+      autoConnect: true,
+    );
+    if (!isDelivery) deliveryTrackerSocket.on('position/${order.id}', onDeliveryPositionUpdate);
+    updateView();
+    verifyGPS();
+  }
+
+  void onDeliveryPositionUpdate(dynamic data) {
+    final double latitude = data['latitude'];
+    final double longitude = data['longitude'];
+
+    addMarker('delivery', latitude, longitude, 'Ubicación Actual', '', deliveryMarker);
+  }
+
+  void emitDeliveryPosition() {
+    deliveryTrackerSocket.emit('position', {
+      'order': order.id,
+      'latitude': deliveryPosition.latitude,
+      'longitude': deliveryPosition.longitude,
+    });
+  }
+
+  void checkIsDelivery(List<Role> currentRoles) {
     for (Role role in currentRoles) {
       if (role.name == 'DELIVERY') {
         isDelivery = true;
         break;
       }
     }
-    updateView();
-    deliveryMarker = await createMarkerFromAsset('assets/images/location-icon.png');
-    clientMarker = await createMarkerFromAsset('assets/images/destination-icon.png');
-    verifyGPS();
   }
 
   void goBack() => Navigator.pop(context, null);
@@ -137,6 +161,7 @@ class OrderTrackerController {
 
   void positionListener(Position position) {
     deliveryPosition = position;
+    emitDeliveryPosition();
     addMarker('delivery', position.latitude, position.longitude, 'Ubicación Actual', '', deliveryMarker);
 
     animateMapCamera(position.latitude, position.longitude);
@@ -145,11 +170,39 @@ class OrderTrackerController {
 
   void updateMapLocation() async {
     try {
-      deliveryPosition = await determinePosition();
-      await animateMapCamera(deliveryPosition.latitude, deliveryPosition.longitude);
+      if (isDelivery) {
+        deliveryPosition = await determinePosition();
+        await animateMapCamera(deliveryPosition.latitude, deliveryPosition.longitude);
+        await saveDeliveryPosition(deliveryPosition.latitude, deliveryPosition.longitude);
+        addMarker(
+          'delivery',
+          deliveryPosition.latitude,
+          deliveryPosition.longitude,
+          'Ubicación Actual',
+          '',
+          deliveryMarker,
+        );
+
+      } else {
+        await animateMapCamera(order.address!.latitude, order.address!.longitude);
+        addMarker(
+          'delivery',
+          order.deliveryLatitude ?? 0,
+          order.deliveryLongitude ?? 0,
+          'Ubicación De Repartidor',
+          '',
+          deliveryMarker,
+        );
+      }
       
-      addMarker('delivery', deliveryPosition.latitude, deliveryPosition.longitude, 'Ubicación Actual', '', deliveryMarker);
-      addMarker('client', order.address!.latitude, order.address!.longitude, 'Ubicación De Entrega', '', clientMarker);
+      addMarker(
+        'client',
+        order.address!.latitude,
+        order.address!.longitude,
+        'Ubicación De Entrega',
+        '',
+        clientMarker,
+      );
 
       LatLng deliveryCoordinates = LatLng(deliveryPosition.latitude, deliveryPosition.longitude);
       LatLng clientCoordinates = LatLng(order.address!.latitude, order.address!.longitude);
@@ -196,12 +249,16 @@ class OrderTrackerController {
     return descriptor;
   }
 
-  Future callUser() async {
+  Future<void> callUser() async {
     //await LaunchUrl.phoneCall(isDelivery ? order.user!.phone : order.delivery!.phone);
   }
 
-  Future sendUserEmail() async {
+  Future<void> sendUserEmail() async {
     await LaunchUrl.sendEmail(isDelivery ? order.user!.email : order.delivery!.email);
+  }
+
+  Future<void> saveDeliveryPosition(double latitude, double longitude) async {
+    await orderProvider.edit(order.id!, Order(deliveryLatitude: latitude, deliveryLongitude: longitude));
   }
 
   void expandOrderDetail() {
