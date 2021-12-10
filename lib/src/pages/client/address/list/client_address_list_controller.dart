@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:food_delivery/src/models/address_model.dart';
-import 'package:food_delivery/src/models/response_api_model.dart';
 import 'package:food_delivery/src/providers/address_provider.dart';
 import 'package:food_delivery/src/providers/order_provider.dart';
-import 'package:food_delivery/src/widgets/custom_snackbar.dart';
 
 class ClientAddressListController {
   late BuildContext context;
@@ -41,9 +39,9 @@ class ClientAddressListController {
     updateView();
   }
 
-  Future selectAddress() async {
-    ResponseApi? responseApi = await orderProvider.create(addressSelected!);
-    if (responseApi?.success == false) CustomSnackBar.showError(context: context, title: 'Error', message: 'Intenta otra vez');
+  void selectAddress() {
+    Address address = addresses.firstWhere((element) => element.id == addressSelected);
+    Navigator.pushNamed(context, 'client/payment/list', arguments: address);
   }
 
 }

@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/src/utils/string_extension.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:food_delivery/src/pages/client/address/list/client_address_list_controller.dart';
-import 'package:food_delivery/src/widgets/address_item.dart';
+import 'package:food_delivery/src/models/address_model.dart';
+import 'package:food_delivery/src/pages/client/payment/create/client_payment_list_controller.dart';
 
-class ClientAddressListPage extends StatefulWidget {
-  const ClientAddressListPage({Key? key}) : super(key: key);
+class ClientPaymentListPage extends StatefulWidget {
+  const ClientPaymentListPage({ Key? key }) : super(key: key);
 
   @override
-  _ClientAddressListPageState createState() => _ClientAddressListPageState();
+  _ClientPaymentListPageState createState() => _ClientPaymentListPageState();
 }
 
-class _ClientAddressListPageState extends State<ClientAddressListPage> {
-  final _controller = ClientAddressListController();
+class _ClientPaymentListPageState extends State<ClientPaymentListPage> {
+  final _controller = ClientPaymentListController();
 
-  updateView() => setState(() {});
+  void updateView() => setState(() => {});
 
   @override
   void initState() {
-    super.initState();
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      _controller.init(context, updateView);
+      Address address = ModalRoute.of(context)?.settings.arguments as Address;
+      _controller.init(context, updateView, address);
     });
+    super.initState();
   }
 
   @override
@@ -36,9 +36,9 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _appBar(),
-      bottomNavigationBar: _controller.addresses.isNotEmpty ? _selectAddressButton() : null,
+      bottomNavigationBar: _controller.paymentCards.isNotEmpty ? _payButton() : null,
       body: Container(
-        alignment: _controller.addresses.isNotEmpty ? Alignment.topCenter : Alignment.center,
+        alignment: _controller.paymentCards.isNotEmpty ? Alignment.topCenter : Alignment.center,
         padding: const EdgeInsets.only(left: 42, right: 42),
         height: height,
         width: width,
@@ -48,94 +48,12 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: _controller.addresses.isNotEmpty ? 15 : 25),
-                _controller.addresses.isNotEmpty ? _addressList() : _emptyAddressList(),
+                SizedBox(height: _controller.paymentCards.isNotEmpty ? 15 : 25),
+                _controller.paymentCards.isNotEmpty ? Container() : _emptyPaymentList(),
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _bannerImage() {
-    return Container(
-      width: double.infinity,
-      height: 190,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        image: const DecorationImage(
-          image: AssetImage('assets/images/list-address.webp'),
-          fit: BoxFit.cover,
-          alignment: Alignment.bottomCenter,
-        ),
-      ),
-    );
-  }
-
-  Widget _addressList() {
-    return Column(
-      children: [
-        _bannerImage(),
-        const SizedBox(height: 20),
-        ListView.separated(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: _controller.addresses.length,
-          separatorBuilder: (_, __) => _listSeparator(),
-          itemBuilder: (_, index) => AddressItem(
-            value: _controller.addresses[index].id,
-            groupValue: _controller.addressSelected,
-            name: _controller.addresses[index].name!.capitalize(),
-            address: _controller.addresses[index].address!.titleCase(),
-            onChanged: _controller.addressItemChanged(),
-          ),
-        ),
-        const SizedBox(height: 42),
-      ],
-    );
-  }
-
-  Widget _listSeparator() {
-    return Container(
-      margin: const EdgeInsets.only(left: 22),
-      height: 26,
-      width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 3,
-            height: 3,
-            margin: const EdgeInsets.only(bottom: 5),
-            decoration: const BoxDecoration(
-              color: Color(0XFFFF8C3E),
-              shape: BoxShape.circle,
-            ),
-          ),
-          Transform.translate(
-            offset: const Offset(-0.5, 0),
-            child: Container(
-              width: 4,
-              height: 4,
-              margin: const EdgeInsets.only(bottom: 5),
-              decoration: const BoxDecoration(
-                color: Color(0XFFFF8C3E),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          Container(
-            width: 3,
-            height: 3,
-            margin: const EdgeInsets.only(bottom: 5),
-            decoration: const BoxDecoration(
-              color: Color(0XFFFF8C3E),
-              shape: BoxShape.circle,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -153,6 +71,7 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
           children: [
             ElevatedButton(
               onPressed: _controller.goBack,
+              child: const Icon(Icons.arrow_back_rounded, size: 30, color: Colors.black),
               style: ElevatedButton.styleFrom(
                 shadowColor: Colors.transparent,
                 padding: const EdgeInsets.all(2),
@@ -161,10 +80,9 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
                 onPrimary: Colors.grey,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
               ),
-              child: const Icon(Icons.arrow_back_rounded, size: 30, color: Colors.black),
             ),
             const Text(
-              'Dirección de entrega',
+              'Método de pago',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
@@ -172,7 +90,7 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
               ),
             ),
             ElevatedButton(
-              onPressed: _controller.goToCreateAddress,
+              onPressed: _controller.addPaymentMethod,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(2),
                 shadowColor: Colors.transparent,
@@ -188,8 +106,8 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
       ),
     );
   }
-  
-  Widget _emptyAddressList() {
+
+  Widget _emptyPaymentList() {
     return Transform.translate(
       offset: const Offset(0, -25),
       child: Column(
@@ -206,7 +124,7 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
           ),
           const SizedBox(height: 15),
           const Text(
-            'No tienes direcciones',
+            'No tienes métodos de pago',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Color(0XFF0C0C0C)),
           ),
           const SizedBox(height: 20),
@@ -229,25 +147,26 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
             child: Ink(
               decoration: const ShapeDecoration(color: Colors.black, shape: CircleBorder()),
               child: IconButton(
-                onPressed: _controller.goToCreateAddress,
+                onPressed: () {},
                 icon: const Icon(Icons.add_rounded),
                 iconSize: 28,
                 color: Colors.white,
               ),
             ),
           ),
+          const SizedBox(height: 15),
         ],
       ),
     );
   }
 
-  Widget _selectAddressButton() {
+  Widget _payButton() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
       child: Container(
         height: 60,
         child: ElevatedButton(
-          onPressed: _controller.selectAddress,
+          onPressed: _controller.pay,
           style: ElevatedButton.styleFrom(
             elevation: 4,
             padding: const EdgeInsets.symmetric(horizontal: 40),

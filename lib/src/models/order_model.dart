@@ -51,7 +51,7 @@ class Order {
     "deliveryLongitude": deliveryLongitude,
     "address"          : address,
     "cart"             : cart,
-    "status"           : status,
+    "status"           : EnumToString.convertToString(status).toUpperCase(),
     "createdAt"        : createdAt?.toIso8601String(),
   };
 
