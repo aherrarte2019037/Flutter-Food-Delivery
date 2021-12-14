@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:enum_to_string/enum_to_string.dart';
 
-enum PaymentCardType { debit, credit}
+enum PaymentCardType { debit, credit, cash }
 
 class PaymentCard {
   PaymentCardType type;
@@ -39,5 +39,15 @@ class PaymentCard {
   PaymentCard paymentMethodFromJson(String str) => PaymentCard.fromJson(json.decode(str));
 
   String paymentMethodToJson(PaymentCard paymentMethod) => json.encode(paymentMethod.toJson());
+
+  String get numberWithMask {
+    if (type == PaymentCardType.cash) return '';
+    return 'xxxxxx ${number.toString().substring(number.toString().length - 4)}';
+  }
+
+  String get expFormatted {
+    if (type == PaymentCardType.cash) return '';
+    return '${expirationDate?.month}/${expirationDate?.year}';
+  }
 
 }

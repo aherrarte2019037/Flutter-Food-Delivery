@@ -50,6 +50,7 @@ dependencies:
   socket_io_client: ^1.0.2
   flutter_credit_card: ^3.0.1
   flutter_secure_storage: ^5.0.2
+  credit_card_type_detector: ^2.0.0
 cupertino_icons: ^1.0.2
 
 dev_dependencies:

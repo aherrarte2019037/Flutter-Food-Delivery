@@ -13,20 +13,38 @@ class ClientPaymentListController {
   late Address address;
   UserProvider userProvider = UserProvider();
   OrderProvider orderProvider = OrderProvider();
-  List<PaymentCard> paymentCards = [];
+  List<PaymentCard> paymentCards = [
+    PaymentCard(
+      type: PaymentCardType.cash,
+      cvv: 0,
+      number: 0,
+      createdAt: DateTime.now(),
+      expirationDate: DateTime.now(),
+    ),
+  ];
+  String paymentCardSelected = '';
 
   void init(BuildContext context, Function updateView, Address address) async {
     this.context = context;
     this.updateView = updateView;
     this.address = address;
     await SecureStorage.deleteAllPaymentCards();
-    paymentCards = await SecureStorage.getPaymentCards();
+    paymentCards.addAll(await SecureStorage.getPaymentCards());
+    paymentCardSelected = paymentCards[0].createdAt.toString();
+    updateView();
   }
 
   void goBack() => Navigator.pop(context);
 
   void addPaymentMethod() {
 
+  }
+
+  ValueChanged paymentCardItemChanged() {
+    return (value) {
+      paymentCardSelected = value!.toString();
+      updateView();
+    };
   }
 
   Future<void> pay() async {

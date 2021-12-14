@@ -91,7 +91,6 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
             onChanged: _controller.addressItemChanged(),
           ),
         ),
-        const SizedBox(height: 42),
       ],
     );
   }
@@ -243,7 +242,7 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
 
   Widget _selectAddressButton() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42),
+      padding: const EdgeInsets.only(bottom: 42, left: 42, right: 42, top: 20),
       child: Container(
         height: 60,
         child: ElevatedButton(
