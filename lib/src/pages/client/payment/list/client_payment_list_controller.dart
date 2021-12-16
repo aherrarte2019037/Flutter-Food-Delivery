@@ -36,8 +36,8 @@ class ClientPaymentListController {
 
   void goBack() => Navigator.pop(context);
 
-  void addPaymentMethod() {
-
+  Future<void> addPaymentCard() async {
+    await Navigator.pushNamed(context, 'client/payment/create');
   }
 
   ValueChanged paymentCardItemChanged() {

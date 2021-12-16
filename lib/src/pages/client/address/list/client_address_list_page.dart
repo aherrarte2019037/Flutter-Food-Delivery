@@ -77,7 +77,37 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
     return Column(
       children: [
         _bannerImage(),
-        const SizedBox(height: 20),
+        const SizedBox(height: 32),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Direcciones',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  'Selecciona una opción',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0XFF999999),
+                  ),
+                ),
+              ],
+            ),
+            _addAddressButton(),
+          ],
+        ),
+        const SizedBox(height: 10),
         ListView.separated(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -92,6 +122,29 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _addAddressButton() {
+    return OutlinedButton.icon(
+      onPressed: _controller.goToCreateAddress,
+      label: const Text(
+        'Añadir',
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w500,
+          fontSize: 17,
+        ),
+      ),
+      icon: const Icon(Icons.add_rounded, color: Colors.white, size: 23),
+      style: OutlinedButton.styleFrom(
+        primary: Colors.white,
+        side: const BorderSide(style: BorderStyle.none),
+        backgroundColor: Colors.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        elevation: 3,
+        padding: const EdgeInsets.only(top: 11.5, bottom: 11.5, left: 16, right: 23),
+      ),
     );
   }
 
@@ -171,7 +224,7 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
               ),
             ),
             ElevatedButton(
-              onPressed: _controller.goToCreateAddress,
+              onPressed: () {},
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(2),
                 shadowColor: Colors.transparent,
@@ -180,7 +233,7 @@ class _ClientAddressListPageState extends State<ClientAddressListPage> {
                 onPrimary: Colors.grey,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
               ),
-              child: const Icon(Icons.add_rounded, size: 32, color: Colors.black),
+              child: const Icon(Icons.more_horiz, size: 30, color: Colors.black),
             ),
           ],
         ),

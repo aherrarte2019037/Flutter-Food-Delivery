@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:food_delivery/src/models/address_model.dart';
-import 'package:food_delivery/src/pages/client/payment/create/client_payment_list_controller.dart';
+import 'package:food_delivery/src/pages/client/payment/list/client_payment_list_controller.dart';
 import 'package:food_delivery/src/widgets/payment_card_item.dart';
 
 class ClientPaymentListPage extends StatefulWidget {
@@ -105,7 +105,8 @@ class _ClientPaymentListPageState extends State<ClientPaymentListPage> {
                 primary: Colors.white,
                 onPrimary: Colors.grey,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50)),
+                  borderRadius: BorderRadius.circular(50),
+                ),
               ),
               child:
                   const Icon(Icons.more_horiz, size: 30, color: Colors.black),
@@ -162,26 +163,7 @@ class _ClientPaymentListPageState extends State<ClientPaymentListPage> {
                 ),
               ],
             ),
-            OutlinedButton.icon(
-              onPressed: () {},
-              label: const Text(
-                'Añadir',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 17,
-                ),
-              ),
-              icon: const Icon(Icons.add_rounded, color: Colors.white, size: 23),
-              style: OutlinedButton.styleFrom(
-                primary: Colors.white,
-                side: const BorderSide(style: BorderStyle.none),
-                backgroundColor: Colors.black,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                elevation: 3,
-                padding: const EdgeInsets.only(top: 11.5, bottom: 11.5, left: 16, right: 23),
-              ),
-            ),
+            _addPaymentCardButton(),
           ],
         ),
         const SizedBox(height: 32),
@@ -198,6 +180,29 @@ class _ClientPaymentListPageState extends State<ClientPaymentListPage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _addPaymentCardButton() {
+    return OutlinedButton.icon(
+      onPressed: _controller.addPaymentCard,
+      label: const Text(
+        'Añadir',
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w500,
+          fontSize: 17,
+        ),
+      ),
+      icon: const Icon(Icons.add_rounded, color: Colors.white, size: 23),
+      style: OutlinedButton.styleFrom(
+        primary: Colors.white,
+        side: const BorderSide(style: BorderStyle.none),
+        backgroundColor: Colors.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        elevation: 3,
+        padding: const EdgeInsets.only(top: 11.5, bottom: 11.5, left: 16, right: 23),
+      ),
     );
   }
 

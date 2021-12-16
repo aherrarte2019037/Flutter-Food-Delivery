@@ -3,17 +3,19 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:food_delivery/src/pages/client/address/create/client_address_create_controller.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import 'package:food_delivery/src/pages/client/payment/create/client_payment_create_controller.dart';
+import 'package:food_delivery/src/utils/credit_card_formatter.dart';
 
-class ClientAddressCreatePage extends StatefulWidget {
-  const ClientAddressCreatePage({Key? key}) : super(key: key);
+class ClientPaymentCreatePage extends StatefulWidget {
+  const ClientPaymentCreatePage({Key? key}) : super(key: key);
 
   @override
   _ClientAddressCreatePageState createState() => _ClientAddressCreatePageState();
 }
 
-class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
-  final _controller = ClientAddressCreateController();
+class _ClientAddressCreatePageState extends State<ClientPaymentCreatePage> {
+  final _controller = ClientPaymentCreateController();
 
   updateView() => setState(() {});
 
@@ -58,17 +60,17 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
                 ),
               ),
               SizedBox(height: height * 0.035),
-              _textFieldName(),
+              _textFieldNumber(),
               SizedBox(height: height * 0.035),
-              _textFieldAddress(),
-              SizedBox(height: height * 0.035),
-              _textFieldReferences(),
-              SizedBox(height: height * 0.025),
               Row(
                 children: [
-                  _locationButton(),
-                  const SizedBox(width: 15),
-                  if (_controller.address != null) _changeLocationButton(),
+                  Expanded(
+                    child: _textFieldExpDate(),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: _textFieldCVV(),
+                  ),
                 ],
               ),
             ],
@@ -102,7 +104,7 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
               child: const Icon(Icons.arrow_back_rounded, size: 30, color: Colors.black),
             ),
             const Text(
-              'Añadir Dirección',
+              'Añadir Tarjeta',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
@@ -127,18 +129,23 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
     );
   }
 
-  Widget _textFieldName() {
+  Widget _textFieldNumber() {
     return TextField(
-      controller: _controller.textFieldControllers['name'],
+      controller: _controller.textFieldControllers['number'],
       textInputAction: TextInputAction.next,
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]+')),
+        CreditCardFormatter(mask: 'xxxx-xxxx-xxxx-xxxx-xxxx'),
+      ],
       autofocus: false,
       cursorColor: Colors.grey,
       style: const TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
-        labelText: 'Nombre',
+        labelText: 'Número',
         labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintText: 'Nombre de dirección',
+        hintText: 'Número de tarjeta',
         hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
         contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
         enabledBorder: OutlineInputBorder(
@@ -153,20 +160,22 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
     );
   }
 
-  Widget _textFieldAddress() {
+  Widget _textFieldExpDate() {
     return TextField(
-      controller: _controller.textFieldControllers['address'],
+      controller: _controller.textFieldControllers['expDate'],
       textInputAction: TextInputAction.next,
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        CreditCardExpirationDateFormatter(),
+      ],
       autofocus: false,
-      minLines: 3,
-      maxLines: 3,
       cursorColor: Colors.grey,
       style: const TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
-        labelText: 'Dirección',
+        labelText: 'Expiración',
         labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintText: 'Dirección detallada',
+        hintText: 'MM/AA',
         hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
         contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
         enabledBorder: OutlineInputBorder(
@@ -181,20 +190,23 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
     );
   }
 
-  Widget _textFieldReferences() {
+  Widget _textFieldCVV() {
     return TextField(
+      controller: _controller.textFieldControllers['cvv'],
+      textInputAction: TextInputAction.next,
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]+')),
+        CreditCardCvcInputFormatter(),
+      ],
       autofocus: false,
-      textInputAction: TextInputAction.done,
-      controller: _controller.textFieldControllers['references'],
-      minLines: 3,
-      maxLines: 3,
       cursorColor: Colors.grey,
       style: const TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
-        labelText: 'Referencias',
+        labelText: 'CVV',
         labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintText: 'Lugares cercanos o información importante',
+        hintText: '000',
         hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
         contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
         enabledBorder: OutlineInputBorder(
@@ -205,43 +217,6 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
           borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
           borderRadius: BorderRadius.circular(14),
         ),
-      ),
-    );
-  }
-
-  Widget _locationButton() {
-    return OutlinedButton.icon(
-      onPressed: _controller.address != null ? () {} : _controller.goToSelectAddress,
-      label: Text(
-        _controller.address != null ? 'Ubicación establecida' : 'Establecer ubicación',
-        style: const TextStyle(color: Colors.white),
-      ),
-      icon: const Icon(FlutterIcons.location_arrow_faw, color: Colors.white, size: 18),
-      style: OutlinedButton.styleFrom(
-        primary: Colors.white,
-        side: const BorderSide(style: BorderStyle.none),
-        backgroundColor: Colors.black,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        elevation: 4,
-        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
-      ),
-    );
-  }
-
-  Widget _changeLocationButton() {
-    return OutlinedButton.icon(
-      onPressed: _controller.goToSelectAddress,
-      label: const Text('', style: TextStyle(color: Colors.white)),
-      icon: const Icon(FlutterIcons.md_refresh_ion, color: Colors.white, size: 25),
-      style: OutlinedButton.styleFrom(
-        primary: Colors.white,
-        side: const BorderSide(style: BorderStyle.none),
-        backgroundColor: Colors.black,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        fixedSize: const Size(48, 48),
-        minimumSize: const Size(48, 48),
-        elevation: 4,
-        padding: const EdgeInsets.only(left: 7, bottom: 2),
       ),
     );
   }
