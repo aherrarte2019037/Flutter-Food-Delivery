@@ -18,7 +18,10 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   final _controller = MapPageController();
 
-  updateView() => setState(() {});
+  void updateView() {
+    if (!mounted) return;
+    setState(() {});
+  }
 
   @override
   void initState() {

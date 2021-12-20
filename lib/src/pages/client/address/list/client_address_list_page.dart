@@ -17,7 +17,10 @@ class ClientAddressListPage extends StatefulWidget {
 class _ClientAddressListPageState extends State<ClientAddressListPage> {
   final _controller = ClientAddressListController();
 
-  updateView() => setState(() {});
+  void updateView() {
+    if (!mounted) return;
+    setState(() {});
+  }
 
   @override
   void initState() {

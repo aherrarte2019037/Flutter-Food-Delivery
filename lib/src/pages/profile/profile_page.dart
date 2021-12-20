@@ -19,8 +19,9 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final ProfileController _profileController = ProfileController();
 
-  updateView() {
-    setState(() => {});
+  void updateView() {
+    if (!mounted) return;
+    setState(() {});
   }
 
   @override
@@ -273,7 +274,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return TextField(
       readOnly: _profileController.isEditing ? false : true,
       controller: controller,
-      cursorColor: Colors.grey,
+      cursorColor: const Color(0XFFFF8C3E),
       style: const TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
         labelText: label,

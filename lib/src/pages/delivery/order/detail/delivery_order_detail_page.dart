@@ -24,7 +24,10 @@ class DeliveryOrderDetailPage extends StatefulWidget {
 class _DeliveryOrderDetailPageState extends State<DeliveryOrderDetailPage> {
   final _controller = DeliveryOrderDetailController();
 
-  updateView() => setState(() {});
+  void updateView() {
+    if (!mounted) return;
+    setState(() {});
+  }
 
   @override
   void initState() {

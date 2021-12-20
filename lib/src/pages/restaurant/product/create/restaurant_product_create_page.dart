@@ -19,8 +19,9 @@ class RestaurantProductCreatePage extends StatefulWidget {
 class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePage> {
   final RestaurantProductCreateController _controller = RestaurantProductCreateController();
 
-  updateView() {
-    setState(() => {});
+  void updateView() {
+    if (!mounted) return;
+    setState(() {});
   }
 
   @override
@@ -266,7 +267,7 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
     return TextField(
       controller: _controller.textFieldControllers['name'],
       textInputAction: TextInputAction.next,
-      cursorColor: Colors.grey,
+      cursorColor: const Color(0XFFFF8C3E),
       style: const TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
         labelText: 'Nombre',
@@ -292,7 +293,7 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
       controller: _controller.textFieldControllers['price'],
       textInputAction: TextInputAction.done,
       keyboardType: TextInputType.number,
-      cursorColor: Colors.grey,
+      cursorColor: const Color(0XFFFF8C3E),
       style: const TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
         labelText: 'Precio',
@@ -319,7 +320,7 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
       controller: _controller.textFieldControllers['calories'],
       textInputAction: TextInputAction.done,
       keyboardType: TextInputType.number,
-      cursorColor: Colors.grey,
+      cursorColor: const Color(0XFFFF8C3E),
       style: const TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
         labelText: 'Calorías',
@@ -475,7 +476,7 @@ class _RestaurantProductCreatePageState extends State<RestaurantProductCreatePag
       textInputAction: TextInputAction.done,
       minLines: 3,
       maxLines: 3,
-      cursorColor: const Color(0XFF3a3a3a),
+      cursorColor: const Color(0XFFFF8C3E),
       style: const TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
         labelText: 'Descripción',

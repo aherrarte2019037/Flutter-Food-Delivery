@@ -131,31 +131,32 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
       child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 5),
           decoration: BoxDecoration(
-              color: ThemeColors.lightPrimaryColor,
-              borderRadius: BorderRadius.circular(10)),
+            color: ThemeColors.lightPrimaryColor,
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: TextField(
             focusNode: _registerController.firstNameNode,
             textInputAction: TextInputAction.next,
             onEditingComplete: () {
               _registerController.fieldFocusChange(
-                  context,
-                  _registerController.firstNameNode,
-                  _registerController.lastNameNode);
+                context,
+                _registerController.firstNameNode,
+                _registerController.lastNameNode,
+              );
             },
             textCapitalization: TextCapitalization.words,
             controller: _registerController.firstNameInput,
             style: const TextStyle(color: Color(0XFF3C4976), fontSize: 17),
+            cursorColor: const Color(0XFFFF8C3E),
             decoration: InputDecoration(
               hintText: 'Nombre',
               hintStyle: const TextStyle(color: Color(0XFF758CD9)),
               border: InputBorder.none,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+              contentPadding:const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
               prefixIcon: Icon(
                 FlutterIcons.md_person_ion,
                 size: 23,
-                color:
-                    ThemeColors.getWithOpacity(ThemeColors.primaryColor, 0.8),
+                color:ThemeColors.getWithOpacity(ThemeColors.primaryColor, 0.8),
               ),
             ),
           )),
@@ -167,32 +168,32 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
       child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 5),
           decoration: BoxDecoration(
-              color: ThemeColors.lightPrimaryColor,
-              borderRadius: BorderRadius.circular(10)),
+            color: ThemeColors.lightPrimaryColor,
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: TextField(
             focusNode: _registerController.lastNameNode,
             textInputAction: TextInputAction.next,
             onEditingComplete: () {
               _registerController.fieldFocusChange(
-                  context,
-                  _registerController.lastNameNode,
-                  _registerController.emailNode);
+                context,
+                _registerController.lastNameNode,
+                _registerController.emailNode,
+              );
             },
             textCapitalization: TextCapitalization.words,
             controller: _registerController.lastNameInput,
             style: const TextStyle(color: Color(0XFF3C4976), fontSize: 17),
+            cursorColor: const Color(0XFFFF8C3E),
             decoration: InputDecoration(
               hintText: 'Apellido',
-              hintStyle: const TextStyle(
-                  color: Color(0XFF758CD9), letterSpacing: -0.1),
+              hintStyle: const TextStyle(color: Color(0XFF758CD9), letterSpacing: -0.1),
               border: InputBorder.none,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
               prefixIcon: Icon(
                 FlutterIcons.md_person_ion,
                 size: 23,
-                color:
-                    ThemeColors.getWithOpacity(ThemeColors.primaryColor, 0.8),
+                color: ThemeColors.getWithOpacity(ThemeColors.primaryColor, 0.8),
               ),
             ),
           )),
@@ -203,96 +204,101 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
     return Container(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
-            color: ThemeColors.lightPrimaryColor,
-            borderRadius: BorderRadius.circular(10)),
-        child: TextField(
-          focusNode: _registerController.emailNode,
-          textInputAction: TextInputAction.next,
-          onEditingComplete: () {
-            _registerController.fieldFocusChange(
-                context,
-                _registerController.emailNode,
-                _registerController.passwordNode);
-          },
-          keyboardType: TextInputType.emailAddress,
-          controller: _registerController.emailInput,
-          style: const TextStyle(color: Color(0XFF3C4976), fontSize: 17),
-          decoration: InputDecoration(
-            hintText: 'Correo electrónico',
-            hintStyle:
-                const TextStyle(color: Color(0XFF758CD9), letterSpacing: -0.1),
-            border: InputBorder.none,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
-            prefixIcon: Icon(
-              FlutterIcons.md_mail_ion,
-              size: 23,
-              color: ThemeColors.getWithOpacity(ThemeColors.primaryColor, 0.8),
-            ),
+        color: ThemeColors.lightPrimaryColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: TextField(
+        focusNode: _registerController.emailNode,
+        textInputAction: TextInputAction.next,
+        onEditingComplete: () {
+          _registerController.fieldFocusChange(
+            context,
+            _registerController.emailNode,
+            _registerController.passwordNode,
+          );
+        },
+        keyboardType: TextInputType.emailAddress,
+        controller: _registerController.emailInput,
+        style: const TextStyle(color: Color(0XFF3C4976), fontSize: 17),
+        cursorColor: const Color(0XFFFF8C3E),
+        decoration: InputDecoration(
+          hintText: 'Correo electrónico',
+          hintStyle: const TextStyle(color: Color(0XFF758CD9), letterSpacing: -0.1),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+          prefixIcon: Icon(
+            FlutterIcons.md_mail_ion,
+            size: 23,
+            color: ThemeColors.getWithOpacity(ThemeColors.primaryColor, 0.8),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _textFieldPassword() {
     return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        decoration: BoxDecoration(
-            color: ThemeColors.lightPrimaryColor,
-            borderRadius: BorderRadius.circular(10)),
-        child: TextField(
-          focusNode: _registerController.passwordNode,
-          textInputAction: TextInputAction.next,
-          onEditingComplete: () {
-            _registerController.fieldFocusChange(
-                context,
-                _registerController.passwordNode,
-                _registerController.confirmNode);
-          },
-          controller: _registerController.passwordInput,
-          obscureText: true,
-          style: const TextStyle(color: Color(0XFF3C4976), fontSize: 17),
-          decoration: InputDecoration(
-            hintText: 'Contraseña',
-            hintStyle:
-                const TextStyle(color: Color(0XFF758CD9), letterSpacing: -0.1),
-            border: InputBorder.none,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
-            prefixIcon: Icon(
-              FlutterIcons.md_lock_ion,
-              size: 26,
-              color: ThemeColors.getWithOpacity(ThemeColors.primaryColor, 0.8),
-            ),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: ThemeColors.lightPrimaryColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: TextField(
+        focusNode: _registerController.passwordNode,
+        textInputAction: TextInputAction.next,
+        onEditingComplete: () {
+          _registerController.fieldFocusChange(
+            context,
+            _registerController.passwordNode,
+            _registerController.confirmNode,
+          );
+        },
+        controller: _registerController.passwordInput,
+        obscureText: true,
+        style: const TextStyle(color: Color(0XFF3C4976), fontSize: 17),
+        cursorColor: const Color(0XFFFF8C3E),
+        decoration: InputDecoration(
+          hintText: 'Contraseña',
+          hintStyle: const TextStyle(color: Color(0XFF758CD9), letterSpacing: -0.1),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+          prefixIcon: Icon(
+            FlutterIcons.md_lock_ion,
+            size: 26,
+            color: ThemeColors.getWithOpacity(ThemeColors.primaryColor, 0.8),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _textFieldConfirmPassword() {
     return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        decoration: BoxDecoration(
-            color: ThemeColors.lightPrimaryColor,
-            borderRadius: BorderRadius.circular(10)),
-        child: TextField(
-          textInputAction: TextInputAction.done,
-          focusNode: _registerController.confirmNode,
-          controller: _registerController.confirmInput,
-          obscureText: true,
-          style: const TextStyle(color: Color(0XFF3C4976), fontSize: 17),
-          decoration: InputDecoration(
-            hintText: 'Confirmar',
-            hintStyle:
-                const TextStyle(color: Color(0XFF758CD9), letterSpacing: -0.1),
-            border: InputBorder.none,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
-            prefixIcon: Icon(
-              FlutterIcons.md_refresh_ion,
-              size: 26,
-              color: ThemeColors.getWithOpacity(ThemeColors.primaryColor, 0.8),
-            ),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: ThemeColors.lightPrimaryColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: TextField(
+        textInputAction: TextInputAction.done,
+        focusNode: _registerController.confirmNode,
+        controller: _registerController.confirmInput,
+        obscureText: true,
+        style: const TextStyle(color: Color(0XFF3C4976), fontSize: 17),
+        cursorColor: const Color(0XFFFF8C3E),
+        decoration: InputDecoration(
+          hintText: 'Confirmar',
+          hintStyle: const TextStyle(color: Color(0XFF758CD9), letterSpacing: -0.1),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+          prefixIcon: Icon(
+            FlutterIcons.md_refresh_ion,
+            size: 26,
+            color: ThemeColors.getWithOpacity(ThemeColors.primaryColor, 0.8),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _registerButton() {

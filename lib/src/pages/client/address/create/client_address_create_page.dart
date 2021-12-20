@@ -15,7 +15,10 @@ class ClientAddressCreatePage extends StatefulWidget {
 class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
   final _controller = ClientAddressCreateController();
 
-  updateView() => setState(() {});
+  void updateView() {
+    if (!mounted) return;
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -132,7 +135,7 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
       controller: _controller.textFieldControllers['name'],
       textInputAction: TextInputAction.next,
       autofocus: false,
-      cursorColor: Colors.grey,
+      cursorColor: const Color(0XFFFF8C3E),
       style: const TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
         labelText: 'Nombre',
@@ -160,7 +163,7 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
       autofocus: false,
       minLines: 3,
       maxLines: 3,
-      cursorColor: Colors.grey,
+      cursorColor: const Color(0XFFFF8C3E),
       style: const TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
         labelText: 'Dirección',
@@ -188,7 +191,7 @@ class _ClientAddressCreatePageState extends State<ClientAddressCreatePage> {
       controller: _controller.textFieldControllers['references'],
       minLines: 3,
       maxLines: 3,
-      cursorColor: Colors.grey,
+      cursorColor: const Color(0XFFFF8C3E),
       style: const TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
         labelText: 'Referencias',

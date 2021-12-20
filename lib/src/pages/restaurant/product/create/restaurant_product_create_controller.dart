@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/src/models/product_category_model.dart';
 import 'package:food_delivery/src/models/product_model.dart';
 import 'package:food_delivery/src/models/response_api_model.dart';
+import 'package:food_delivery/src/utils/form_utils.dart';
 import 'package:food_delivery/src/utils/string_extension.dart';
 import 'package:food_delivery/src/providers/product_category_provider.dart';
 import 'package:food_delivery/src/providers/product_provider.dart';
@@ -72,11 +73,9 @@ class RestaurantProductCreateController {
   }
 
   Future createProduct() async{
-    for (var controller in textFieldControllers.values) {
-      if(controller.text.isEmpty) {
-        CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Ingresa todos los datos');
-        return;
-      }
+    if (!FormUtils.formFilled(textFieldControllers)) {
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Ingresa todos los datos');
+      return;
     }
 
     product = Product(
@@ -99,7 +98,7 @@ class RestaurantProductCreateController {
         latestProducts.insert(0, productCreated);
         productsListKey.currentState?.insertItem(0, duration: const Duration(milliseconds: 500));
         createProductIsLoading = false;
-        resetControllers();
+        FormUtils.resetForm(textFieldControllers);
         updateView();
         
       } else {
@@ -123,13 +122,5 @@ class RestaurantProductCreateController {
   }
 
   void dismissImage(DismissDirection direction, File image) => images.remove(image);
-
-  void resetControllers() {
-    for (var controller in textFieldControllers.values) {
-      controller.text = '';
-    }
-
-    images = [];
-  }
 
 }

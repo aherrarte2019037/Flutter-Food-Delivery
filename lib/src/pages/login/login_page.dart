@@ -31,8 +31,9 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     return const Color(0XFF23EBA0);
   }
 
-  updateView() {
-    setState(() => {});
+  void updateView() {
+    if (!mounted) return;
+    setState(() {});
   }
 
   @override
@@ -142,62 +143,67 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
   Widget _textFieldEmail() {
     return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        decoration: BoxDecoration(
-            color: ThemeColors.lightPrimaryColor,
-            borderRadius: BorderRadius.circular(10)),
-        child: TextField(
-          focusNode: _loginController.emailNode,
-          textInputAction: TextInputAction.next,
-          onEditingComplete: () {
-            _loginController.fieldFocusChange(
-                context, _loginController.emailNode, _loginController.passNode);
-          },
-          keyboardType: TextInputType.emailAddress,
-          controller: _loginController.emailInput,
-          style: const TextStyle(color: Color(0XFF3C4976), fontSize: 18),
-          decoration: InputDecoration(
-            hintText: 'Correo electrónico',
-            hintStyle:
-                const TextStyle(color: Color(0XFF758CD9), letterSpacing: -0.1),
-            border: InputBorder.none,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
-            prefixIcon: Icon(
-              FlutterIcons.md_mail_ion,
-              size: 23,
-              color: ThemeColors.getWithOpacity(ThemeColors.primaryColor, 0.8),
-            ),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: ThemeColors.lightPrimaryColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: TextField(
+        focusNode: _loginController.emailNode,
+        textInputAction: TextInputAction.next,
+        onEditingComplete: () {
+          _loginController.fieldFocusChange(
+            context,
+            _loginController.emailNode,
+            _loginController.passNode,
+          );
+        },
+        keyboardType: TextInputType.emailAddress,
+        controller: _loginController.emailInput,
+        style: const TextStyle(color: Color(0XFF3C4976), fontSize: 18),
+        cursorColor: const Color(0XFFFF8C3E),
+        decoration: InputDecoration(
+          hintText: 'Correo electrónico',
+          hintStyle: const TextStyle(color: Color(0XFF758CD9), letterSpacing: -0.1),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+          prefixIcon: Icon(
+            FlutterIcons.md_mail_ion,
+            size: 23,
+            color: ThemeColors.getWithOpacity(ThemeColors.primaryColor, 0.8),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _textFieldPassword() {
     return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        decoration: BoxDecoration(
-            color: ThemeColors.lightPrimaryColor,
-            borderRadius: BorderRadius.circular(10)),
-        child: TextField(
-          textInputAction: TextInputAction.done,
-          focusNode: _loginController.passNode,
-          obscureText: true,
-          controller: _loginController.passwordInput,
-          style: const TextStyle(color: Color(0XFF3C4976), fontSize: 18),
-          decoration: InputDecoration(
-            hintText: 'Contraseña',
-            hintStyle:
-                const TextStyle(color: Color(0XFF758CD9), letterSpacing: -0.1),
-            border: InputBorder.none,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
-            prefixIcon: Icon(
-              FlutterIcons.md_lock_ion,
-              size: 26,
-              color: ThemeColors.getWithOpacity(ThemeColors.primaryColor, 0.8),
-            ),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: ThemeColors.lightPrimaryColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: TextField(
+        textInputAction: TextInputAction.done,
+        focusNode: _loginController.passNode,
+        obscureText: true,
+        controller: _loginController.passwordInput,
+        style: const TextStyle(color: Color(0XFF3C4976), fontSize: 18),
+        cursorColor: const Color(0XFFFF8C3E),
+        decoration: InputDecoration(
+          hintText: 'Contraseña',
+          hintStyle: const TextStyle(color: Color(0XFF758CD9), letterSpacing: -0.1),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+          prefixIcon: Icon(
+            FlutterIcons.md_lock_ion,
+            size: 26,
+            color: ThemeColors.getWithOpacity(ThemeColors.primaryColor, 0.8),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _rememberSection() {

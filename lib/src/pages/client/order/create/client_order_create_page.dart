@@ -19,7 +19,10 @@ class ClientOrderCreatePage extends StatefulWidget {
 class _ClientOrderCreatePageState extends State<ClientOrderCreatePage> {
   final _controller = ClientOrderCreateController();
 
-  updateView() => setState(() => {});
+  void updateView() {
+    if (!mounted) return;
+    setState(() {});
+  }
 
   @override
   void initState() {

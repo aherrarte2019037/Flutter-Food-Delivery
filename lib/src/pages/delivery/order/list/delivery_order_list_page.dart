@@ -20,7 +20,10 @@ class DeliveryOrderListPage extends StatefulWidget {
 class _DeliveryOrderListPageState extends State<DeliveryOrderListPage> {
   final DeliveryOrderListController _controller = DeliveryOrderListController();
 
-  updateView() => setState(() {});
+  void updateView() {
+    if (!mounted) return;
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -166,6 +169,7 @@ class _DeliveryOrderListPageState extends State<DeliveryOrderListPage> {
         Expanded(
           child: TextField(
             autofocus: false,
+            cursorColor: const Color(0XFFFF8C3E),
             decoration: InputDecoration(
               filled: true,
               fillColor: const Color(0XFFf3f5f9),

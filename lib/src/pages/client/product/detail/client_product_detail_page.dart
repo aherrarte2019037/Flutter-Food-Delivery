@@ -22,8 +22,9 @@ class ClientProductDetailPage extends StatefulWidget {
 class _ClientProductDetailPageState extends State<ClientProductDetailPage> {
   final ClientProductDetailController _controller = ClientProductDetailController();
 
-  updateView() {
-    setState(() => {});
+  void updateView() {
+    if (!mounted) return;
+    setState(() {});
   }
 
   @override

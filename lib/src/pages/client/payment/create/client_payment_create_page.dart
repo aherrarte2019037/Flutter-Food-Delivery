@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_credit_card/credit_card_form.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:food_delivery/src/pages/client/payment/create/client_payment_create_controller.dart';
-import 'package:food_delivery/src/utils/credit_card_formatter.dart';
 
 class ClientPaymentCreatePage extends StatefulWidget {
   const ClientPaymentCreatePage({Key? key}) : super(key: key);
@@ -17,7 +16,10 @@ class ClientPaymentCreatePage extends StatefulWidget {
 class _ClientAddressCreatePageState extends State<ClientPaymentCreatePage> {
   final _controller = ClientPaymentCreateController();
 
-  updateView() => setState(() {});
+  void updateView() {
+    if (!mounted) return;
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -38,7 +40,7 @@ class _ClientAddressCreatePageState extends State<ClientPaymentCreatePage> {
       appBar: _appBar(),
       bottomNavigationBar: _createAddressButton(),
       body: Container(
-        padding: const EdgeInsets.only(bottom: 30, left: 42, right: 42),
+        padding: const EdgeInsets.only(bottom: 30, left: 28, right: 28),
         height: height,
         width: width,
         child: SingleChildScrollView(
@@ -46,33 +48,84 @@ class _ClientAddressCreatePageState extends State<ClientPaymentCreatePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 15),
+              _bannerImage(),
               const SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                height: 190,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  image: const DecorationImage(
-                    image: AssetImage('assets/images/create-address.webp'),
-                    fit: BoxFit.cover,
-                    alignment: Alignment.bottomCenter,
+              CreditCardForm(
+                formKey: _controller.keyForm,
+                cardNumber: _controller.textFieldControllers['number']!.text,
+                expiryDate: _controller.textFieldControllers['expDate']!.text,
+                cardHolderName: _controller.textFieldControllers['cardHolder']!.text,
+                cvvCode: _controller.textFieldControllers['cvv']!.text,
+                onCreditCardModelChange: _controller.onPaymentCardChange,
+                themeColor: Colors.blue,
+                cursorColor: const Color(0XFFFF8C3E),
+                cardNumberDecoration: InputDecoration(
+                  labelText: 'Número',
+                  labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  hintText: 'Número de tarjeta',
+                  hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                expiryDateDecoration: InputDecoration(
+                  labelText: 'Expiración',
+                  labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  hintText: 'MM/AA',
+                  hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                cvvCodeDecoration: InputDecoration(
+                  labelText: 'CVV',
+                  labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  hintText: '000',
+                  hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                cardHolderDecoration: InputDecoration(
+                  labelText: 'Titular',
+                  labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  hintText: 'Titular de la tarjeta',
+                  hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
+                    borderRadius: BorderRadius.circular(14),
                   ),
                 ),
               ),
-              SizedBox(height: height * 0.035),
-              _textFieldNumber(),
-              SizedBox(height: height * 0.035),
-              Row(
-                children: [
-                  Expanded(
-                    child: _textFieldExpDate(),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: _textFieldCVV(),
-                  ),
-                ],
-              ),
+              _adviceText(),
             ],
           ),
         ),
@@ -129,94 +182,44 @@ class _ClientAddressCreatePageState extends State<ClientPaymentCreatePage> {
     );
   }
 
-  Widget _textFieldNumber() {
-    return TextField(
-      controller: _controller.textFieldControllers['number'],
-      textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.number,
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]+')),
-        CreditCardFormatter(mask: 'xxxx-xxxx-xxxx-xxxx-xxxx'),
-      ],
-      autofocus: false,
-      cursorColor: Colors.grey,
-      style: const TextStyle(color: Colors.black, fontSize: 18),
-      decoration: InputDecoration(
-        labelText: 'Número',
-        labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintText: 'Número de tarjeta',
-        hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
-          borderRadius: BorderRadius.circular(14),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
-          borderRadius: BorderRadius.circular(14),
+  Widget _bannerImage() {
+    return Container(
+      width: double.infinity,
+      height: 190,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        image: const DecorationImage(
+          image: AssetImage('assets/images/client-payment-add.gif'),
+          fit: BoxFit.contain,
+          alignment: Alignment.center,
         ),
       ),
     );
   }
 
-  Widget _textFieldExpDate() {
-    return TextField(
-      controller: _controller.textFieldControllers['expDate'],
-      textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.number,
-      inputFormatters: [
-        CreditCardExpirationDateFormatter(),
-      ],
-      autofocus: false,
-      cursorColor: Colors.grey,
-      style: const TextStyle(color: Colors.black, fontSize: 18),
-      decoration: InputDecoration(
-        labelText: 'Expiración',
-        labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintText: 'MM/AA',
-        hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
-          borderRadius: BorderRadius.circular(14),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
-          borderRadius: BorderRadius.circular(14),
-        ),
-      ),
-    );
-  }
-
-  Widget _textFieldCVV() {
-    return TextField(
-      controller: _controller.textFieldControllers['cvv'],
-      textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.number,
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]+')),
-        CreditCardCvcInputFormatter(),
-      ],
-      autofocus: false,
-      cursorColor: Colors.grey,
-      style: const TextStyle(color: Colors.black, fontSize: 18),
-      decoration: InputDecoration(
-        labelText: 'CVV',
-        labelStyle: const TextStyle(color: Color(0XFF7e7e7e), fontSize: 16),
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintText: '000',
-        hintStyle: const TextStyle(color: Color(0XFF494949), fontSize: 16),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Color(0XFFC7C7C7), width: 1),
-          borderRadius: BorderRadius.circular(14),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Color(0XFF525252), width: 1),
-          borderRadius: BorderRadius.circular(14),
-        ),
+  Widget _adviceText() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 8),
+      child: Row(
+        children: [
+          Transform.translate(
+            offset: const Offset(0, 2),
+            child: const Text(
+              '* ',
+              style: TextStyle(
+                fontSize: 15.5,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ),
+          const Text(
+            'Los datos se guardan encriptados en tu móvil',
+            style: TextStyle(
+              fontSize: 15.5,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -227,7 +230,7 @@ class _ClientAddressCreatePageState extends State<ClientPaymentCreatePage> {
       child: Container(
         height: 60,
         child: ElevatedButton(
-          onPressed: _controller.createAddress,
+          onPressed: _controller.addPaymentCard,
           style: ElevatedButton.styleFrom(
             elevation: 4,
             padding: const EdgeInsets.symmetric(horizontal: 40),

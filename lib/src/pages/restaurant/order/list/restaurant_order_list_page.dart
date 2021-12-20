@@ -20,7 +20,10 @@ class RestaurantOrderListPage extends StatefulWidget {
 class _RestaurantOrderListState extends State<RestaurantOrderListPage> {
   final RestaurantOrderListController _controller = RestaurantOrderListController();
 
-  updateView() => setState(() {});
+  void updateView() {
+    if (!mounted) return;
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -166,6 +169,7 @@ class _RestaurantOrderListState extends State<RestaurantOrderListPage> {
         Expanded(
           child: TextField(
             autofocus: false,
+            cursorColor: const Color(0XFFFF8C3E),
             decoration: InputDecoration(
               filled: true,
               fillColor: const Color(0XFFf3f5f9),

@@ -4,6 +4,7 @@ import 'package:food_delivery/src/models/address_model.dart';
 import 'package:food_delivery/src/models/response_api_model.dart';
 import 'package:food_delivery/src/pages/client/address/map/map_page.dart';
 import 'package:food_delivery/src/providers/address_provider.dart';
+import 'package:food_delivery/src/utils/form_utils.dart';
 import 'package:food_delivery/src/widgets/custom_snackbar.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -35,21 +36,11 @@ class ClientAddressCreateController {
     );
     updateView();
   }
-
-  void resetControllers() {
-    for (var controller in textFieldControllers.values) {
-      controller.text = '';
-    }
-
-    address = null;
-  }
   
   void createAddress() async {
-    for (var controller in textFieldControllers.values) {
-      if(controller.text.isEmpty) {
-        CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Ingresa todos los datos');
-        return;
-      }
+    if (!FormUtils.formFilled(textFieldControllers)) {
+      CustomSnackBar.showError(context: context, title: 'Aviso', message: 'Ingresa todos los datos');
+      return;
     }
 
     if(address == null) {
@@ -65,7 +56,10 @@ class ClientAddressCreateController {
     if (responseApi?.success == true) {
       addressesCreated.insert(0, responseApi!.data as Address);
       CustomSnackBar.showSuccess(context: context, title: 'Aviso', message: 'Dirección de entrega creada');
-      resetControllers();
+      
+      FormUtils.resetForm(textFieldControllers);
+      address = null;
+
       updateView();
       
     } else {

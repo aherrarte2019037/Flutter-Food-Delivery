@@ -25,7 +25,10 @@ class RestaurantOrderDetailPage extends StatefulWidget {
 class _RestaurantOrderDetailPageState extends State<RestaurantOrderDetailPage> {
   final _controller = RestaurantOrderDetailController();
 
-  updateView() => setState(() {});
+  void updateView() {
+    if (!mounted) return;
+    setState(() {});
+  }
 
   @override
   void initState() {

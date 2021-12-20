@@ -52,6 +52,7 @@ dependencies:
   flutter_secure_storage: ^5.0.2
   credit_card_type_detector: ^2.0.0
   flutter_multi_formatter: ^2.5.1
+  intl: ^0.17.0
 cupertino_icons: ^1.0.2
 
 dev_dependencies:

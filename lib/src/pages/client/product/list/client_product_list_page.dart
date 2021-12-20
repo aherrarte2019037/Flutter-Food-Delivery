@@ -20,8 +20,9 @@ class ClientProductListPage extends StatefulWidget {
 class _ProductListState extends State<ClientProductListPage> {
   final ClientProductListController _controller = ClientProductListController();
 
-  updateView() {
-    setState(() => {});
+  void updateView() {
+    if (!mounted) return;
+    setState(() {});
   }
 
   @override
@@ -187,6 +188,7 @@ class _ProductListState extends State<ClientProductListPage> {
         Expanded(
           child: TextField(
             autofocus: false,
+            cursorColor: const Color(0XFFFF8C3E),
             decoration: InputDecoration(
               filled: true,
               fillColor: const Color(0XFFf3f5f9),

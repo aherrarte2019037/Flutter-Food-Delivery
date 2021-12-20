@@ -17,8 +17,9 @@ class RestaurantCategoryCreatePage extends StatefulWidget {
 class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreatePage> {
   final RestaurantCategoryCreateController _controller = RestaurantCategoryCreateController();
 
-  updateView() {
-    setState(() => {});
+  void updateView() {
+    if (!mounted) return;
+    setState(() {});
   }
 
   @override
@@ -251,7 +252,7 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
     return TextField(
       controller: _controller.textFieldControllers['name'],
       autofocus: false,
-      cursorColor: Colors.grey,
+      cursorColor: const Color(0XFFFF8C3E),
       style: const TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
         labelText: 'Nombre',
@@ -279,7 +280,7 @@ class _RestaurantCategoryCreatePageState extends State<RestaurantCategoryCreateP
       controller: _controller.textFieldControllers['description'],
       minLines: 3,
       maxLines: 3,
-      cursorColor: Colors.grey,
+      cursorColor: const Color(0XFFFF8C3E),
       style: const TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
         labelText: 'Descripción',

@@ -17,7 +17,10 @@ class ClientPaymentListPage extends StatefulWidget {
 class _ClientPaymentListPageState extends State<ClientPaymentListPage> {
   final _controller = ClientPaymentListController();
 
-  void updateView() => setState(() => {});
+  void updateView() {
+    if (!mounted) return;
+    setState(() {});
+  }
 
   @override
   void initState() {
