@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/src/models/order_model.dart';
 import 'package:food_delivery/src/models/shopping_cart_item_model.dart';

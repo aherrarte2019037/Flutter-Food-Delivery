@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:enum_to_string/enum_to_string.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe

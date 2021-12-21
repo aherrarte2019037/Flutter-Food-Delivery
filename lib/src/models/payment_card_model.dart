@@ -46,7 +46,7 @@ class PaymentCard {
 
   String get numberWithMask {
     if (type == PaymentCardType.cash) return '';
-    return 'xxxxxx ${number.toString().substring(number.toString().length - 4)}';
+    return 'xxxx xxxx xxxx ${number.toString().substring(number.toString().length - 4)}';
   }
 
   String get expFormatted {
